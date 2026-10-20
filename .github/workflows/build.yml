@@ -13,7 +13,8 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - uses: android-actions/setup-android@v3
+      # The runner image already has the Android SDK (ANDROID_HOME). android-actions/setup-android@v3
+      # now fails there: it installs the long-removed "tools" package by default.
       - name: Test
         run: |
           chmod +x gradlew
