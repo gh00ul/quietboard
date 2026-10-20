@@ -22,6 +22,7 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import java.util.Calendar
+import java.util.Locale
 
 class SettingsActivity : Activity() {
     private lateinit var prefs: Prefs
@@ -252,7 +253,8 @@ class SettingsActivity : Activity() {
         val dialog = b.create()
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val k = keyField.text.toString().trim().lowercase()
+                // English rules like the lookup: a Turkish phone must not store "IDK" as "ıdk".
+                val k = keyField.text.toString().trim().lowercase(Locale.US)
                 val v = valueField.text.toString().trim()
                 when {
                     k.isEmpty() -> keyField.error = "Enter a shortcut"
@@ -454,7 +456,8 @@ class SettingsActivity : Activity() {
                 isClickable = true
                 val out = TypedValue()
                 if (theme.resolveAttribute(android.R.attr.selectableItemBackground, out, true)) foreground = getDrawable(out.resourceId)
-                contentDescription = choice.label + (if (choice.id == current) ", selected" else "")
+                // The whole row is one TalkBack item: name, what it is, and whether it's the current one.
+                contentDescription = choice.label + ". " + choice.blurb + (if (choice.id == current) ". Selected" else "")
             }
             val look = KbTheme.forChoice(this, prefs, choice.id, month)
             row.addView(ThemeSwatch(this, look), LinearLayout.LayoutParams(dpi(96f), dpi(96f * ThemeSwatch.ASPECT)))

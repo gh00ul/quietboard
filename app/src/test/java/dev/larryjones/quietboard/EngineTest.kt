@@ -46,6 +46,35 @@ class EngineTest {
         }
     }
 
+    @Test fun learnedCapitalIDoesNotStopCorrectingI() {
+        val h = UserHistory(Files.createTempDirectory("qb").toFile())
+        val s = Suggest(dict, h)
+        repeat(3) { h.learn(null, "I") } // every corrected "i" is learned as "I"
+        assertEquals("i -> I keeps working once \"I\" is learned", "I", s.suggest("i", null, true, emptySet()).autoCorrect)
+        h.accept("i") // the user undid it: lowercase on purpose from now on
+        assertNull(s.suggest("i", null, true, emptySet()).autoCorrect)
+    }
+
+    @Test fun learnedWordsStayHiddenWhereLearningIsOff() {
+        val h = UserHistory(Files.createTempDirectory("qb").toFile())
+        val s = Suggest(dict, h)
+        repeat(3) { h.learn(null, "Zorbix") }
+        fun strip(learned: Boolean) = s.suggest("zorb", null, true, emptySet(), learned).strip.mapNotNull { it?.word }
+        assertTrue("Zorbix" in strip(true))
+        assertTrue("lock screen / incognito: nothing learned shows", "Zorbix" !in strip(false))
+    }
+
+    @Test fun realWordsAndNamesAreNotCorrectedAway() {
+        assertEquals("John", ac("john"))
+        for (w in listOf("where'd", "what'd", "why'd", "c'mon", "idc", "vid", "mhm", "https", "this'll", "there're", "rev", "ids")) {
+            assertNull(w, ac(w))
+        }
+        assertNull("a name, not a typo of \"been\"", ac("Bern", "in"))
+        assertNull(ac("Fay", "and"))
+        assertNull("a closing quote is not part of a typo", ac("hello'"))
+        assertEquals("cookie emoji for the plural", suggest.emojiFor("cookie"), suggest.emojiFor("cookies"))
+    }
+
     @Test fun leavesRealWordsAlone() {
         assertNull(ac("hello"))
         assertNull(ac("their"))

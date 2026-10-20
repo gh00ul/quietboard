@@ -24,6 +24,8 @@ class Dictionary private constructor(
     private val whitelist: Map<String, String>,
 ) {
     private val exact = HashMap<String, Int>(words.size * 2)
+    /** Keys with an all-lowercase entry, even a never-offered one ("rev", "ids"). */
+    private val lowercase = HashSet<String>()
     private val byLength: Array<IntArray>
 
     /** Letters-only, consecutive-duplicate-free form of each word for glide typing ("hello" -> "helo"). */
@@ -36,15 +38,23 @@ class Dictionary private constructor(
         for (i in keys.indices) if (offensive[i]) offensiveKeys += keys[i]
         for (i in keys.indices) if (keys[i] in offensiveKeys) offensive[i] = true
 
+        // The preferred spelling of each key: one that may be offered ("John", not the never-offered
+        // "john"), then the lowercase one, then the most frequent.
         for (i in keys.indices) {
             val k = keys[i]
+            if (words[i] == k) lowercase += k
             val cur = exact[k]
             if (cur == null) {
                 exact[k] = i
             } else {
                 val curIsLower = words[cur] == k
                 val newIsLower = words[i] == k
-                if ((newIsLower && !curIsLower) || (newIsLower == curIsLower && freqs[i] > freqs[cur])) exact[k] = i
+                val better = when {
+                    never[i] != never[cur] -> !never[i]
+                    newIsLower != curIsLower -> newIsLower
+                    else -> freqs[i] > freqs[cur]
+                }
+                if (better) exact[k] = i
             }
         }
 
@@ -79,6 +89,26 @@ class Dictionary private constructor(
 
     /** Index of the preferred entry for this lowercase key, or -1. */
     fun exactIndex(lower: String): Int = exact[lower] ?: -1
+
+    /** Whether [lower] is itself a word in lowercase (offered or not). */
+    fun hasLowercase(lower: String): Boolean = lower in lowercase
+
+    /** Whether some word starts with [prefix] (lowercase). */
+    fun hasPrefix(prefix: String): Boolean {
+        val i = lowerBound(prefix)
+        return i < keys.size && keys[i].startsWith(prefix)
+    }
+
+    /** Whether [word] is in the list in exactly this spelling ("Fay" as well as "fay"). */
+    fun hasSpelling(word: String): Boolean {
+        val k = word.lowercase(Locale.US)
+        var i = lowerBound(k)
+        while (i < keys.size && keys[i] == k) {
+            if (words[i] == word) return true
+            i++
+        }
+        return false
+    }
 
     fun whitelistFor(lower: String): String? = whitelist[lower]
 

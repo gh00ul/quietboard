@@ -19,7 +19,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowSystemClock
 import java.io.File
+import java.time.Duration
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w384dp-h832dp-450dpi")
@@ -190,6 +192,56 @@ class FeatureTest {
             at(q.touch.centerX(), q.touch.centerY()), 0, 0, 1f, 1f, 0, 0, 0, 0))
         assertEquals(LayoutId.SYMBOLS, kv.layout!!.id)
         assertEquals(listOf("1"), typed)
+    }
+
+    @Test fun aGlideThatStartsLateKeepsItsStart() {
+        val kv = laidOutRoot().keyboard
+        var first: Float? = null
+        kv.listener = object : KeyboardView.Listener by noop {
+            override fun onGesture(xs: FloatArray, ys: FloatArray, count: Int) { first = xs[0] }
+        }
+        val keys = kv.layout!!.rows.flatMap { it.keys }
+        fun k(c: String) = keys.first { it.text == c }
+        fun ev(t: Long, action: Int, key: Key) = MotionEvent.obtain(t, t, action, key.touch.centerX(), key.touch.centerY(), 0)
+        val t = SystemClock.uptimeMillis()
+        kv.dispatchTouchEvent(ev(t, MotionEvent.ACTION_DOWN, k("q")))
+        kv.dispatchTouchEvent(ev(t + 50, MotionEvent.ACTION_UP, k("q")))
+        // Right after a tap the slide from h to e is a key slide; once the pause is over it's a glide,
+        // and the glide must start at h, where the finger landed.
+        kv.dispatchTouchEvent(ev(t + 100, MotionEvent.ACTION_DOWN, k("h")))
+        kv.dispatchTouchEvent(ev(t + 150, MotionEvent.ACTION_MOVE, k("e")))
+        ShadowSystemClock.advanceBy(Duration.ofMillis(400))
+        kv.dispatchTouchEvent(ev(t + 500, MotionEvent.ACTION_MOVE, k("l")))
+        kv.dispatchTouchEvent(ev(t + 550, MotionEvent.ACTION_MOVE, k("o")))
+        kv.dispatchTouchEvent(ev(t + 600, MotionEvent.ACTION_UP, k("o")))
+        assertEquals(k("h").touch.centerX(), first!!, 1f)
+    }
+
+    @Test fun aSecondFingerDuringABackspaceSwipeIsIgnored() {
+        val kv = laidOutRoot().keyboard
+        val typed = ArrayList<String>()
+        var swiping = false
+        kv.listener = object : KeyboardView.Listener by noop {
+            override fun onText(text: String) { typed += text }
+            override fun onDeleteSwipeStart() { swiping = true }
+        }
+        val keys = kv.layout!!.rows.flatMap { it.keys }
+        val del = keys.first { it.type == KeyType.DELETE }
+        val x = keys.first { it.text == "x" }
+        val props = Array(2) { i -> MotionEvent.PointerProperties().apply { id = i } }
+        fun at(vararg xy: Float) = Array(xy.size / 2) { i -> MotionEvent.PointerCoords().apply { this.x = xy[2 * i]; y = xy[2 * i + 1] } }
+        val left = del.touch.centerX() - 3 * del.touch.width()
+        val t = SystemClock.uptimeMillis()
+        kv.dispatchTouchEvent(MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, del.touch.centerX(), del.touch.centerY(), 0))
+        kv.dispatchTouchEvent(MotionEvent.obtain(t, t + 40, MotionEvent.ACTION_MOVE, left, del.touch.centerY(), 0))
+        val both = at(left, del.touch.centerY(), x.touch.centerX(), x.touch.centerY())
+        kv.dispatchTouchEvent(MotionEvent.obtain(t, t + 80, MotionEvent.ACTION_POINTER_DOWN or (1 shl MotionEvent.ACTION_POINTER_INDEX_SHIFT),
+            2, props, both, 0, 0, 1f, 1f, 0, 0, 0, 0))
+        kv.dispatchTouchEvent(MotionEvent.obtain(t, t + 120, MotionEvent.ACTION_POINTER_UP or (1 shl MotionEvent.ACTION_POINTER_INDEX_SHIFT),
+            2, props, both, 0, 0, 1f, 1f, 0, 0, 0, 0))
+        kv.dispatchTouchEvent(MotionEvent.obtain(t, t + 160, MotionEvent.ACTION_UP, left, del.touch.centerY(), 0))
+        assertTrue(swiping)
+        assertTrue("nothing typed mid-swipe: $typed", typed.isEmpty())
     }
 
     private fun tap2(kv: KeyboardView, first: Key, second: Key) {

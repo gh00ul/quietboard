@@ -86,6 +86,7 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
         xs: FloatArray, ys: FloatArray, count: Int,
         centersX: FloatArray, centersY: FloatArray, kw: Float, kh: Float, limit: Int,
         context: Map<String, Float> = emptyMap(),
+        learned: Boolean = true,
     ): List<String> {
         val w = weights
         if (count < 2 || kw <= 0f || kh <= 0f) return emptyList()
@@ -109,13 +110,14 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
                 // Rare all-caps acronyms ("DSM", "BRG") are noise as glide results.
                 if (word.length > 1 && dict.freqs[idx] < 120 && word.all { it.isUpperCase() }) continue
                 val seq = dict.gestureSeq[idx] ?: continue
-                evaluate(word, seq, dictPrior(idx, word), userLen, cx, cy)?.let { cands += it }
+                evaluate(word, seq, dictPrior(idx, word, learned), userLen, cx, cy)?.let { cands += it }
             }
         }
         // Your own words that the dictionary doesn't have.
         val startSet = starts.toHashSet()
         val endSet = ends.toHashSet()
-        history.forEachKnown { word, c ->
+        // (Not on the lock screen or in incognito fields: [learned] is false there.)
+        if (learned) history.forEachKnown { word, c ->
             val seq = userSeqs.getOrPut(word.lowercase(Locale.US)) { userSeq(word) }
             if (seq.isEmpty() || (seq[0] - 'a') !in startSet || (seq[seq.length - 1] - 'a') !in endSet) return@forEachKnown
             if (blockOffensive && dict.offensive.getOrElse(dict.exactIndex(word.lowercase(Locale.US))) { false }) return@forEachKnown
@@ -215,7 +217,7 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
     }
 
     /** Language prior: frequency, your own usage, and a nudge away from names/possessives/acronyms. */
-    private fun dictPrior(idx: Int, word: String): Float {
+    private fun dictPrior(idx: Int, word: String, learned: Boolean): Float {
         val w = weights
         var p = w.fq * dict.freqs[idx] / 255f
         // Names, possessives and acronyms are unlikely glides, but contractions aren't ("it's", "I'd").
@@ -224,7 +226,7 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
             (word.length > 1 && word.all { it.isUpperCase() }))
         if (odd) p -= w.cap
         if (dict.slang[idx]) p -= w.slang
-        val c = history.count(dict.keys[idx])
+        val c = if (learned) history.count(dict.keys[idx]) else 0
         if (c > 0) p += 0.3f + 0.05f * min(c, 10)
         return p
     }

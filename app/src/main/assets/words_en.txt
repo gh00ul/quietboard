@@ -3227,7 +3227,7 @@ angstroms	54
 Anguilla	68
 anguish	94
 anguished	71
-angular	88
+angular	89
 angularity	48
 angularly	41
 angulated	48
@@ -4290,7 +4290,7 @@ arbitrate	71
 arbitrated	59
 arbitrates	42
 arbitrating	49
-arbitration	85
+arbitration	86
 arbitrations	53
 arbitrator	81
 arbitrator's	39
@@ -10859,7 +10859,7 @@ Brande	49
 branded	102
 Brandeis	71
 Branden	55
-Brandenburg	82
+Brandenburg	83
 Brandenburg's	40
 Brander	45
 Brandi	78
@@ -12498,6 +12498,7 @@ byzantine	69
 Byzantines	86
 Byzantium	81
 Byzantium's	46
+c'mon	120
 CAA	89
 cab	121
 cab's	36
@@ -14057,7 +14058,7 @@ castigates	52
 castigating	50
 castigation	44
 Castiglione	65
-Castile	89
+Castile	90
 Castile's	32
 Castilian	80
 Castilians	53
@@ -16920,7 +16921,7 @@ clunker	34
 clunkers	33
 clunky	62
 Cluny	69
-cluster	106
+cluster	107
 cluster's	54
 clustered	94
 clustering	88
@@ -24621,7 +24622,7 @@ detailer	40
 detailers	38
 detailing	92
 details	133
-detain	90
+detain	91
 detained	104
 detainee	79
 detainee's	57
@@ -28893,7 +28894,7 @@ Ehrlich's	47
 EIC	65
 Eichmann	78
 Eichmann's	42
-eid	61
+eid	62
 eider	52
 eiderdown	34
 eiders	37
@@ -29066,7 +29067,7 @@ electrification	99
 electrified	91
 electrifies	36
 electrify	71
-electrifying	75
+electrifying	76
 electro	87
 electroacoustic	74
 electrocardiogram	64
@@ -35872,7 +35873,7 @@ freebooters	51
 freeborn	61
 freed	112
 Freedman	73
-freedman	73
+freedman	74
 Freedman's	54
 freedmen	85
 freedmen's	44
@@ -38205,7 +38206,7 @@ glen	97
 Glen's	52
 Glencoe	66
 Glenda	77
-Glendale	79
+Glendale	80
 Glendale's	39
 Glendon	55
 Glendower	41
@@ -40684,7 +40685,7 @@ handgrip	52
 handgrips	35
 handguard	67
 handgun	92
-handguns	80
+handguns	81
 handheld	84
 handhelds	68
 handhold	51
@@ -41179,7 +41180,7 @@ hastiness	39
 Hastings	105
 Hastings's	34
 Hasty	57
-hasty	96
+hasty	97
 hat	131
 hat's	47
 hatband	42
@@ -43574,6 +43575,7 @@ hotkeys	48
 hotline	86
 hotlines	54
 hotly	91
+Hotmail	95
 hotness	63
 hotplate	43
 hotplates	34
@@ -43742,6 +43744,7 @@ HSTs	55
 HTC	79
 HTML	102
 http	95
+https	100
 hu	90
 HUAC	74
 Huang	97
@@ -44526,6 +44529,7 @@ ICJ	78
 ick	100
 icky	66
 ICL	80
+iCloud	100
 ICM	75
 ICMP	69
 ICN	63
@@ -44568,6 +44572,7 @@ Idaho	98
 Idaho's	58
 IDB	68
 IDC	73
+idc	100	s
 IDD	57
 idea	156
 idea's	48
@@ -49359,7 +49364,7 @@ juggler's	34
 jugglers	71
 juggles	59
 juggling	90
-Jughead	69
+Jughead	70
 Jughead's	43
 jugs	80
 jugular	82
@@ -51696,7 +51701,7 @@ Larousse	48
 Larry	125
 Larry's	66
 Lars	98
-Larsen	90
+Larsen	91
 Larsen's	55
 Larson	89
 Larson's	55
@@ -52823,7 +52828,7 @@ Lian	83
 Liana	65
 lianas	63
 Liane	63
-Liao	76
+Liao	77
 Liao's	39
 Liaoning	75
 Liaoyang	46
@@ -56772,7 +56777,7 @@ Maureen's	42
 Maurer	68
 Mauretania	66
 Mauriac	44
-Maurice	111
+Maurice	112
 Maurice's	58
 Mauricio	75
 Maurie	41
@@ -57583,7 +57588,7 @@ megavitamin	40
 megavolt	33
 megawatt	82
 megawatts	88
-Meggie	66
+Meggie	67
 Meghan	78
 Meghann	38
 Megiddo	61
@@ -58034,7 +58039,7 @@ mesmerists	38
 mesmerize	49
 mesmerized	74
 mesmerizes	37
-mesmerizing	72
+mesmerizing	73
 mesoglea	44
 meson	61
 mesons	50
@@ -58312,6 +58317,7 @@ MGM's	81
 MHC	86
 MHD	72
 MHG	49
+mhm	89	s
 MHS	76
 MI's	34
 MIA	82
@@ -60579,7 +60585,7 @@ moth's	48
 mothball	57
 mothballed	77
 mothballing	47
-mothballs	69
+mothballs	70
 mother	161
 mother's	119
 motherboard	76
@@ -61368,7 +61374,7 @@ mutant	111
 mutant's	44
 mutants	98
 mutate	76
-mutated	90
+mutated	91
 mutates	68
 mutating	71
 mutation	100
@@ -65942,7 +65948,7 @@ overlays	77
 overlie	60
 overlies	70
 overload	93
-overloaded	85
+overloaded	86
 overloading	74
 overloads	62
 overlong	60
@@ -70986,7 +70992,7 @@ poo	88	n
 pooch	73
 poodle	85
 poodle's	32
-poodles	68
+poodles	69
 poof	79	n
 poofs	57	n
 Pooh	78
@@ -71155,7 +71161,7 @@ portent	62
 portentous	58
 portents	59
 Porter	102
-porter	103
+porter	104
 Porter's	75
 porter's	55
 porterhouse	64
@@ -72575,7 +72581,7 @@ procrastinator	37
 procreate	70
 procreated	40
 procreating	40
-procreation	75
+procreation	76
 procreative	58
 proctalgia	40	n
 proctitis	44	n
@@ -74643,7 +74649,7 @@ radiantly	42
 radiate	79
 radiated	78
 radiates	72
-radiating	81
+radiating	82
 radiation	121
 radiation's	37
 radiations	65
@@ -86636,7 +86642,7 @@ sorcerers	77
 sorceress	86
 sorceresses	50
 sorceries	39
-sorcery	88
+sorcery	89
 sordid	87
 sordidness	35
 sore	107
@@ -87337,7 +87343,7 @@ spilled	102
 spilling	92
 spillover	62
 spillovers	39
-spills	87
+spills	88
 spillway	85
 spillways	61
 spilt	80
@@ -92224,7 +92230,7 @@ tater	64
 Tati's	39
 Tatiana	85
 Tatiana's	37
-tats	58
+tats	59
 tatted	37
 tattered	75
 tatters	71
@@ -93251,6 +93257,7 @@ Theravada	75
 there	187
 there'd	53
 there'll	56
+there're	90
 there's	155
 thereabout	36
 thereabouts	69
@@ -93391,6 +93398,7 @@ thirtieth	77
 thirty	125
 this	204
 this'd	125
+this'll	90
 thistle	77
 thistles	65
 thither	70
@@ -95904,7 +95912,7 @@ trotskyist	41
 trotted	56
 trotter	75
 trotters	69
-trotting	74
+trotting	75
 trouble	143
 troubled	113
 troublemaker	85
@@ -96192,7 +96200,7 @@ Tull's	44
 tulle	61
 Tully	84
 Tully's	40
-Tulsa	89
+Tulsa	90
 Tulsa's	54
 tum	79
 tumble	89
@@ -100287,6 +100295,7 @@ victory	136
 victory's	32
 Victrola	43
 victuals	58
+vid	87	s
 Vida	83
 Vidal	82
 Vidal's	51
@@ -100316,6 +100325,7 @@ videotex	55
 videotext	33
 vidi	47
 vidicon	49
+vids	85	s
 vie	89
 vied	81
 Vieira	71
@@ -102229,7 +102239,9 @@ Wharton	85
 Wharton's	55
 wharves	84
 what	191
+what'd	110
 what'll	75
+what're	105
 what's	160
 whatcha	101	s
 whatever	143
@@ -102296,11 +102308,13 @@ whelped	35
 whelping	35
 whelps	40
 when	182
+when'd	90
 when's	90
 whence	101
 whenever	127
 whenever's	76
 where	180
+where'd	110
 where'll	90
 where's	56
 whereabout	35
@@ -102588,6 +102602,9 @@ whose	145
 whosoever	70
 WHR	68
 why	167
+why'd	105
+why'll	75
+why's	85
 why've	40
 Whyalla	55
 whys	56

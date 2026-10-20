@@ -262,6 +262,13 @@ class TopBar(context: Context) : View(context) {
         if (r != null && label != null) {
             paint.color = if (pressedTool == Tool.PASTE) t.keyPressed else t.key
             canvas.drawRoundRect(r, r.height() / 2, r.height() / 2, paint)
+            if (t.keyStroke != 0) {
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 1.2f * dp
+                paint.color = t.keyStroke
+                canvas.drawRoundRect(r, r.height() / 2, r.height() / 2, paint)
+                paint.style = Paint.Style.FILL
+            }
             val isz = 17 * dp
             Icons.draw(canvas, Icon.PASTE, r.left + 10 * dp + isz / 2, cy, isz, t.text)
             chipText.color = t.text
@@ -284,6 +291,14 @@ class TopBar(context: Context) : View(context) {
             if (tool == pressedTool || tool == activeTool) {
                 paint.color = if (tool == activeTool) t.special else t.keyPressed
                 canvas.drawCircle(r.centerX(), cy, 19 * dp, paint)
+                if (tool == activeTool && t.specialStroke != 0) {
+                    // Outline themes (Neon, Retro): the fill alone barely shows on the background.
+                    paint.style = Paint.Style.STROKE
+                    paint.strokeWidth = 1.2f * dp
+                    paint.color = t.specialStroke
+                    canvas.drawCircle(r.centerX(), cy, 19 * dp, paint)
+                    paint.style = Paint.Style.FILL
+                }
             }
             Icons.draw(canvas, icon, r.centerX(), cy, 22 * dp, if (tool == activeTool) t.text else KbTheme.blend(t.text, t.background, 0.18f))
         }

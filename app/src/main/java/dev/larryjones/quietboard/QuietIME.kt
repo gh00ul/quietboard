@@ -102,7 +102,10 @@ class QuietIME : InputMethodService(),
     private var destroyed = false
     /** Password or incognito field: nothing typed here is learned, and copies aren't recorded. */
     private var privateField = false
+    /** Nothing is learned here, and what was learned isn't shown: private fields, the lock screen, learning off. */
     private var noLearning = false
+    /** All-caps field (promo codes, number plates): every letter is a capital. */
+    private var capChars = false
     private var suggestionsOn = false
     private var autocorrectOn = false
     private var autoCapOn = false
@@ -116,6 +119,13 @@ class QuietIME : InputMethodService(),
     private val composing = StringBuilder()
     private var composingPrev: String? = null
     private var composingFromGesture = false
+    /**
+     * The word being typed is stuck to the text before it ("x@aol", "site.org", "4th"): part of an
+     * address or a number, so space never autocorrects it.
+     */
+    private var composingGlued = false
+    /** The cached selection came from onUpdateSelection, so it's fresher than EditorInfo's initial one. */
+    private var selFromUpdate = false
     /** The editor reported no composing region while we think a word is being typed (see onUpdateSelection). */
     private var composingSuspect = false
     /** A word made editable again (backspace into it, or typing at its end); not re-learned or
@@ -177,6 +187,13 @@ class QuietIME : InputMethodService(),
     private fun reapplyConfig() {
         val info = editorInfo ?: return
         if (!configDirty || !isInputViewShown) return
+        // Settle the word first: turning suggestions off mid-word would make the next letter replace it.
+        flushGesture()
+        if (composing.isNotEmpty()) conn?.let { ic ->
+            ic.beginBatchEdit()
+            commitComposingAsTyped()
+            ic.endBatchEdit()
+        }
         applyConfig()
         configureEditor(info)
         if (keyboard?.layout == null || layoutOptions() != builtOptions) setLayout(layoutId)
@@ -198,7 +215,10 @@ class QuietIME : InputMethodService(),
         clipboard = ClipboardHistory(this, prefs)
         clipboard.onChange = { main.post { refreshTopBar() } }
         // Best effort: skip copies made while a password or incognito field is the active editor.
-        clipboard.skipCapture = { activeEditor?.let { isPrivateEditor(it) } ?: false }
+        clipboard.skipCapture = {
+            getSystemService(KeyguardManager::class.java)?.isKeyguardLocked == true ||
+                activeEditor?.let { isPrivateEditor(it) } ?: false
+        }
         clipboard.start()
         prefs.sp.getString(KEY_RECENTS, null)?.split(SEP)?.filter { it.isNotEmpty() }?.let { emojiRecents.addAll(it) }
         Thread({
@@ -279,6 +299,8 @@ class QuietIME : InputMethodService(),
         if (onLockScreen && panel == Panel.CLIPBOARD) showPanel(Panel.KEYS)
         val keepLock = sameField && shift == ShiftState.LOCKED
         val keepSymbolTyped = sameField && symbolTyped
+        // A glided word's pending space survives an app restarting input on the same field.
+        val keepPhantom = sameField && phantomSpace
         applyConfig()
         configureEditor(info)
         resetState(info)
@@ -286,6 +308,7 @@ class QuietIME : InputMethodService(),
             if (keyboard?.layout == null || layoutOptions() != builtOptions) setLayout(layoutId)
             symbolTyped = keepSymbolTyped
             if (keepLock) shift = ShiftState.LOCKED
+            if (keepPhantom) { phantomSpace = true; anchorPending = true }
         } else {
             showPanel(Panel.KEYS)
             setLayout(baseLayout)
@@ -306,6 +329,7 @@ class QuietIME : InputMethodService(),
     override fun onStartInput(attribute: EditorInfo, restarting: Boolean) {
         super.onStartInput(attribute, restarting)
         activeEditor = attribute
+        selFromUpdate = false
     }
 
     override fun onFinishInput() {
@@ -418,15 +442,19 @@ class QuietIME : InputMethodService(),
             InputType.TYPE_CLASS_PHONE -> LayoutId.PHONE
             else -> LayoutId.ALPHA
         }
-        noLearning = privateField || !prefs.learnWords
+        // On the lock screen whoever holds the phone types: learn nothing, show nothing learned.
+        noLearning = privateField || !prefs.learnWords || onLockScreen
+        capChars = cls == InputType.TYPE_CLASS_TEXT && (flags and InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS) != 0
         val noSuggest = (flags and InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS) != 0
         suggestionsOn = prefs.showSuggestions && cls == InputType.TYPE_CLASS_TEXT && !isPassword && !noSuggest
+        // Names are whatever they are: "Aoife" must not become "Alive".
         autocorrectOn = prefs.autocorrect && suggestionsOn && field == FieldKind.TEXT &&
-            variation != InputType.TYPE_TEXT_VARIATION_FILTER
+            variation != InputType.TYPE_TEXT_VARIATION_FILTER && variation != InputType.TYPE_TEXT_VARIATION_PERSON_NAME
         autoCapOn = prefs.autoCap && cls == InputType.TYPE_CLASS_TEXT && !isPassword
         textField = cls == InputType.TYPE_CLASS_TEXT && !isPassword
 
         keyboard?.enterIcon = enterIconFor(info)
+        keyboard?.enterDescription = enterDescriptionFor(info)
         // No glide in passwords (a mis-decoded word would be typed invisibly) or non-text fields.
         keyboard?.gestureTyping = prefs.gestureTyping && textField
         // TalkBack must not speak password keys aloud unless the user has headphones on.
@@ -466,10 +494,18 @@ class QuietIME : InputMethodService(),
         }
     }
 
+    /** What TalkBack calls the enter key when the icon alone would mislead ("Next" shows the Go arrow). */
+    private fun enterDescriptionFor(info: EditorInfo): String? {
+        if ((info.imeOptions and EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) return null
+        info.actionLabel?.toString()?.takeIf { it.isNotBlank() }?.let { return it }
+        return if ((info.imeOptions and EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_NEXT) "Next" else null
+    }
+
     private fun resetState(info: EditorInfo) {
         composing.setLength(0)
         composingPrev = null
         composingFromGesture = false
+        composingGlued = false
         composingSuspect = false
         gestureAlternatives = emptyList()
         pendingAutocorrect = null
@@ -488,8 +524,12 @@ class QuietIME : InputMethodService(),
         anchorPos = -1
         autoShiftPressed = false
         tapUnshiftedAuto = false
-        selStart = info.initialSelStart
-        selEnd = info.initialSelEnd
+        // Showing the keyboard again without a restart: EditorInfo's selection is from when input
+        // started, the updates since are newer.
+        if (!selFromUpdate) {
+            selStart = info.initialSelStart
+            selEnd = info.initialSelEnd
+        }
     }
 
     private fun layoutOptions() =
@@ -513,6 +553,7 @@ class QuietIME : InputMethodService(),
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd)
         selStart = newSelStart
         selEnd = newSelEnd
+        selFromUpdate = true
         // Keyboard hidden (e.g. a hardware keyboard is in use): no strip or caps to keep up to date, so
         // skip the round trips to the app.
         if (!viewShown) return
@@ -590,6 +631,7 @@ class QuietIME : InputMethodService(),
         composing.append(word)
         composingPrev = lastWord(before.subSequence(0, before.length - word.length))
         composingFromGesture = false
+        composingGlued = gluedAt(before, word.length)
         resumedWord = word
     }
 
@@ -600,6 +642,14 @@ class QuietIME : InputMethodService(),
         val word = before.subSequence(i, before.length).toString()
         if (word.isEmpty() || word.length > Dictionary.MAX_LEN || isApostrophe(word[0])) return null
         return word
+    }
+
+    /** Whether the [wordLen]-letter word ending [before] is stuck to a non-space character other than an opening bracket or quote. */
+    private fun gluedAt(before: CharSequence?, wordLen: Int): Boolean {
+        val i = (before?.length ?: 0) - wordLen - 1
+        if (before == null || i < 0) return false
+        val c = before[i]
+        return !c.isWhitespace() && c !in OPENERS
     }
 
     private fun isApostrophe(c: Char) = c == '\'' || c == '\u2019'
@@ -616,7 +666,14 @@ class QuietIME : InputMethodService(),
     }
 
     override fun onText(text: String) {
-        flushGesture()
+        val shiftWas = shift
+        val glided = flushGesture()
+        // A letter tapped while the glide was still decoding took the glide's one-shot capital, which
+        // the glide has used up ("Hello x", not "Hello X").
+        typeText(if (glided && shiftWas == ShiftState.ON && shift == ShiftState.OFF) text.lowercase(Locale.US) else text)
+    }
+
+    private fun typeText(text: String) {
         val ic = conn ?: return
         syncComposing()
         lastCorrection = null
@@ -632,6 +689,12 @@ class QuietIME : InputMethodService(),
             }
             weakSpace = false
             anchorPos = -1
+            if (composingFromGesture) {
+                // Letters typed onto a glided word (email/URL fields add no space): a typed word now,
+                // so backspace takes one letter and the glide's alternatives no longer apply.
+                composingFromGesture = false
+                gestureAlternatives = emptyList()
+            }
             if (suggestionsOn) {
                 if (composing.isEmpty()) {
                     val before = ic.getTextBeforeCursor(64, 0)
@@ -645,7 +708,12 @@ class QuietIME : InputMethodService(),
                     }
                     // Typing at the end of an existing word ("becau|" + "se"): continue that word.
                     val tail = before?.let { trailingWord(it) }
-                    if (tail != null) recompose(ic, before, tail) else composingPrev = lastWord(before)
+                    if (tail != null) {
+                        recompose(ic, before, tail)
+                    } else {
+                        composingPrev = lastWord(before)
+                        composingGlued = gluedAt(before, 0)
+                    }
                 }
                 composing.append(text)
                 ic.setComposingText(composing, 1)
@@ -655,8 +723,21 @@ class QuietIME : InputMethodService(),
             afterInput()
             refreshSuggestions()
         } else {
+            if (phantomSpace && autoSpaces && precededBySpace(text)) {
+                // After a glide: "hello 5", "hello (", like a letter would get.
+                ic.beginBatchEdit()
+                commitComposingAsTyped()
+                ic.commitText(" ", 1)
+                ic.endBatchEdit()
+                phantomSpace = false
+            }
             commitSeparator(text)
         }
+    }
+
+    private fun precededBySpace(t: String): Boolean {
+        if (t.isEmpty() || t.codePointCount(0, t.length) != 1) return false
+        return Character.isDigit(t.codePointAt(0)) || t in "([{&\u201C"
     }
 
     private fun isWordChar(t: String): Boolean {
@@ -736,7 +817,7 @@ class QuietIME : InputMethodService(),
     private fun learnCommitted(word: String) {
         if (word == revertedWord) {
             // The user undid a correction and kept their spelling: trust it from now on.
-            if (!noLearning) history.accept(word)
+            if (!noLearning) history.accept(word.replace('\u2019', '\''))
             revertedWord = null
         }
         if (word != resumedWord) learn(composingPrev, word)
@@ -779,10 +860,11 @@ class QuietIME : InputMethodService(),
             if (before == expected) {
                 // Undo autocorrect: put back exactly what was typed and don't "fix" it again this session.
                 // It's only trusted for good once committed unchanged; the correction is un-learned.
-                rejected += lc.original.lowercase(Locale.US)
+                rejected += lc.original.lowercase(Locale.US).replace('\u2019', '\'')
                 if (!noLearning) history.unlearn(lc.prev, lc.corrected)
                 revertedWord = lc.original
                 resumedWord = null
+                composingGlued = false
                 ic.beginBatchEdit()
                 ic.deleteSurroundingText(expected.length, 0)
                 composing.append(lc.original)
@@ -1015,9 +1097,9 @@ class QuietIME : InputMethodService(),
 
     private fun currentSelection(ic: InputConnection): Pair<Int, Int>? {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val st = ic.getSurroundingText(0, 0, 0) ?: return null
-            if (st.offset < 0) return null
-            return (st.offset + st.selectionStart) to (st.offset + st.selectionEnd)
+            // Editors on the default implementation give no offset: fall through to extracted text.
+            val st = ic.getSurroundingText(0, 0, 0)
+            if (st != null && st.offset >= 0) return (st.offset + st.selectionStart) to (st.offset + st.selectionEnd)
         }
         val et = ic.getExtractedText(ExtractedTextRequest(), 0) ?: return null
         if (et.startOffset < 0 || et.selectionStart < 0) return null
@@ -1062,10 +1144,11 @@ class QuietIME : InputMethodService(),
         val kh = kv.rowHeightPx()
         val id = glideId
         val ctx = glideContext
+        val learned = !noLearning
         previewBusy = true
         try {
             gestureExec.execute {
-                val best = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 1, ctx) }.getOrDefault(emptyList()).firstOrNull()
+                val best = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 1, ctx, learned) }.getOrDefault(emptyList()).firstOrNull()
                 main.post {
                     previewBusy = false
                     if (id == glideId && glidePreviewing && best != null) {
@@ -1087,7 +1170,7 @@ class QuietIME : InputMethodService(),
     /** What's likely next after the word before the cursor (or the glided word still showing). */
     private fun currentGlideContext(): Map<String, Float> {
         val s = suggest ?: return emptyMap()
-        val learned = !noLearning && !onLockScreen
+        val learned = !noLearning
         if (composing.isNotEmpty()) return s.contextFor(composing.toString(), false, learned)
         val before = conn?.getTextBeforeCursor(64, 0)
         val trimmed = before?.trimEnd()
@@ -1105,10 +1188,11 @@ class QuietIME : InputMethodService(),
         val kw = kv.keyWidthPx()
         val kh = kv.rowHeightPx()
         val ctx = glideContext
+        val learned = !noLearning
         val id = ++pendingGestureId
         pendingGesture = try {
             gestureExec.submit(Callable {
-                val results = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 4, ctx) }.getOrDefault(emptyList())
+                val results = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 4, ctx, learned) }.getOrDefault(emptyList())
                 main.post { if (pendingGestureId == id && pendingGesture != null) flushGesture() }
                 results
             })
@@ -1117,12 +1201,20 @@ class QuietIME : InputMethodService(),
         }
     }
 
-    /** Applies a glide that is still decoding, waiting for it if needed (keeps typed text in order). */
-    private fun flushGesture() {
-        val f = pendingGesture ?: return
+    /**
+     * Applies a glide that is still decoding, waiting for it if needed (keeps typed text in order).
+     * Returns whether a glided word was typed.
+     */
+    private fun flushGesture(): Boolean {
+        val f = pendingGesture ?: return false
         pendingGesture = null
         val results = runCatching { f.get() }.getOrDefault(emptyList())
-        if (results.isNotEmpty()) applyGesture(results)
+        if (results.isEmpty()) {
+            refreshSuggestions() // nothing typed: don't leave the live preview in the strip
+            return false
+        }
+        applyGesture(results)
+        return true
     }
 
     private fun dropGesture() {
@@ -1135,11 +1227,21 @@ class QuietIME : InputMethodService(),
         syncComposing()
         ic.beginBatchEdit()
         if (composing.isNotEmpty()) {
-            commitComposingAsTyped()
+            val typed = composing.toString()
+            val ac = pendingAutocorrect
+            if (!composingFromGesture && typed.length == 1 && autocorrectOn && ac != null && ac != typed) {
+                // A one-letter word can't be glided, so it was tapped: correct it as space would ("i" -> "I").
+                ic.commitText(ac, 1)
+                learn(composingPrev, ac)
+                composing.setLength(0)
+                resumedWord = null
+            } else {
+                commitComposingAsTyped()
+            }
             if (autoSpaces) ic.commitText(" ", 1)
         } else if (autoSpaces) {
             val before = ic.getTextBeforeCursor(1, 0)
-            if (!before.isNullOrEmpty() && !before[0].isWhitespace() && before[0] !in "([{\"'/@#\u201C\u2018") {
+            if (!before.isNullOrEmpty() && !before[0].isWhitespace() && before[0] !in NO_SPACE_BEFORE_GLIDE) {
                 ic.commitText(" ", 1)
             }
         }
@@ -1151,12 +1253,15 @@ class QuietIME : InputMethodService(),
         if (suggestionsOn) {
             composing.append(words[0])
             composingFromGesture = true
+            composingGlued = false
             gestureAlternatives = words.drop(1)
             ic.setComposingText(composing, 1)
         } else {
             // No-suggestions fields (some terminals, search boxes): plain text, nothing to pick from.
             ic.commitText(words[0], 1)
             learn(composingPrev, words[0])
+            // Track where the word ended, so a tap elsewhere drops the space owed to it.
+            anchorPending = true
         }
         ic.endBatchEdit()
         phantomSpace = autoSpaces
@@ -1166,11 +1271,12 @@ class QuietIME : InputMethodService(),
         refreshSuggestions()
     }
 
-    private fun gestureCase(w: String) = when (shift) {
+    private fun gestureCase(w: String) = when {
         // English rules, not the phone's: a Turkish phone must not turn "is" into "İs".
-        ShiftState.LOCKED -> w.uppercase(Locale.US)
-        ShiftState.ON -> w.replaceFirstChar { it.titlecase(Locale.US) }
-        ShiftState.OFF -> w
+        shift == ShiftState.LOCKED || (shift == ShiftState.ON && capChars) -> w.uppercase(Locale.US)
+        // Words with their own inner capitals keep them ("iPhone" at a sentence start).
+        shift == ShiftState.ON && w.drop(1).none { it.isUpperCase() } -> w.replaceFirstChar { it.titlecase(Locale.US) }
+        else -> w
     }
 
     // ------------------------------------------------------------------ shift / suggestions
@@ -1184,7 +1290,7 @@ class QuietIME : InputMethodService(),
 
     private fun updateShift() {
         val kv = keyboard
-        if (shift != ShiftState.LOCKED && !shiftHeld && !shiftManual && composing.isNotEmpty()) {
+        if (shift != ShiftState.LOCKED && !shiftHeld && !shiftManual && composing.isNotEmpty() && !capChars) {
             // Mid-word the answer is always "no capital"; skip the round-trip to the app, which
             // blocks the keyboard on slow apps and made typing feel laggy.
             shift = ShiftState.OFF
@@ -1220,7 +1326,7 @@ class QuietIME : InputMethodService(),
                     )
                 )
             } else {
-                val r = s.suggest(composing.toString(), composingPrev, autocorrectOn, rejected)
+                val r = s.suggest(composing.toString(), composingPrev, autocorrectOn && !composingGlued, rejected, learned = !noLearning)
                 pendingAutocorrect = r.autoCorrect
                 tb.setSuggestions(r.strip)
             }
@@ -1232,7 +1338,7 @@ class QuietIME : InputMethodService(),
                 val trimmed = before?.trimEnd()
                 val sentenceStart = trimmed.isNullOrEmpty() || trimmed.last() in ".!?\n"
                 // Your own habits stay out of incognito fields and the lock screen; built-in ones don't.
-                s.predict(lastWord(before), shift != ShiftState.OFF, learned = !noLearning && !onLockScreen, sentenceStart = sentenceStart)
+                s.predict(lastWord(before), shift != ShiftState.OFF, learned = !noLearning, sentenceStart = sentenceStart)
             } else emptyList()
             tb.setSuggestions(preds.ifEmpty { null })
         }
@@ -1297,7 +1403,8 @@ class QuietIME : InputMethodService(),
 
     private fun learn(prev: String?, word: String) {
         if (noLearning) return
-        history.learn(prev, word)
+        // "i’m" is "i'm": one spelling of the apostrophe in what's learned.
+        history.learn(prev?.replace('\u2019', '\''), word.replace('\u2019', '\''))
     }
 
     // ------------------------------------------------------------------ top bar
@@ -1308,9 +1415,11 @@ class QuietIME : InputMethodService(),
         if (pendingGesture != null) { flushGesture(); return }
         val ic = conn ?: return
         syncComposing()
-        // No trailing space mid-text (one usually follows already) or in email/URL fields.
-        val after = ic.getTextAfterCursor(1, 0)
-        val addSpace = autoSpaces && after.isNullOrEmpty()
+        // A space after the pick at the end of the text or right before another word; before a line
+        // break it waits for the next letter; none before a space or punctuation, or in email/URL fields.
+        val next = ic.getTextAfterCursor(1, 0)?.firstOrNull()
+        val addSpace = autoSpaces && (next == null || next.isLetterOrDigit())
+        val spaceLater = autoSpaces && next == '\n'
         if (item.emoji) {
             // Keep the word (autocorrected if pending) and add the emoji after it.
             ic.beginBatchEdit()
@@ -1338,8 +1447,8 @@ class QuietIME : InputMethodService(),
         if (composing.isNotEmpty()) {
             val typed = composing.toString()
             if (item.literal || item.word == typed) {
-                rejected += typed.lowercase(Locale.US)
-                if (!noLearning) history.accept(typed)
+                rejected += typed.lowercase(Locale.US).replace('\u2019', '\'')
+                if (!noLearning) history.accept(typed.replace('\u2019', '\''))
             }
             ic.commitText(item.word, 1)
             learn(composingPrev, item.word)
@@ -1357,7 +1466,7 @@ class QuietIME : InputMethodService(),
         resumedWord = null
         revertedWord = null
         weakSpace = addSpace
-        phantomSpace = false
+        phantomSpace = spaceLater
         lastCorrection = null
         lastSpaceTime = 0L
         anchorPending = true
@@ -1366,7 +1475,8 @@ class QuietIME : InputMethodService(),
     }
 
     override fun onSuggestionLongPress(item: SuggestionItem): Boolean {
-        if (item.emoji || !history.forget(item.word)) return false
+        // Not on the lock screen: a stranger mustn't probe or delete what you've taught it.
+        if (item.emoji || noLearning || !history.forget(item.word)) return false
         Toast.makeText(this, "Removed \u201C${item.word}\u201D from learned words", Toast.LENGTH_SHORT).show()
         refreshSuggestions()
         return true
@@ -1447,7 +1557,7 @@ class QuietIME : InputMethodService(),
                     root?.addPanel(it)
                 }
                 if (t != null) ep.applyTheme(t)
-                ep.setRecents(emojiRecents)
+                ep.setRecents(if (onLockScreen) emptyList() else emojiRecents)
                 ep.open()
                 clipPanel?.visibility = View.GONE
                 editPanel?.visibility = View.GONE
@@ -1475,6 +1585,7 @@ class QuietIME : InputMethodService(),
         val ic = conn ?: return
         ic.beginBatchEdit()
         commitComposingAsTyped()
+        if (phantomSpace && autoSpaces) ic.commitText(" ", 1) // "hello 😀" after a glide
         ic.commitText(emoji, 1)
         ic.endBatchEdit()
         phantomSpace = false; weakSpace = false; lastCorrection = null
@@ -1483,7 +1594,7 @@ class QuietIME : InputMethodService(),
     }
 
     private fun rememberEmoji(emoji: String) {
-        if (privateField) return // nothing from password or incognito fields is kept
+        if (privateField || onLockScreen) return // nothing from private fields or the lock screen is kept
         emojiRecents.remove(emoji)
         emojiRecents.add(0, emoji)
         while (emojiRecents.size > 40) emojiRecents.removeAt(emojiRecents.size - 1)
@@ -1610,6 +1721,10 @@ class QuietIME : InputMethodService(),
         const val KEY_RECENTS = "emoji_recents"
         private const val SEP = "\u001F"
         private val AUTOCORRECT_PUNCT = setOf(".", ",", "?", "!", ":", ";", ")")
+        /** Before these a word isn't "stuck" to the text: brackets, quotes, dashes, markdown marks. */
+        private const val OPENERS = "([{<\"'\u201C\u2018\u00AB*_~-\u2013\u2014"
+        /** No space before a glided word right after these ("(hello", "well-known", "@name"). */
+        private const val NO_SPACE_BEFORE_GLIDE = "([{\"'/@#\u201C\u2018-\u2013\u2014_"
         private val SWAP_PUNCT = setOf(".", ",", "?", "!", ":", ";")
         private val BACKWARD = setOf(EditPanel.Action.LEFT, EditPanel.Action.UP, EditPanel.Action.HOME)
         private val FORWARD = setOf(EditPanel.Action.RIGHT, EditPanel.Action.DOWN, EditPanel.Action.END)

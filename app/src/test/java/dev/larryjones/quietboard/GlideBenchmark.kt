@@ -142,6 +142,8 @@ class GlideBenchmark {
         assertTrue(name !in d.decode(xs, ys, xs.size, SwipeSim.cx, SwipeSim.cy, SwipeSim.KW, SwipeSim.KH, 4))
         repeat(2) { h.learn(null, name) }
         assertEquals(name, d.decode(xs, ys, xs.size, SwipeSim.cx, SwipeSim.cy, SwipeSim.KW, SwipeSim.KH, 4).firstOrNull())
+        // Lock screen and incognito fields: learned words don't glide.
+        assertTrue(name !in d.decode(xs, ys, xs.size, SwipeSim.cx, SwipeSim.cy, SwipeSim.KW, SwipeSim.KH, 4, emptyMap(), learned = false))
     }
 
     @Test fun previousWordBreaksTies() {

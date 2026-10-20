@@ -91,9 +91,11 @@ private fun textButton(ctx: Context, label: String, onClick: () -> Unit) = TextV
     setOnClickListener { onClick() }
 }
 
-private fun rounded(color: Int, radius: Float) = GradientDrawable().apply {
+private fun rounded(color: Int, radius: Float, stroke: Int = 0, strokeWidth: Int = 0) = GradientDrawable().apply {
     setColor(color)
     cornerRadius = radius
+    // Neon and Retro draw keys by their outline: without it a key is invisible on the background.
+    if (stroke != 0) setStroke(strokeWidth, stroke)
 }
 
 object EmojiData {
@@ -236,7 +238,7 @@ class EmojiPanel(context: Context, private val listener: Listener) : LinearLayou
     private fun styleTabs() {
         val t = theme ?: return
         for ((i, tv) in tabViews.withIndex()) {
-            tv.background = if (i == current) rounded(t.special, context.dp(12f)) else null
+            tv.background = if (i == current) rounded(t.special, context.dp(12f), t.specialStroke, context.dp(1.2f).toInt()) else null
             tv.alpha = if (i == current) 1f else 0.75f
         }
     }
@@ -396,7 +398,7 @@ class ClipboardPanel(context: Context, private val listener: Listener) : LinearL
                 close.color = t.hint
                 close.pressedColor = t.keyPressed
                 row.background = android.graphics.drawable.InsetDrawable(
-                    rounded(t.key, context.dp(14f)), 0, context.dp(3f).toInt(), 0, context.dp(3f).toInt()
+                    rounded(t.key, context.dp(14f), t.keyStroke, context.dp(1.2f).toInt()), 0, context.dp(3f).toInt(), 0, context.dp(3f).toInt()
                 )
             }
             row.setOnClickListener { listener.onClipPaste(item.text) }
@@ -416,7 +418,8 @@ class PanelKey(context: Context, val label: String?, val icon: Icon?, private va
         set(v) { field = v; invalidate() }
     var functional = true
     var active = false
-        set(v) { field = v; invalidate() }
+        // Selected = on, for TalkBack (the Select toggle).
+        set(v) { field = v; isSelected = v; invalidate() }
     var onClick: (() -> Unit)? = null
     /** Fired once per touch (for haptics), unlike onClick which repeats on repeating keys. */
     var onPress: (() -> Unit)? = null
@@ -460,6 +463,15 @@ class PanelKey(context: Context, val label: String?, val icon: Icon?, private va
         val fg = if (active) t.onAccent else t.text
         paint.color = bg
         canvas.drawRoundRect(inset, inset, width - inset, height - inset, 12 * dp, 12 * dp, paint)
+        val stroke = if (active) 0 else if (functional) t.specialStroke else t.keyStroke
+        if (stroke != 0) {
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 1.2f * dp
+            paint.color = stroke
+            val s = inset + 0.6f * dp
+            canvas.drawRoundRect(s, s, width - s, height - s, 12 * dp, 12 * dp, paint)
+            paint.style = Paint.Style.FILL
+        }
         if (icon != null) {
             Icons.draw(canvas, icon, width / 2f, height / 2f, minOf(width, height) * 0.38f, fg)
         } else if (label != null) {

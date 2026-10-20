@@ -50,8 +50,10 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         val w = word.lowercase(Locale.US)
         emojiKeywords[w]?.let { return it }
         if (w.length <= 3 || w in NOT_PLURALS) return null
+        // "cookies" -> cookie, "parties" -> party
+        if (w.endsWith("ies")) emojiKeywords[w.dropLast(1)]?.let { return it }
         val singular = when {
-            w.endsWith("ies") -> w.dropLast(3) + "y" // parties -> party
+            w.endsWith("ies") -> w.dropLast(3) + "y"
             w.endsWith("ches") || w.endsWith("shes") || w.endsWith("sses") || w.endsWith("xes") -> w.dropLast(2)
             w.endsWith("s") && !w.endsWith("ss") -> w.dropLast(1)
             else -> return null
@@ -64,7 +66,11 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         return listOf(strip[0], strip[1], SuggestionItem(e, emoji = true))
     }
 
-    fun suggest(typed: String, prev: String?, allowAutoCorrect: Boolean, rejected: Set<String>): SuggestionResult {
+    /**
+     * Suggestions for [typed]. Without [learned] (lock screen, incognito fields) nothing you've taught
+     * the keyboard shows or counts: no learned words, completions or word-pair habits.
+     */
+    fun suggest(typed: String, prev: String?, allowAutoCorrect: Boolean, rejected: Set<String>, learned: Boolean = true): SuggestionResult {
         // A typographic apostrophe (don’t) looks words up like a plain one.
         val lower = typed.lowercase(Locale.US).replace('’', '\'')
         if (typed.any { it.isDigit() }) {
@@ -78,13 +84,18 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         val prevLower = prev?.lowercase(Locale.US)
         val exactIdx = dict.exactIndex(lower)
         val shortcut = shortcuts[lower]
-        val userKnown = history.isKnown(lower)
+        val userKnown = learned && history.isKnown(lower)
+        // Kept in exactly this spelling: learned "I" (from corrected "i"s) mustn't stop "i" -> "I".
+        val userKept = userKnown && history.spelling(lower)?.replace('\u2019', '\'') == typed.replace('\u2019', '\'')
         // Typed in lowercase, but the only dictionary form is a rare name/acronym ("gte" for GTE, "tue"):
         // most likely a typo, so look for corrections too.
-        val rareCapsOnly = exactIdx >= 0 && typed == lower && dict.words[exactIdx] != lower && dict.freqs[exactIdx] < 110
-        // "parents'": the plural possessive of a known word.
-        val possessive = lower.length > 2 && lower.endsWith("s'") && dict.exactIndex(lower.dropLast(1)) >= 0
-        val known = (exactIdx >= 0 && !rareCapsOnly) || userKnown || shortcut != null || possessive
+        val rareCapsOnly = exactIdx >= 0 && typed == lower && dict.words[exactIdx] != lower && dict.freqs[exactIdx] < 110 &&
+            !dict.hasLowercase(lower)
+        // "parents'", or a closing quote ('hello'): a known word with an apostrophe after it. Not a
+        // contraction being typed ("wouldn'" goes on to "wouldn't").
+        val quoted = lower.length > 1 && lower.endsWith("'") && !dict.hasPrefix(lower) &&
+            (dict.exactIndex(lower.dropLast(1)) >= 0 || (learned && history.isKnown(lower.dropLast(1))))
+        val known = (exactIdx >= 0 && !rareCapsOnly) || userKnown || shortcut != null || quoted
 
         // Words that commonly follow the previous one ("I" + "wold" -> would, not wild).
         val follows = prevLower?.let { nextWords[it.replace('\u2019', '\'')] }?.mapTo(HashSet()) { it.lowercase(Locale.US) }
@@ -106,13 +117,13 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         dict.forEachWithPrefix(lower) { i ->
             if (dict.keys[i] != lower && !hidden(i)) {
                 val w = dict.words[i]
-                val s = dict.freqs[i] + userBonus(w) + pairBonus(prevLower, w) + ctx(w) - (dict.keys[i].length - lower.length) * 1.5f
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(w) - (dict.keys[i].length - lower.length) * 1.5f
                 top.add(i, s)
             }
         }
         top.forEach { i, s -> offer(dict.words[i], s) }
-        history.completions(lower) { w, c ->
-            if (c >= 2 && !blocked(w)) offer(w, 120f + 10f * minOf(c, 10) + pairBonus(prevLower, w))
+        if (learned) history.completions(lower) { w, c ->
+            if (c >= 2 && !blocked(w)) offer(w, 120f + 10f * minOf(c, 10) + pairBonus(prevLower, w, true))
         }
 
         // 2) Typo corrections.
@@ -121,8 +132,10 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         // Once the user has kept a word (undid its correction), whitelist/case fixes leave it alone too.
         // ...and all-caps input is deliberate ("ID", "IM"): don't turn it into "I'D".
         val allCaps = typed.length >= 2 && typed.all { !it.isLetter() || it.isUpperCase() }
-        val whitelisted = if (userKnown || allCaps) null else dict.whitelistFor(lower)
-        val caseFixed = if (userKnown) null else caseFix(exactIdx, typed)
+        // A capitalised word typed as the dictionary spells it is a name ("in Bern"), not a typo of "been".
+        val properNoun = exactIdx >= 0 && typed != lower && dict.hasSpelling(typed)
+        val whitelisted = if (userKept || allCaps || properNoun) null else dict.whitelistFor(lower)
+        val caseFixed = if (userKept) null else caseFix(exactIdx, typed)
         if (!known && lower.length >= 2) {
             val maxDist = when (lower.length) { 2 -> 0.75f; 3, 4 -> 1.0f; else -> 1.6f }
             dict.corrections(lower, maxDist) { i, d ->
@@ -132,7 +145,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
                 if (typed == lower && w.length > 1 && dict.freqs[i] < 120 && w.all { !it.isLetter() || it.isUpperCase() }) {
                     return@corrections
                 }
-                val s = dict.freqs[i] + userBonus(w) + pairBonus(prevLower, w) + ctx(w) - d * EDIT_COST
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(w) - d * EDIT_COST
                 offer(w, s - 5f)
                 if (s > bestFixScore && dict.freqs[i] >= 40) { bestFixScore = s; bestFix = w }
             }
@@ -243,12 +256,14 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         return if (w.any { it.isUpperCase() }) w else null
     }
 
-    private fun userBonus(w: String): Float {
+    private fun userBonus(w: String, learned: Boolean): Float {
+        if (!learned) return 0f
         val c = history.count(w.lowercase(Locale.US))
         return if (c <= 0) 0f else 20f + 8f * minOf(c, 8)
     }
 
-    private fun pairBonus(prevLower: String?, w: String): Float {
+    private fun pairBonus(prevLower: String?, w: String, learned: Boolean): Float {
+        if (!learned) return 0f
         val c = history.pairCount(prevLower, w)
         return if (c <= 0) 0f else 30f * minOf(c, 3)
     }

@@ -13,6 +13,8 @@ import java.nio.file.StandardCopyOption
 object SafeFile {
     private fun tmpOf(f: File) = File(f.parentFile, f.name + ".tmp")
 
+    /** Synchronized: two writers of one file in this process would share (and truncate) its temp file. */
+    @Synchronized
     fun write(f: File, bytes: ByteArray): Boolean {
         val tmp = tmpOf(f)
         return try {

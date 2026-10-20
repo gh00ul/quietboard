@@ -254,6 +254,82 @@ class ImeTest {
         assertEquals("hi hello ", text)
     }
 
+    @Test fun lockScreenNeitherShowsNorLearnsYourWords() {
+        waitForEngine()
+        val h = QuietIME::class.java.getDeclaredField("history").apply { isAccessible = true }.get(ime) as UserHistory
+        repeat(3) { h.learn(null, "Zorbix") }
+        type("zorb")
+        assertTrue("unlocked: your word is offered", root.topBar.itemsForTest().any { it?.word == "Zorbix" })
+        val km = RuntimeEnvironment.getApplication().getSystemService(KeyguardManager::class.java)
+        shadowOf(km).setKeyguardLocked(true)
+        edit.setText("")
+        start(fieldId = 40)
+        type("zorb")
+        assertFalse("locked: not offered", root.topBar.itemsForTest().any { it?.word == "Zorbix" })
+        ime.onSpace()
+        val before = h.count("hello")
+        type("hello ")
+        assertEquals("locked: nothing learned", before, h.count("hello"))
+    }
+
+    @Test fun numbersAndAddressesAreNotAutocorrected() {
+        waitForEngine()
+        type("May 4th x@aol.com 'hello' ")
+        assertEquals("May 4th x@aol.com 'hello' ", text)
+    }
+
+    @Test fun tappedIBeforeAGlideIsCapitalised() {
+        waitForEngine()
+        type("so i")
+        val (xs, ys) = swipe("think")
+        ime.onGesture(xs, ys, xs.size)
+        ime.onSpace()
+        assertTrue(text, text.startsWith("so I "))
+    }
+
+    @Test fun lettersTypedOntoAGlideInAUrlFieldAreTypedLetters() {
+        waitForEngine()
+        start(fieldId = 41, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
+        val (xs, ys) = swipe("face")
+        ime.onGesture(xs, ys, xs.size)
+        type("b")
+        val glided = text.dropLast(1)
+        type("ook")
+        ime.onDelete()
+        assertEquals("backspace takes one letter, not the whole glide", glided + "boo", text)
+    }
+
+    @Test fun glideSpacing() {
+        waitForEngine()
+        type("well-")
+        val (xs, ys) = swipe("known")
+        ime.onGesture(xs, ys, xs.size)
+        type("5")
+        assertTrue("no space after a hyphen, one before a digit: $text", text.startsWith("well-") && !text.startsWith("well- ") && text.endsWith(" 5"))
+    }
+
+    @Test fun pickingAWordBeforeTextAddsTheSpace() {
+        waitForEngine()
+        edit.setText("foo world")
+        edit.setSelection(4)
+        reportSelection()
+        ime.onSuggestionPicked(SuggestionItem("hello"))
+        assertEquals("foo hello world", text)
+    }
+
+    @Test fun capsFieldsStayInCapitals() {
+        start(fieldId = 42, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS)
+        type("ab")
+        assertEquals(ShiftState.ON, root.keyboard.shiftState)
+    }
+
+    @Test fun namesAreNotAutocorrected() {
+        waitForEngine()
+        start(fieldId = 43, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+        type("aoife ")
+        assertEquals("aoife ", text)
+    }
+
     @Test fun glideAfterPeriodIsCapitalized() {
         waitForEngine()
         edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES

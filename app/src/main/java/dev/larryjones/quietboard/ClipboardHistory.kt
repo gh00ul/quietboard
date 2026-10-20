@@ -53,9 +53,10 @@ class ClipboardHistory(private val ctx: Context, private val prefs: Prefs) {
 
     fun stop() {
         cm?.removePrimaryClipChangedListener(listener)
-        handler.removeCallbacks(tick)
         prune() // write the latest state; the alarm keeps deleting expired clips from here on
         stopped = true
+        // After the prune: its save re-arms the timer, which would keep the dead keyboard alive.
+        handler.removeCallbacks(tick)
         io.shutdown() // queued saves still run
     }
 
@@ -183,26 +184,39 @@ class ClipboardHistory(private val ctx: Context, private val prefs: Prefs) {
             }
         }.getOrDefault(emptyList())
 
+        /**
+         * The keyboard's save thread, the expiry alarm and Settings all write the file: one at a time,
+         * and a read-modify-write (below) as one step, so none overwrites a newer state with an older one.
+         */
+        private val diskLock = Any()
+
         private fun writeItems(f: File, items: List<Item>) {
-            if (items.isEmpty()) { SafeFile.delete(f); return }
-            val arr = JSONArray()
-            for (it in items) arr.put(JSONObject().put("t", it.text).put("at", it.time).put("p", it.pinned))
-            SafeFile.write(f, arr.toString().toByteArray())
+            synchronized(diskLock) {
+                if (items.isEmpty()) { SafeFile.delete(f); return }
+                val arr = JSONArray()
+                for (it in items) arr.put(JSONObject().put("t", it.text).put("at", it.time).put("p", it.pinned))
+                SafeFile.write(f, arr.toString().toByteArray())
+            }
         }
 
         /** Used by the settings screen when the keyboard may not be running. */
         fun clearUnpinnedOnDisk(filesDir: File) {
-            val f = File(filesDir, FILE)
-            writeItems(f, readItems(f).filter { it.pinned })
+            synchronized(diskLock) {
+                val f = File(filesDir, FILE)
+                writeItems(f, readItems(f).filter { it.pinned })
+            }
         }
 
         /** Deletes clips over an hour old from disk, then re-arms the alarm for the next one. */
         fun pruneExpiredOnDisk(ctx: Context) {
-            val f = File(ctx.filesDir, FILE)
-            val all = readItems(f)
-            val cutoff = System.currentTimeMillis() - RETENTION_MS
-            val keep = all.filter { it.pinned || it.time >= cutoff }
-            if (keep.size != all.size) writeItems(f, keep)
+            val keep = synchronized(diskLock) {
+                val f = File(ctx.filesDir, FILE)
+                val all = readItems(f)
+                val cutoff = System.currentTimeMillis() - RETENTION_MS
+                val kept = all.filter { it.pinned || it.time >= cutoff }
+                if (kept.size != all.size) writeItems(f, kept)
+                kept
+            }
             scheduleDiskExpiry(ctx, keep.filter { !it.pinned }.minOfOrNull { it.time })
         }
 

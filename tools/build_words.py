@@ -77,7 +77,7 @@ slang = dict(x.split() for x in """lol 195|lmao 185|omg 178|idk 178|tbh 152|ngl 
 |legit 132|gotcha 122|aight 122|ight 112|sup 122|wassup 112|whatcha 102|prolly 112|probs 100|obvi 90|totes 90|cya 112|gn 112|gm 100
 |hru 112|iykyk 90|fomo 102|gg 122|ez 102|yikes 130|vibe 130|vibes 125|lit 135|goat 125|bet 145|cap 130|mid 125|yo 150|dope 125
 |chill 140|nvm 135|jk 140|ily 130|ilysm 110|tmrw 120|tmr 110|bae 110|xd 110|asap 140|fyi 130|thru 120|nite 110|luv 110|wat 100
-|ppl 125|rly 120|srsly 105""".replace('\n', '').split('|'))
+|ppl 125|rly 120|srsly 105|idc 100|mhm 95|vid 95|vids 85""".replace('\n', '').split('|'))
 slang = {k: int(v) for k, v in slang.items()}
 for w, f in slang.items(): words[w] = max(words.get(w, 0), f)
 
@@ -119,6 +119,11 @@ modern = {
     "I'm": 190, "it's": 185, "that's": 175, "can't": 175, "I'll": 172, "you're": 170, "I've": 165,
     "let's": 165, "won't": 165, "what's": 160, "I'd": 158, "there's": 155, "he's": 155, "we're": 155,
     "they're": 155, "she's": 150, "you'll": 140, "we'll": 140, "you've": 140, "we've": 138, "they'll": 135,
+    # ones AOSP lacks entirely, which autocorrect then "fixed" into other words (where'd -> where's)
+    "c'mon": 120, "where'd": 110, "what'd": 110, "why'd": 105, "what're": 105, "when'd": 90,
+    "there're": 90, "this'll": 90, "why's": 85, "why'll": 75,
+    # web words typed in ordinary text ("https:" became "http:")
+    'https': 100, 'iCloud': 100, 'Hotmail': 95,
 }
 present = {w.lower() for w in words} | {w.lower() for w in off} | set(never)
 for w, f in modern.items():

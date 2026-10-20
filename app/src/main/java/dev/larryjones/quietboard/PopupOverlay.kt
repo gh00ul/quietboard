@@ -54,6 +54,7 @@ class PopupOverlay(context: Context) : View(context) {
     private var trailY = FloatArray(256)
     private var trailN = 0
     private val measure = android.graphics.PathMeasure()
+    private val stripes = android.graphics.Path()
 
     // Tap bursts (fun themes): a ring buffer of particles that fly off a key and fade.
     var effects = true
@@ -178,9 +179,9 @@ class PopupOverlay(context: Context) : View(context) {
         if (trailN != 0) { trailN = 0; invalidate() }
     }
 
+    /** Hides popups and the trail. Tap bursts finish on their own (a layout switch mustn't cut them off). */
     fun hideAll() {
         previewOn = false; popupOn = false; trailN = 0
-        born.fill(0L)
         invalidate()
     }
 
@@ -275,14 +276,19 @@ class PopupOverlay(context: Context) : View(context) {
             canvas.drawPath(trailPath, trailPaint)
             if (glow) trailPaint.clearShadowLayer()
             if (t.trail == Trail.CANDY) {
-                // Red stripes that carry on from one piece of the trail to the next.
+                // Red stripes that carry on from one piece of the trail to the next (cut out of the
+                // path by hand: a dash effect per piece per frame was ~1,500 allocations a second).
                 measure.setPath(trailPath, false)
                 val len = measure.length
+                stripes.reset()
+                var d = -dashPhase
+                while (d < len) {
+                    if (d + stripe > 0f) measure.getSegment(maxOf(0f, d), minOf(len, d + stripe), stripes, true)
+                    d += 2 * stripe
+                }
                 trailPaint.color = t.trailTail
                 trailPaint.alpha = alpha
-                trailPaint.pathEffect = android.graphics.DashPathEffect(floatArrayOf(stripe, stripe), dashPhase)
-                canvas.drawPath(trailPath, trailPaint)
-                trailPaint.pathEffect = null
+                canvas.drawPath(stripes, trailPaint)
                 dashPhase = (dashPhase + len) % (2 * stripe)
             }
             a = b + 1

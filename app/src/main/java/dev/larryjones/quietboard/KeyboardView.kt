@@ -57,6 +57,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         set(v) { if (field != v) { field = v; invalidate() } }
     var enterIcon = Icon.ENTER
         set(v) { if (field != v) { field = v; invalidate() } }
+    /** What TalkBack says for enter when the icon would mislead ("Next" uses the Go arrow); null = from the icon. */
+    var enterDescription: String? = null
 
     /** Shown faintly on the space bar of the letters layout, like Gboard's language name. */
     var spaceLabel = "English"
@@ -174,6 +176,14 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
 
     /** When the last plain key tap ended; a touch right after typing is a tap, never a glide. */
     private var lastTapUp = 0L
+    /**
+     * The path of a lone finger from where it landed. A glide that only starts once the fast-typing
+     * pause is over (or after sliding across keys) still gets its beginning.
+     */
+    private var preX = FloatArray(64)
+    private var preY = FloatArray(64)
+    private var preN = 0
+    private var preId = -1
     private var lastProgressAt = 0L
 
     private val longPressRunnable = Runnable { longPressPtr?.let { onLongPress(it) } }
@@ -332,7 +342,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                     k.functional -> KeyLook.SPECIAL
                     else -> KeyLook.LETTER
                 }
-                Scenery.keyExtra(canvas, t, k.visual, radius, look, k.hint != null && k.type == KeyType.CHAR, seed, dp)
+                val corner = (k.hint != null && k.type == KeyType.CHAR) || k.longPressAction == KeyType.EMOJI
+                Scenery.keyExtra(canvas, t, k.visual, radius, look, corner, seed, dp)
             }
 
             val cx = k.visual.centerX()
@@ -424,7 +435,10 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             }
             MotionEvent.ACTION_POINTER_DOWN -> {
                 val i = ev.actionIndex
-                down(ev.getPointerId(i), ev.getX(i), ev.getY(i))
+                val x = ev.getX(i); val y = ev.getY(i)
+                // The empty one-handed side isn't a key: a palm or second thumb there must not commit
+                // the key the first finger is holding.
+                if (!sideArea.contains(x, y)) down(ev.getPointerId(i), x, y)
             }
             MotionEvent.ACTION_MOVE -> {
                 for (i in 0 until ev.pointerCount) {
@@ -432,6 +446,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                     val p = ptrs[id] ?: continue
                     if (p.mode == Mode.GESTURE) {
                         for (h in 0 until ev.historySize) addGesturePoint(ev.getHistoricalX(i, h), ev.getHistoricalY(i, h))
+                    } else if (p.mode == Mode.NORMAL && id == preId) {
+                        for (h in 0 until ev.historySize) addPre(ev.getHistoricalX(i, h), ev.getHistoricalY(i, h))
                     }
                     move(p, ev.getX(i), ev.getY(i))
                 }
@@ -472,7 +488,9 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
     }
 
     private fun down(id: Int, x: Float, y: Float) {
-        if (ptrs.values.any { it.mode == Mode.GESTURE || it.mode == Mode.POPUP }) return
+        // Mid-glide, popup, space-bar cursor or backspace swipe: a second finger would commit or delete
+        // the wrong thing (typing during a backspace swipe replaced the selection, then got deleted).
+        if (ptrs.values.any { it.mode != Mode.NORMAL }) return
         // Fast two-thumb typing: a new touch commits the previous key immediately. Firing can switch
         // the layout ("?123" then a digit) and clear [ptrs], so iterate over a copy.
         for (other in ptrs.values.toList()) {
@@ -497,6 +515,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         val key = keyAt(x, y) ?: return
         val p = Ptr(id, key, x, y)
         ptrs[id] = p
+        if (ptrs.size == 1) { preId = id; preN = 0; addPre(x, y) } else preId = -1
         press(key)
         burstFrom(key)
         listener?.onKeyFeedback(key)
@@ -529,10 +548,17 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         }
     }
 
+    /**
+     * Slide distances in "keys": the smaller of key width and row height. In landscape keys are twice
+     * as wide as rows are tall, and a width-based threshold was longer than the hop to the next row.
+     */
+    private val keyUnit get() = minOf(keyWidth, rowHeight)
+
     private fun move(p: Ptr, x: Float, y: Float) {
         p.lastX = x
         when (p.mode) {
             Mode.NORMAL -> {
+                if (p.id == preId) addPre(x, y)
                 if (p.consumed) return
                 val dx = x - p.downX
                 val dy = y - p.downY
@@ -554,14 +580,14 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                 // Glide only on a deliberate slide: far enough, and not in the middle of fast tapping
                 // (sloppy thumb taps drift and used to turn into glides, eating letters).
                 if (gestureTyping && k.isLetter && layout?.id == LayoutId.ALPHA && ptrs.size == 1 &&
-                    dist(dx, dy) > keyWidth * 0.7f && android.os.SystemClock.uptimeMillis() - lastTapUp > 300L
+                    dist(dx, dy) > keyUnit * 0.7f && android.os.SystemClock.uptimeMillis() - lastTapUp > 300L
                 ) {
                     startGesture(p, x, y)
                     return
                 }
                 if (k.type == KeyType.SHIFT || k.type == KeyType.DELETE || k.type == KeyType.SPACE) return
                 // A tap that drifts slightly over a key border keeps its key; only a real slide changes it.
-                if (dist(dx, dy) < keyWidth * 0.45f) return
+                if (dist(dx, dy) < keyUnit * 0.45f) return
                 val k2 = keyAt(x, y) ?: return
                 // Sliding onto Space/Delete/Shift keeps the letter: landing there by accident would
                 // otherwise start a cursor swipe or delete instead of typing.
@@ -626,13 +652,15 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             Mode.DELETE_SWIPE -> listener?.onDeleteSwipeEnd(p.deleteWords > 0)
             Mode.GESTURE -> {
                 addGesturePoint(x, y)
+                // Length in key widths across and rows down, as the decoder measures it: it reads
+                // nothing into a path under 0.6 of those, so a shorter slide must stay a tap.
                 var len = 0f
-                for (i in 1 until gn) len += dist(gx[i] - gx[i - 1], gy[i] - gy[i - 1])
+                for (i in 1 until gn) len += dist((gx[i] - gx[i - 1]) / keyWidth, (gy[i] - gy[i - 1]) / rowHeight)
                 // A short slide that ends on another letter is a two-letter glide ("we", "as");
                 // one that stays near its start key was a sloppy tap.
                 val end = keyAt(x, y)
-                val toOtherLetter = end != null && end !== p.key && end.isLetter && len >= keyWidth * 0.8f
-                if (len < keyWidth * 1.1f && !toOtherLetter) {
+                val toOtherLetter = end != null && end !== p.key && end.isLetter && len >= 0.65f
+                if (len < 1.1f && !toOtherLetter) {
                     listener?.onGestureCancel()
                     overlay.clearTrail()
                     emitText(shifted(p.key.text))
@@ -694,6 +722,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         when {
             k.type == KeyType.SPACE -> {
                 p.consumed = true
+                listener?.onHaptic(k, Haptic.LONG_PRESS)
                 listener?.onSpaceLongPress()
             }
             k.longPressAction != null -> {
@@ -720,9 +749,15 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         overlay.hidePreview()
         pressed.clear()
         gn = 0
-        addGesturePoint(p.downX, p.downY)
-        addGesturePoint(x, y)
         lastProgressAt = SystemClock.uptimeMillis()
+        // The whole path from touch-down, not just from the last key it slid onto.
+        if (p.id == preId && preN > 0) {
+            for (i in 0 until preN) addGesturePoint(preX[i], preY[i])
+        } else {
+            addGesturePoint(p.downX, p.downY)
+        }
+        addGesturePoint(x, y)
+        preId = -1
         listener?.onGestureStart()
         invalidate()
     }
@@ -743,6 +778,15 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             updateOffsets()
             overlay.setTrail(gx, gy, gn, (offset[0] - overlayOffset[0]).toFloat(), (offset[1] - overlayOffset[1]).toFloat())
         }
+    }
+
+    private fun addPre(x: Float, y: Float) {
+        if (preN > 0 && dist(x - preX[preN - 1], y - preY[preN - 1]) < 1.5f * dp) return
+        if (preN == preX.size) {
+            if (preN >= MAX_PRE) return
+            preX = preX.copyOf(preN * 2); preY = preY.copyOf(preN * 2)
+        }
+        preX[preN] = x; preY[preN] = y; preN++
     }
 
     private fun showPreviewFor(k: Key) {
@@ -875,7 +919,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         }
         KeyType.DELETE -> "Delete"
         KeyType.SPACE -> "Space"
-        KeyType.ENTER -> when (enterIcon) {
+        KeyType.ENTER -> enterDescription ?: when (enterIcon) {
             Icon.SEARCH -> "Search"
             Icon.SEND -> "Send"
             Icon.GO -> "Go"
@@ -903,6 +947,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
     private companion object {
         const val RELEASE_FADE_MS = 160f
         const val PROGRESS_MS = 90L
+        /** Points kept for a lone finger before it becomes a glide (it's a tap or a slide until then). */
+        const val MAX_PRE = 1024
         const val ALT_ACTION_BASE = 0x7E000000
         const val SIDE_SWAP = 10_000
         const val SIDE_EXPAND = 10_001

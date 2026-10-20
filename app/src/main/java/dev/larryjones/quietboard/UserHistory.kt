@@ -80,6 +80,9 @@ class UserHistory(dir: File) {
     /** A word you've typed at least twice (or kept after undoing a correction) is trusted. */
     fun isKnown(lower: String): Boolean = count(lower) >= 2
 
+    /** How you spell a learned word ("I", "iPhone", "teh"), or null. */
+    fun spelling(lower: String): String? = words[lower]?.word
+
     fun learn(prev: String?, word: String) {
         if (!isLearnable(word)) return
         val lower = word.lowercase(Locale.US)
@@ -113,6 +116,7 @@ class UserHistory(dir: File) {
         val lower = word.lowercase(Locale.US)
         val e = words.getOrPut(lower) { Entry(word, 0) }
         if (e.count < 2) e.count = 2
+        e.word = word // you chose this spelling over the correction
         dirty = true
     }
 
