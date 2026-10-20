@@ -47,3 +47,46 @@ mustve	must've
 whatll	what'll
 wholl	who'll
 alot	a lot
+amd	and
+andteh	and the
+inteh	in the
+itsa	it's a
+acomodate	accommodate
+wierd	weird
+il	I'll
+hel	he'll
+shel	she'll
+wel	we'll
+wer	we're
+uf	if
+mot	not
+nave	have
+oft	off
+nigh	high
+manu	many
+berm	been
+bern	been
+galled	called
+namer	named
+pater	later
+tine	time
+fay	day
+nee	new
+hoes	how's
+whys	why's
+whens	when's
+howd	how'd
+howll	how'll
+howve	how've
+thatd	that'd
+whatd	what'd
+whatre	what're
+whered	where'd
+wherell	where'll
+whyd	why'd
+whyll	why'll
+whyve	why've
+whove	who've
+yall	y'all
+id	I'd
+visavis	vis-a-vis

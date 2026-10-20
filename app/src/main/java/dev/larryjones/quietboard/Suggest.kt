@@ -21,6 +21,8 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
     var emojiKeywords: Map<String, String> = emptyMap()
     var emojiEnabled = true
     var blockOffensive = false
+    /** Built-in next words: previous word (lowercase, or [SENTENCE_START]) -> likely next words. */
+    var nextWords: Map<String, List<String>> = emptyMap()
 
     /** Never offered: offensive words when blocking is on, and words that are only "known" (slurs etc.). */
     private fun hidden(i: Int) = dict.never[i] || (blockOffensive && dict.offensive[i])
@@ -107,7 +109,9 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         var bestFix: String? = null
         var bestFixScore = -Float.MAX_VALUE
         // Once the user has kept a word (undid its correction), whitelist/case fixes leave it alone too.
-        val whitelisted = if (userKnown) null else dict.whitelistFor(lower)
+        // ...and all-caps input is deliberate ("ID", "IM"): don't turn it into "I'D".
+        val allCaps = typed.length >= 2 && typed.all { !it.isLetter() || it.isUpperCase() }
+        val whitelisted = if (userKnown || allCaps) null else dict.whitelistFor(lower)
         val caseFixed = if (userKnown) null else caseFix(exactIdx, typed)
         if (!known && lower.length >= 2) {
             val maxDist = when (lower.length) { 2 -> 0.75f; 3, 4 -> 1.0f; else -> 1.6f }
@@ -118,7 +122,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
                 if (typed == lower && w.length > 1 && dict.freqs[i] < 120 && w.all { !it.isLetter() || it.isUpperCase() }) {
                     return@corrections
                 }
-                val s = dict.freqs[i] + userBonus(w) + pairBonus(prevLower, w) - d * 120f
+                val s = dict.freqs[i] + userBonus(w) + pairBonus(prevLower, w) - d * EDIT_COST
                 offer(w, s - 5f)
                 if (s > bestFixScore && dict.freqs[i] >= 40) { bestFixScore = s; bestFix = w }
             }
@@ -131,7 +135,9 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         // Accented input ("café", "naïve", "señor") isn't in this English list: never "correct" it away.
         val accented = lower.any { it.code > 0x7F && it.isLetter() }
         var auto: String? = null
-        if (allowAutoCorrect && lower !in rejected && !mixedCase && !stretched && shortcut == null) {
+        // Short all-caps words are abbreviations ("IM", "ID", "TV"); longer caps-lock words still get fixed.
+        val acronym = allCaps && typed.length <= 3
+        if (allowAutoCorrect && lower !in rejected && !mixedCase && !stretched && !acronym && shortcut == null) {
             auto = when {
                 whitelisted != null -> whitelisted
                 caseFixed != null -> caseFixed
@@ -175,10 +181,15 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         return SuggestionResult(withEmoji(strip, auto ?: typed), auto)
     }
 
-    /** Next-word predictions learned from your own typing. */
-    fun predict(prev: String?, capitalize: Boolean): List<SuggestionItem?> {
-        if (prev == null) return emptyList()
-        val p = history.predict(prev.lowercase(Locale.US), 6)
+    /**
+     * Next-word predictions: what you usually type after [prev] (if [learned] is allowed here), then
+     * common English follow-ons, so suggestions work from the first day. At a sentence start
+     * ([prev] null, [sentenceStart] true) the common first words.
+     */
+    fun predict(prev: String?, capitalize: Boolean, learned: Boolean = true, sentenceStart: Boolean = false): List<SuggestionItem?> {
+        val key = prev?.lowercase(Locale.US)?.replace('\u2019', '\'') ?: if (sentenceStart) SENTENCE_START else return emptyList()
+        val mine = if (learned && prev != null) history.predict(key, 6) else emptyList()
+        val p = (mine + nextWords[key].orEmpty())
             .map { canonical(it) }
             .filter { !blocked(it) }
             .distinctBy { it.lowercase(Locale.US) }
@@ -215,7 +226,21 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
     }
 
     companion object {
+        const val SENTENCE_START = "<s>"
+
+        /** Parses nextwords_en.txt: "prev<TAB>next<TAB>next...". */
+        fun parseNextWords(lines: Sequence<String>): Map<String, List<String>> {
+            val out = HashMap<String, List<String>>()
+            for (line in lines) {
+                val parts = line.split('\t').filter { it.isNotBlank() }
+                if (parts.size >= 2) out[parts[0].lowercase(Locale.US)] = parts.drop(1)
+            }
+            return out
+        }
+
         private val STRETCHED = Regex("(\\p{L})\\1\\1")
+        /** Frequency points one edit costs (frequencies are ~13 points per e-fold of usage). */
+        private const val EDIT_COST = 120f
         private val NEVER_RECASE = setOf("bob", "lee", "san", "los", "ira", "pat", "sue", "will", "mark", "bill", "rob")
         /** Words ending in "s" that aren't plurals of an emoji keyword ("news" isn't "new"). */
         private val NOT_PLURALS = setOf("news", "dies", "goods", "rights", "lens", "species", "series", "always", "glass")

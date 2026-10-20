@@ -22,6 +22,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
 
     interface Listener {
         fun onKeyFeedback(key: Key)
+        /** A specific kind of feedback (delete repeat, long press); defaults to a plain key press. */
+        fun onHaptic(key: Key, kind: Haptic) { onKeyFeedback(key) }
         fun onText(text: String)
         fun onDelete()
         fun onSpace()
@@ -164,7 +166,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             if (p.mode != Mode.NORMAL) return
             p.repeats++
             listener?.onDelete()
-            if (p.repeats % 2 == 0) listener?.onKeyFeedback(p.key)
+            if (p.repeats % 2 == 0) listener?.onHaptic(p.key, Haptic.REPEAT)
             handler.postDelayed(this, if (p.repeats > 12) 35L else 65L)
         }
     }
@@ -652,13 +654,13 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                 p.consumed = true
                 overlay.hidePreview()
                 release(k, p)
-                listener?.onKeyFeedback(k)
+                listener?.onHaptic(k, Haptic.LONG_PRESS)
                 listener?.onLayoutKey(k.longPressAction)
             }
             k.alternates.isNotEmpty() -> {
                 p.mode = Mode.POPUP
                 overlay.hidePreview()
-                listener?.onKeyFeedback(k)
+                listener?.onHaptic(k, Haptic.LONG_PRESS)
                 overlay.showPopup(toOverlay(k.visual), k.alternates.map { shifted(it) }, p.lastX + offX())
             }
         }

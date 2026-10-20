@@ -205,6 +205,7 @@ class QuietIME : InputMethodService(),
                 if (d != null) {
                     suggest = Suggest(d, history)
                     decoder = GestureDecoder(d, history)
+                    suggest?.nextWords = EngineCache.nextWords(this)
                     configureSuggest()
                     refreshSuggestions()
                 }
@@ -244,6 +245,7 @@ class QuietIME : InputMethodService(),
         root.keyboard.listener = this
         this.root = root
         topBar = root.topBar; keyboard = root.keyboard; overlay = root.overlay; content = root.content
+        feedback.attach(root.keyboard) // "Phone default" haptics go through the keyboard view
         emojiPanel = null; clipPanel = null; editPanel = null
         panel = Panel.KEYS
         configDirty = true
@@ -595,6 +597,11 @@ class QuietIME : InputMethodService(),
     // ------------------------------------------------------------------ keyboard events
 
     override fun onKeyFeedback(key: Key) = feedback.key(key.type)
+
+    override fun onHaptic(key: Key, kind: Haptic) {
+        feedback.haptic(kind)
+        feedback.sound(key.type)
+    }
 
     override fun onText(text: String) {
         flushGesture()
@@ -1154,8 +1161,13 @@ class QuietIME : InputMethodService(),
             }
         } else {
             pendingAutocorrect = null
-            val preds = if (prefs.nextWord && !noLearning && !onLockScreen) {
-                s.predict(lastWord(conn?.getTextBeforeCursor(64, 0)), shift != ShiftState.OFF)
+            val preds = if (prefs.nextWord) {
+                val before = conn?.getTextBeforeCursor(64, 0)
+                // Only at a real sentence start (empty field, after . ! ? or a new line), not after a comma.
+                val trimmed = before?.trimEnd()
+                val sentenceStart = trimmed.isNullOrEmpty() || trimmed.last() in ".!?\n"
+                // Your own habits stay out of incognito fields and the lock screen; built-in ones don't.
+                s.predict(lastWord(before), shift != ShiftState.OFF, learned = !noLearning && !onLockScreen, sentenceStart = sentenceStart)
             } else emptyList()
             tb.setSuggestions(preds.ifEmpty { null })
         }
@@ -1557,6 +1569,13 @@ private object EngineCache {
 
     @Synchronized
     fun emojiKeywords(ctx: Context): Map<String, String> = keywords ?: loadKeywords(ctx).also { keywords = it }
+
+    private var next: Map<String, List<String>>? = null
+
+    @Synchronized
+    fun nextWords(ctx: Context): Map<String, List<String>> = next ?: runCatching {
+        ctx.assets.open("nextwords_en.txt").bufferedReader().useLines { Suggest.parseNextWords(it) }
+    }.getOrDefault(emptyMap()).also { next = it }
 
     private fun loadKeywords(ctx: Context): Map<String, String> {
         val kw = HashMap<String, String>()

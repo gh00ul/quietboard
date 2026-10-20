@@ -26,7 +26,7 @@ class Prefs(context: Context) {
     val sound get() = b(SOUND, false)
     val dynamicColor get() = b(DYNAMIC_COLOR, true)
 
-    /** 0 off, 1 light, 2 medium, 3 strong */
+    /** [Feedback.OFF], [Feedback.LIGHT], [Feedback.MEDIUM], [Feedback.STRONG] or [Feedback.SYSTEM] */
     val vibration get() = sp.getInt(VIBRATION, 1)
     /** "system", "light", "dark", "black" */
     val theme: String get() = sp.getString(THEME, "system") ?: "system"

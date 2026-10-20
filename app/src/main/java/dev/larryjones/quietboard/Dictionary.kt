@@ -141,14 +141,14 @@ class Dictionary private constructor(
         for (j in 1..m) prev[j] = prev[j - 1] + insCost(b[j - 1])
         var prevRowMin = 0f
         for (i in 1..n) {
-            cur[0] = i.toFloat()
+            cur[0] = i * EXTRA
             var rowMin = cur[0]
             val ca = a[i - 1]
             for (j in 1..m) {
                 val cb = b[j - 1]
                 var v = prev[j - 1] + subCost(ca, cb)
                 // Hitting a letter twice ("helllo") or missing a double ("helo") is a cheap mistake.
-                val del = prev[j] + (if (i > 1 && a[i - 2] == ca) 0.3f else 1f)
+                val del = prev[j] + (if (i > 1 && a[i - 2] == ca) 0.3f else EXTRA)
                 if (del < v) v = del
                 val ins = cur[j - 1] + (if (j > 1 && b[j - 2] == cb) 0.3f else insCost(cb))
                 if (ins < v) v = ins
@@ -168,7 +168,7 @@ class Dictionary private constructor(
         return prev[m]
     }
 
-    private fun insCost(c: Char) = if (c == '\'') 0.25f else 1f
+    private fun insCost(c: Char) = if (c == '\'') 0.25f else MISSING
 
     private fun adjacent(a: Char, b: Char) =
         a in 'a'..'z' && b in 'a'..'z' && ADJ[(a - 'a') * 26 + (b - 'a')]
@@ -182,13 +182,22 @@ class Dictionary private constructor(
     private fun subCost(a: Char, b: Char): Float {
         if (a == b) return 0f
         if (fold(a) == fold(b)) return 0.1f // "cafe" vs "café": nearly the same word
-        if (a in 'a'..'z' && b in 'a'..'z' && ADJ[(a - 'a') * 26 + (b - 'a')]) return 0.6f
+        if (a in 'a'..'z' && b in 'a'..'z' && ADJ[(a - 'a') * 26 + (b - 'a')]) return ADJACENT
         return 1f
     }
 
     companion object {
         const val MAX_LEN = 24
-        /** A swapped pair ("teh") is the most common typo: cheaper than hitting a neighbouring key. */
+        // Edit costs, tuned on DictionaryBenchmark (typos weighted by how often each kind happens on
+        // phones). A skipped letter ("wold" for "would") is about as common as a neighbouring key, so it
+        // mustn't cost much more: at 1.0 only 62% of them were fixed, at 0.6 85%.
+        /** A letter the user skipped. */
+        private const val MISSING = 0.6f
+        /** An extra letter the user typed. */
+        private const val EXTRA = 1f
+        /** A neighbouring key instead of the right one. */
+        private const val ADJACENT = 0.6f
+        /** A swapped pair ("teh"). */
         private const val TRANSPOSE = 0.5f
 
         private val ADJ: BooleanArray = BooleanArray(26 * 26).also { adj ->

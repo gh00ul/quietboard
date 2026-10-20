@@ -55,6 +55,39 @@ class FeatureTest {
         assertEquals("old pinned", left.getJSONObject(0).getString("t"))
     }
 
+    @Test fun hapticsFeelDifferentPerEvent() {
+        for (level in listOf(Feedback.LIGHT, Feedback.MEDIUM, Feedback.STRONG)) {
+            val key = Feedback.primitiveFor(Haptic.KEY, level).second
+            assertTrue("function keys land firmer", Feedback.primitiveFor(Haptic.FUNCTION, level).second >= key)
+            assertTrue("long press is the firmest", Feedback.primitiveFor(Haptic.LONG_PRESS, level).second >= key)
+            assertTrue("delete repeat is lighter", Feedback.primitiveFor(Haptic.REPEAT, level).second < key)
+            assertTrue("cursor steps are faint", Feedback.primitiveFor(Haptic.TICK, level).second < key)
+            assertTrue(Feedback.primitiveFor(Haptic.KEY, level).second in 0.01f..1f)
+        }
+        assertTrue("stronger settings are stronger",
+            Feedback.strength(Feedback.LIGHT) < Feedback.strength(Feedback.MEDIUM) &&
+                Feedback.strength(Feedback.MEDIUM) < Feedback.strength(Feedback.STRONG))
+        assertEquals(android.view.HapticFeedbackConstants.KEYBOARD_PRESS, Feedback.systemConstant(Haptic.KEY))
+        assertEquals(android.view.HapticFeedbackConstants.TEXT_HANDLE_MOVE, Feedback.systemConstant(Haptic.TICK))
+    }
+
+    @Test fun phoneDefaultHapticsGoThroughTheSystem() {
+        val ctx = RuntimeEnvironment.getApplication()
+        val prefs = Prefs(ctx)
+        prefs.sp.edit().putInt(Prefs.VIBRATION, Feedback.SYSTEM).commit()
+        val view = View(ctx)
+        val f = Feedback(ctx, prefs).apply { attach(view) }
+        f.key(KeyType.CHAR)
+        assertEquals(android.view.HapticFeedbackConstants.KEYBOARD_PRESS, shadowOf(view).lastHapticFeedbackPerformed())
+        f.haptic(Haptic.LONG_PRESS)
+        assertEquals(android.view.HapticFeedbackConstants.LONG_PRESS, shadowOf(view).lastHapticFeedbackPerformed())
+        // The motor modes never crash, whatever the device supports.
+        for (level in listOf(Feedback.OFF, Feedback.LIGHT, Feedback.MEDIUM, Feedback.STRONG)) {
+            prefs.sp.edit().putInt(Prefs.VIBRATION, level).commit()
+            for (h in Haptic.entries) f.haptic(h)
+        }
+    }
+
     @Test fun turningHistoryOffForgetsClips() {
         val ctx = RuntimeEnvironment.getApplication()
         val now = System.currentTimeMillis()

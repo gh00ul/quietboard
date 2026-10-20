@@ -183,6 +183,44 @@ class EngineTest {
         assertTrue(h.predict("say", 5).isEmpty())
     }
 
+    @Test fun builtInNextWordsWorkFromDayOne() {
+        val h = UserHistory(Files.createTempDirectory("qb").toFile())
+        val s = Suggest(dict, h)
+        s.nextWords = File("src/main/assets/nextwords_en.txt").useLines { Suggest.parseNextWords(it) }
+        fun words(prev: String?, start: Boolean = false, learned: Boolean = true) =
+            s.predict(prev, false, learned, start).mapNotNull { it?.word }
+        assertTrue(words("thank").contains("you"))
+        assertTrue("I" in words(null, start = true))
+        assertTrue("nothing after a comma-ish non-word", words(null).isEmpty())
+        // Your own habit comes first, but only where learning is allowed.
+        repeat(3) { h.learn("thank", "goodness") }
+        assertEquals("goodness", s.predict("thank", false).getOrNull(1)?.word)
+        assertTrue("goodness" !in words("thank", learned = false))
+    }
+
+    @Test fun nextWordsAssetIsSane() {
+        val lines = File("src/main/assets/nextwords_en.txt").readLines().filter { it.isNotBlank() }
+        assertTrue(lines.size > 100)
+        for (l in lines) {
+            val parts = l.split('\t')
+            assertTrue("bad line: $l", parts.size >= 2 && parts.none { it.isBlank() || ' ' in it })
+            assertEquals("keys are lowercase: $l", parts[0].lowercase(), parts[0])
+        }
+    }
+
+    @Test fun brandsAndContractions() {
+        assertEquals("YouTube", ac("youtube"))
+        assertEquals("Instagram", ac("instagram"))
+        assertEquals("Lyft is recased, not \"corrected\" to lift", "Lyft", ac("lyft"))
+        assertEquals("iOS", ac("ios"))
+        assertTrue("don't" in stripWords("don"))
+        assertEquals("I'm", ac("im"))
+        assertNull("all caps is deliberate: ID stays ID", ac("ID"))
+        assertNull(ac("IM"))
+        assertEquals("and", ac("amd"))
+        assertEquals("would", ac("wold"))
+    }
+
     @Test fun shortcutsWithDigitsExpand() {
         suggest.shortcuts = mapOf("gr8" to "great", "b4" to "before")
         try {

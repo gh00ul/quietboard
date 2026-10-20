@@ -12,7 +12,7 @@ aardvarks	55
 aardwolf	36
 Aargau	68
 Aarhus	73
-Aaron	114
+Aaron	115
 Aaron's	69
 Aarons	49
 Aaronson	48
@@ -52,7 +52,7 @@ abattoirs	55
 Abba	82
 abbacies	42
 abbacy	65
-Abbas	87
+Abbas	88
 Abbas's	42
 Abbasid	77
 abbatial	53
@@ -217,7 +217,7 @@ aborigines	75
 abort	98
 aborted	91
 aborting	65
-abortion	113
+abortion	114
 abortionist	52
 abortionists	42
 abortions	88
@@ -227,7 +227,7 @@ abound	82
 abounded	78
 abounding	67
 abounds	76
-about	184
+about	185
 above	144
 aboveground	63
 abovementioned	63
@@ -310,7 +310,7 @@ absolutism	78
 absolutist	76
 absolutists	52
 absolutive	72
-absolve	79
+absolve	80
 absolved	78
 absolves	53
 absolving	58
@@ -433,7 +433,7 @@ accelerator	94
 accelerators	82
 accelerometer	69
 accelerometers	67
-accent	120
+accent	121
 accented	88
 accenting	54
 accents	93
@@ -710,7 +710,7 @@ acquisition	103
 acquisitions	88
 acquisitive	55
 acquisitiveness	37
-acquit	74
+acquit	75
 acquits	48
 acquittal	86
 acquittals	61
@@ -788,7 +788,7 @@ acts	127
 ACTU	62
 actual	131
 actualities	53
-actuality	80
+actuality	81
 actualization	69
 actualize	55
 actualized	61
@@ -991,7 +991,7 @@ adjoins	87
 adjoint	89
 adjoints	50
 adjourn	79
-adjourned	94
+adjourned	95
 adjourning	54
 adjournment	74
 adjournments	48
@@ -1206,7 +1206,7 @@ advancement	96
 advancements	79
 advancer	33
 advances	107
-advancing	103
+advancing	104
 advantage	132
 advantaged	67
 advantageous	85
@@ -1387,7 +1387,7 @@ affidavit	89
 affidavits	75
 affiliate	92
 affiliated	100
-affiliates	84
+affiliates	85
 affiliating	71
 affiliation	92
 affiliations	82
@@ -1443,6 +1443,7 @@ aficionado	69
 aficionados	80
 afield	79
 afire	75
+afk	95
 AFL's	80
 aflame	73
 afloat	93
@@ -1505,7 +1506,7 @@ aftershocks	68
 aftertaste	67
 afterthought	70
 afterthoughts	35
-afterward	102
+afterward	103
 afterwards	127
 afterword	76
 afterwords	61
@@ -1540,7 +1541,7 @@ agelessness	41
 agencies	113
 agency	128
 agency's	90
-agenda	112
+agenda	113
 agendas	80
 agent	141
 agent's	79
@@ -1643,7 +1644,7 @@ agoutis	40
 AGR	66
 Agra	79
 agrammatic	33
-agrarian	80
+agrarian	81
 agrarianism	52
 agrarians	46
 agree	137
@@ -1754,18 +1755,19 @@ aimlessly	78
 aimlessness	44
 aims	104
 ain	51
-ain't	88
+ain't	131
 Ainsley	66
 Ainslie	62
 Ainu	73
 AIPAC	73
-air	151
+air	152
 air's	49
 AirAsia	71
 airbag	78
 airbags	78
 airbase	78
 airbases	73
+Airbnb	110
 airboat	49
 airboats	35
 airborne	104
@@ -1843,6 +1845,7 @@ airplane's	64
 airplanes	101
 airplay	110
 airplays	47
+AirPods	110
 airport	134
 airport's	92
 airports	101
@@ -2186,7 +2189,7 @@ Alice	124
 Alice's	77
 Alicia	106
 Alicia's	44
-alien	125
+alien	126
 alien's	66
 alienability	37
 alienable	59
@@ -2250,7 +2253,7 @@ Alla	76
 Allah	106
 Allah's	60
 Allahabad	79
-Allan	103
+Allan	104
 Allan's	57
 Allard	68
 Allard's	33
@@ -2289,7 +2292,7 @@ Allen's	85
 Allenby	69
 Allenby's	49
 Allendale	64
-Allende	79
+Allende	80
 Allende's	56
 Allentown	80
 Allentown's	40
@@ -2307,7 +2310,7 @@ alleviates	63
 alleviating	78
 alleviation	75
 Alley	90
-alley	113
+alley	114
 Alley's	39
 alley's	32
 Alleyn	59
@@ -2761,7 +2764,7 @@ amidships	85
 amidst	97
 Amie	49
 Amiens	77
-Amiga	83
+Amiga	84
 Amiga's	45
 amigo	84
 amigos	74
@@ -3083,7 +3086,7 @@ androgen	72
 androgenic	36
 androgynous	78
 androgyny	55
-Android	81
+Android	110
 android	95
 Android's	34
 android's	43
@@ -3560,7 +3563,7 @@ Antibes	57
 antibiotic	88
 antibiotics	102
 antibodies	92
-antibody	81
+antibody	82
 antic	53
 anticancer	71
 anticapitalist	42
@@ -3942,7 +3945,7 @@ apothecaries	67
 apothecary	78
 apothecary's	45
 apotheosis	71
-app	80
+app	150
 Appalachia	70
 Appalachian	79
 Appalachians	68
@@ -3965,7 +3968,7 @@ apparently	136
 apparition	85
 apparitions	77
 appassionato	38
-appeal	123
+appeal	124
 appealable	49
 appealed	99
 appealing	102
@@ -4016,7 +4019,7 @@ appertaining	54
 appetite	108
 appetites	78
 appetitive	46
-appetizer	82
+appetizer	83
 appetizers	81
 appetizing	67
 Appia	58
@@ -4110,7 +4113,7 @@ apprehending	69
 apprehends	58
 apprehension	85
 apprehensions	62
-apprehensive	81
+apprehensive	82
 apprehensively	37
 apprentice	105
 apprentice's	47
@@ -4156,13 +4159,13 @@ approximant	74
 approximants	63
 approximate	94
 approximated	92
-approximately	126
+approximately	127
 approximates	82
 approximating	80
 approximation	85
 approximations	88
 approximative	41
-apps	68
+apps	135
 appurtenance	41
 appurtenances	57
 appurtenant	44
@@ -4211,7 +4214,7 @@ aquarium's	52
 aquariums	82
 Aquarius	79
 aquas	34
-aquatic	93
+aquatic	94
 aquatics	68
 aquatint	59
 aquatints	47
@@ -4240,7 +4243,7 @@ Arabia	100
 Arabia's	60
 Arabian	93
 Arabians	59
-Arabic	112
+Arabic	113
 Arabist	51
 Arabists	35
 arabization	36
@@ -4451,7 +4454,7 @@ area's	111
 areal	74
 areas	134
 areca	67
-aren't	102
+aren't	137
 arena	114
 arena's	73
 arenas	84
@@ -4459,7 +4462,7 @@ areola	65
 areole	35
 areoles	53
 Arequipa	62
-Ares	89
+Ares	90
 Aretha	75
 Aretha's	32
 Arethusa	57
@@ -4697,7 +4700,7 @@ Arran	74
 arrange	118
 arranged	127
 arrangement	120
-arrangements	118
+arrangements	119
 arranger	102
 arranger's	32
 arrangers	75
@@ -4727,7 +4730,7 @@ Arrhenius	50
 arrhythmia	78
 arrhythmias	74
 arrhythmic	55
-arrival	123
+arrival	124
 arrivals	91
 arrive	127
 arrived	141
@@ -4850,7 +4853,7 @@ artists	130
 artless	49
 Artois	69
 arts	127
-artsy	66
+artsy	67
 Artur	74
 Arturo	93
 Arturo's	32
@@ -5122,7 +5125,7 @@ assess	102
 assessable	48
 assessed	92
 assesses	81
-assessing	86
+assessing	87
 assessment	110
 assessments	83
 assessor	75
@@ -5161,7 +5164,7 @@ assimilative	47
 Assiniboine	65
 Assisi	72
 assist	119
-assistance	122
+assistance	123
 assistances	37
 assistant	134
 assistant's	61
@@ -5181,7 +5184,7 @@ associated	123
 associates	111
 associateship	40
 associating	82
-association	123
+association	124
 association's	81
 associational	53
 associationism	46
@@ -5246,7 +5249,7 @@ astigmatism	59
 Aston	93
 Aston's	42
 astonish	63
-astonished	90
+astonished	91
 astonishes	50
 astonishing	100
 astonishingly	75
@@ -5420,7 +5423,7 @@ atoll's	48
 atolls	84
 atom	107
 atom's	56
-atomic	112
+atomic	113
 atomically	56
 atomics	39
 atomism	68
@@ -5469,7 +5472,7 @@ attaches	81
 attaching	83
 attachment	102
 attachments	86
-attack	147
+attack	148
 attack's	46
 attacked	134
 attacker	100
@@ -5616,7 +5619,7 @@ audibly	66
 Audie	57
 audience	136
 audience's	84
-audiences	106
+audiences	107
 audio	117
 audiogram	44
 audiograms	34
@@ -5691,7 +5694,7 @@ Augustine	92
 Augustine's	73
 Augustinian	81
 Augustinians	63
-Augusto	82
+Augusto	83
 Augustus	98
 Augustus's	50
 auk	40	n
@@ -5920,13 +5923,13 @@ aux	81
 auxiliaries	87
 auxiliary	102
 auxin	39
-av	80
+av	81
 Ava	97
 Ava's	42
 avail	93
 availabilities	49
 availability	95
-available	139
+available	140
 availed	71
 availing	55
 avails	51
@@ -6048,7 +6051,7 @@ AWAC	39
 AWACS	75
 await	102
 awaited	93
-awaiting	105
+awaiting	106
 awaits	101
 awake	116
 awaken	95
@@ -6327,7 +6330,7 @@ backlit	71
 backlog	75
 backlogged	44
 backlogs	55
-backpack	99
+backpack	100
 backpacked	37
 backpacker	61
 backpackers	75
@@ -6477,7 +6480,7 @@ bagpipe	74
 bagpiper	52
 bagpipers	49
 bagpipes	84
-bags	121
+bags	122
 baguette	70
 baguettes	51
 Baguio	68
@@ -6627,7 +6630,7 @@ balking	41
 balks	59
 balky	33
 Ball	106
-ball	142
+ball	143
 Ball's	68
 ball's	68
 ballad	100
@@ -6748,7 +6751,7 @@ Banat	79
 Banbridge	57
 Banbury	76
 Banbury's	34
-banco	68
+banco	69
 Bancroft	78
 Bancroft's	47
 band	147
@@ -6821,7 +6824,7 @@ Bangui	55
 Bangweulu	45
 bani	56
 banish	87
-banished	101
+banished	102
 banishes	71
 banishing	72
 banishment	82
@@ -7140,7 +7143,7 @@ barracking	36
 barracks	108
 barracuda	73
 barracudas	42
-barrage	91
+barrage	92
 barraged	42
 barrages	73
 barramundi	57
@@ -7349,7 +7352,7 @@ bassoons	80
 basswood	65
 bassy	36
 bast	66
-bastard	140	o
+bastard	141	o
 bastard's	40	n
 bastardization	42
 bastardized	47
@@ -7471,7 +7474,7 @@ battlements	74
 battler	51
 battlers	53
 battles	118
-battleship	99
+battleship	100
 battleship's	62
 battleships	91
 battlestar	67
@@ -7535,7 +7538,7 @@ Bayern's	48
 Bayes	69
 Bayesian	76
 baying	62
-Baylor	88
+Baylor	89
 Baylor's	50
 Bayly	56
 bayonet	90
@@ -7843,7 +7846,7 @@ beekeeping	73
 beeline	59
 Beelzebub	66
 been	182
-beep	102
+beep	103
 beeper	74
 beepers	40
 beeping	104
@@ -7906,7 +7909,7 @@ begin	139
 Begin's	46
 beginner	91
 beginner's	59
-beginners	85
+beginners	86
 beginning	144
 beginnings	101
 begins	132
@@ -8015,7 +8018,7 @@ belief	122
 beliefs	114
 belies	68
 believability	60
-believable	89
+believable	90
 believably	48
 believe	157
 believed	139
@@ -8056,7 +8059,7 @@ belled	40
 belles	70
 belletristic	40
 Belleville	72
-Bellevue	83
+Bellevue	84
 Bellevue's	37
 bellflower	51
 bellhop	69
@@ -8075,7 +8078,7 @@ Bellingham	75
 Bellini	72
 Bellini's	57
 Bellinzona	61
-bellman	62
+bellman	63
 Bellman's	35
 bello	73
 Belloc	59
@@ -8223,7 +8226,7 @@ Bengal	95
 Bengal's	49
 Bengali	91
 Bengals	88
-Benghazi	70
+Benghazi	71
 Bengt	69
 beni	59
 benighted	45
@@ -8498,6 +8501,8 @@ bestiality	71	n
 bestialize	40	n
 bestiaries	48
 bestiary	55
+bestie	115
+besties	100
 besting	74
 bestow	88
 bestowal	61
@@ -8570,7 +8575,7 @@ bettor	63
 bettors	63
 Betty	117
 Betty's	67
-between	162
+between	163
 betweens	52
 betwixt	64
 Betz	56
@@ -8897,7 +8902,8 @@ Binet's	35
 Bing	88
 bing	85
 Bing's	47
-binge	84
+binge	105
+bingeing	85
 Bingen	66
 binges	54
 Bingham	84
@@ -9066,7 +9072,7 @@ biplane	96
 biplanes	78
 bipod	74
 bipods	47
-bipolar	92
+bipolar	93
 bipolarity	41
 bipyramid	55
 biracial	67
@@ -9177,7 +9183,7 @@ bitchin	81	o
 bitchiness	79	o
 bitching	89	o
 bitchy	96	o
-bitcoin	102
+bitcoin	110
 bite	123
 biter	67
 biters	41
@@ -9338,7 +9344,7 @@ Blalock	57
 blame	129
 blamed	113
 blameless	74
-blames	97
+blames	98
 blameworthiness	34
 blameworthy	49
 Blamey	64
@@ -9550,7 +9556,7 @@ blockbusting	49
 blocked	117
 blocker	79
 blockers	78
-blockhead	71
+blockhead	72
 blockhouse	78
 blockhouses	70
 blocking	110
@@ -9576,7 +9582,7 @@ blond	106
 blonde	113
 Blondell	51
 blonder	32
-blondes	78
+blondes	79
 Blondie	89
 Blondie's	48
 blonds	58
@@ -9735,7 +9741,7 @@ bluestocking	40
 bluestone	69
 bluesy	73
 bluetongue	32
-Bluetooth	79
+Bluetooth	110
 bluey	55
 bluff	102
 bluffed	62
@@ -9983,7 +9989,7 @@ Bogomil	45
 Bogor	61
 Bogota	71
 bogs	83
-bogus	93
+bogus	94
 bogwood	35
 Boheme	43
 Bohemia	83
@@ -10140,7 +10146,7 @@ bondholder	44
 bondholders	68
 bonding	101
 bondmen	35
-bonds	114
+bonds	115
 bondsman	66
 bondsmen	55
 Bone	91
@@ -10443,7 +10449,7 @@ bossiness	41
 bossing	69
 bossism	33
 bossy	84
-Boston	124
+Boston	125
 Boston's	85
 Bostonian	51
 Bostonians	50
@@ -10637,7 +10643,7 @@ Bowman	86
 bowman	80
 Bowman's	57
 bowmen	64
-bows	96
+bows	97
 bowser	39
 Bowser's	47
 bowsprit	68
@@ -10865,10 +10871,10 @@ brandishes	57
 brandishing	71
 Brando	86
 Brando's	52
-Brandon	110
+Brandon	111
 Brandon's	54
 brands	103
-Brandt	88
+Brandt	89
 Brandt's	52
 Brandy	75
 brandy	105
@@ -10912,7 +10918,7 @@ braved	68
 bravely	92
 braveness	39
 braver	75
-bravery	104
+bravery	105
 braves	74
 bravest	86
 braving	61
@@ -10939,7 +10945,7 @@ brazen	82
 brazenly	60
 brazier	62
 braziers	53
-Brazil	117
+Brazil	118
 Brazil's	82
 Brazilian	108
 Brazilian's	36
@@ -11022,7 +11028,7 @@ breathalyzer	66
 breathalyzers	32
 breathe	121
 breathed	88
-breather	80
+breather	81
 breathers	57
 breathes	96
 breathing	127
@@ -11229,7 +11235,7 @@ briefer	63
 briefest	58
 briefing	101
 briefings	77
-briefly	116
+briefly	117
 briefs	89
 Brien	58
 Brier	66
@@ -11251,7 +11257,7 @@ brigands	73
 brigantine	69
 brigantines	48
 Brigg	58
-Briggs	99
+Briggs	100
 Briggs's	34
 Brigham	81
 Brigham's	38
@@ -11336,7 +11342,7 @@ Brit	83
 Brita	62
 Britain	125
 Britain's	100
-Britannia	86
+Britannia	87
 Britannia's	39
 Britannic	60
 Britannica	83
@@ -11467,7 +11473,7 @@ bronchioles	59
 bronchitis	78
 bronchoscope	45
 bronchus	51
-bronco	73
+bronco	74
 broncos	54
 Bronson	85
 Bronson's	44
@@ -11496,7 +11502,7 @@ brook	96
 Brook's	53
 brook's	42
 Brookdale	50
-Brooke	106
+Brooke	107
 Brooke's	63
 brooked	40
 Brookfield	76
@@ -11549,7 +11555,7 @@ browner	71
 brownfield	71
 Brownian	65
 Brownie	65
-brownie	81
+brownie	82
 Brownies	56
 brownies	83
 Browning	88
@@ -11632,7 +11638,7 @@ brusquely	52
 brusqueness	37
 Brussels	102
 Brut	63
-brutal	113
+brutal	114
 brutalities	59
 brutality	98
 brutalization	41
@@ -11730,7 +11736,7 @@ Bucknell	65
 Buckner	78
 Buckner's	45
 buckram	43
-bucks	111
+bucks	112
 buckshot	74
 buckskin	67
 buckskins	43
@@ -11814,7 +11820,7 @@ Buffy	103
 Buffy's	68
 Buford	80
 Buford's	50
-bug	115
+bug	116
 bug's	44
 Buganda	62
 Bugatti	72
@@ -11842,7 +11848,7 @@ Buicks	48
 build	140
 builder	103
 builder's	73
-builders	99
+builders	100
 building	151
 building's	105
 buildings	131
@@ -12142,7 +12148,7 @@ Burgundy	92
 burgundy	88
 Burgundy's	39
 burial	114
-burials	85
+burials	86
 buried	135
 buries	79
 burin	57
@@ -12437,8 +12443,8 @@ buzzards	73
 buzzed	78
 buzzer	101
 buzzers	74
-buzzes	91
-buzzing	106
+buzzes	92
+buzzing	107
 buzzsaw	55
 buzzword	59
 buzzwords	52
@@ -12451,7 +12457,7 @@ Bydgoszcz	70
 bye	150
 Byelorussia	42
 Byelorussian	57
-Byers	76
+Byers	77
 byes	77
 bygone	74
 bygones	78
@@ -12780,7 +12786,7 @@ Caligula	77
 Caligula's	47
 caliper	71
 calipers	77
-caliph	85
+caliph	86
 caliph's	56
 caliphal	51
 caliphate	79
@@ -12841,7 +12847,7 @@ calmed	91
 calmer	82
 calmest	47
 calming	87
-calmly	97
+calmly	98
 calmness	71
 calms	84
 calomel	52
@@ -12887,7 +12893,7 @@ calypso	79
 Calypso's	35
 calypsos	48
 calyx	74
-cam	108
+cam	109
 Cam's	35
 Camacho	70
 Camacho's	32
@@ -12924,7 +12930,7 @@ camelback	52
 cameleers	37
 camellia	63
 Camelot	88
-camels	94
+camels	95
 Camembert	63
 cameo	93
 cameoed	53
@@ -13008,12 +13014,12 @@ Camry	70
 cams	84
 camshaft	90
 camshafts	78
-Camus	72
+Camus	73
 Camus's	34
 can	189
 Can's	42
 can's	37
-can't	160
+can't	175
 cana	59
 Canaan	80
 Canaan's	35
@@ -13038,11 +13044,11 @@ Canaries	66
 canaries	73
 canary	89
 canasta	59
-Canaveral	70
+Canaveral	71
 Canberra	84
 Canberra's	57
 cancan	59
-cancel	116
+cancel	117
 cancelable	34
 cancelation	47
 canceled	115
@@ -13069,7 +13075,7 @@ candid	88
 Candida	66
 candida	53
 candidacies	70
-candidacy	92
+candidacy	93
 candidate	126
 candidate's	82
 candidates	117
@@ -13116,11 +13122,11 @@ canings	43
 Canis	71
 canister	88
 canisters	83
-canker	66
+canker	67
 cankered	35
 cankers	52
 canna	51
-cannabis	96
+cannabis	97
 Cannae	73
 cannas	39
 canned	98
@@ -13390,7 +13396,7 @@ captaincies	55
 captaincy	97
 captained	109
 captaining	86
-captains	100
+captains	101
 captainship	35
 caption	85
 captioned	85
@@ -13423,7 +13429,7 @@ capybaras	47
 car	160
 Car's	37
 car's	100
-Cara	88
+Cara	89
 Cara's	34
 carabao	58
 carabineers	35
@@ -13434,7 +13440,7 @@ Caracalla's	36
 caracals	39
 caracara	32
 caracaras	48
-Caracas	84
+Caracas	85
 carafe	44
 caramba	59
 caramel	90
@@ -13637,7 +13643,7 @@ Carl's	65
 Carla	106
 Carla's	53
 Carlen	32
-Carlene	63
+Carlene	64
 Carleton	76
 Carleton's	51
 Carley	48
@@ -13958,7 +13964,7 @@ caseworkers	47
 Casey	113
 Casey's	65
 Cash	96
-cash	135
+cash	136
 Cash's	64
 cashbox	35
 cashed	87
@@ -14177,7 +14183,7 @@ catchphrases	79
 catchword	41
 catchwords	40
 catchy	92
-catechism	76
+catechism	77
 catechisms	58
 catechist	59
 catechists	58
@@ -14373,7 +14379,7 @@ cavetto	37
 caviar	92
 cavies	43
 cavils	39
-caving	76
+caving	77
 cavities	86
 cavity	102
 cavity's	33
@@ -14543,7 +14549,7 @@ celled	75
 celli	44
 Cellini	61
 Cellini's	34
-cellist	80
+cellist	81
 cellists	65
 cellmate	78
 cellmates	62
@@ -14644,7 +14650,7 @@ centipede	76
 centipedes	69
 cento	49
 Central	133
-central	137
+central	138
 Centralia	65
 centralism	71
 centralist	71
@@ -14731,7 +14737,7 @@ certificated	73
 certificates	99
 certification	93
 certifications	89
-certified	108
+certified	109
 certifier	43
 certifiers	36
 certifies	74
@@ -14879,7 +14885,7 @@ Challenger	88
 challenger	101
 Challenger's	35
 challenger's	50
-challengers	80
+challengers	81
 challenges	116
 challenging	112
 Chalmers	80
@@ -14889,7 +14895,7 @@ chamber's	61
 chambered	94
 chambering	69
 Chamberlain	96
-chamberlain	91
+chamberlain	92
 Chamberlain's	72
 chamberlains	47
 Chamberland	35
@@ -14916,7 +14922,7 @@ champion	128
 champion's	65
 championed	100
 championing	83
-champions	112
+champions	113
 championship	124
 championship's	61
 championships	107
@@ -14950,7 +14956,7 @@ chandeliers	76
 chandelle	35
 Chandigarh	74
 Chandler	95
-chandler	87
+chandler	88
 Chandler's	69
 chandler's	33
 chandlers	48
@@ -15087,7 +15093,7 @@ chargeable	66
 charged	127
 charger	88
 chargers	72
-charges	131
+charges	132
 charging	111
 Chariot	68
 chariot	99
@@ -15154,7 +15160,7 @@ charqui	36
 charred	86
 charring	55
 chars	56
-chart	121
+chart	122
 chart's	62
 charted	89
 charter	111
@@ -15185,10 +15191,10 @@ chasers	74
 chases	93
 chasidim	50
 chasing	117
-chasm	79
+chasm	80
 chasms	59
 chasseur	46
-chassis	96
+chassis	97
 chassis's	33
 chaste	84
 chastely	44
@@ -15209,6 +15215,7 @@ Chateaubriand	57
 chateaus	35
 chateaux	57
 chatelaine	40
+ChatGPT	110
 Chatham	81
 Chatham's	43
 chatoyant	34
@@ -15285,7 +15292,7 @@ checkered	80
 checkering	45
 checkers	87
 checking	121
-checklist	82
+checklist	83
 checklists	63
 checkmate	88
 checkmated	55
@@ -15329,7 +15336,7 @@ cheerleader's	35
 cheerleaders	90
 cheerless	47
 cheers	121
-cheery	79
+cheery	80
 cheese	126
 cheese's	38
 cheeseburger	81
@@ -15448,7 +15455,7 @@ Chesterfield's	42
 Chesterton	70
 Chesterton's	46
 chestnut	95
-chestnuts	83
+chestnuts	84
 chests	87
 Chet	94
 Chet's	35
@@ -15674,7 +15681,7 @@ chipmunks	73
 chipped	89
 Chippendale	58
 Chippenham	66
-chipper	74
+chipper	75
 chippers	41
 Chippewa	79
 Chippewas	52
@@ -15843,7 +15850,7 @@ chough	51
 choughs	68
 chow	93
 Chowchilla	48
-chowder	75
+chowder	76
 chowders	40
 chows	35
 Chretien	47
@@ -15969,7 +15976,7 @@ Chuck's	60
 chucked	74
 chucker	37
 chuckers	33
-chucking	69
+chucking	70
 chuckle	93
 chuckled	45
 chuckles	115
@@ -16248,9 +16255,9 @@ cithara	44
 Citibank	67
 Citibank's	33
 Citicorp	50
-cities	129
+cities	130
 citing	95
-citizen	122
+citizen	123
 citizen's	81
 citizenry	84
 citizens	129
@@ -16313,7 +16320,7 @@ claimable	33
 claimant	94
 claimant's	62
 claimants	91
-claimed	127
+claimed	128
 claimer	37
 claiming	116
 claims	129
@@ -16336,7 +16343,7 @@ clamming	50
 clammy	66
 clamor	69
 clamored	59
-clamoring	89
+clamoring	90
 clamorous	45
 clamors	35
 clamp	95
@@ -16435,7 +16442,7 @@ class's	68
 classed	102
 classes	129
 classic	128
-classical	121
+classical	122
 classically	80
 classicism	82
 classicist	79
@@ -16532,7 +16539,7 @@ cleanliness	86
 cleanly	80
 cleanness	52
 cleans	88
-cleanse	91
+cleanse	92
 cleansed	83
 cleanser	66
 cleansers	51
@@ -16610,7 +16617,7 @@ clerestory	79
 clergies	38
 clergy	100
 clergy's	53
-clergyman	88
+clergyman	89
 clergyman's	47
 clergymen	88
 clergywoman	34
@@ -16666,7 +16673,7 @@ cliffhanger	85
 cliffhangers	63
 Clifford	97
 Clifford's	58
-cliffs	103
+cliffs	104
 clifftop	61
 cliffy	39
 Clift	63
@@ -16709,7 +16716,7 @@ cling	92
 clinging	91
 clings	76
 clingy	71
-clinic	118
+clinic	119
 clinic's	55
 clinical	111
 clinically	87
@@ -16923,7 +16930,7 @@ clutched	66
 clutches	90
 clutching	83
 clutter	81
-cluttered	71
+cluttered	72
 cluttering	57
 Clwyd	66
 Clyde	108
@@ -16968,7 +16975,7 @@ coach's	74
 coached	99
 coaches	112
 coaching	110
-coachman	78
+coachman	79
 coachman's	36
 coachmen	48
 coachwork	63
@@ -17240,7 +17247,7 @@ coenzyme	80
 coenzymes	50
 coequal	49
 coerce	76
-coerced	86
+coerced	87
 coerces	62
 coercing	65
 coercion	85
@@ -17330,7 +17337,7 @@ cohere	55
 cohered	34
 coherence	91
 coherency	61
-coherent	91
+coherent	92
 coherently	67
 coherer	59
 coheres	39
@@ -17396,7 +17403,7 @@ cokey	39
 coking	68
 col	86
 COLA	54
-cola	90
+cola	91
 Colan	57
 colander	42
 Colas	48
@@ -17451,7 +17458,7 @@ collaborationism	47
 collaborationist	77
 collaborationists	48
 collaborations	106
-collaborative	86
+collaborative	87
 collaboratively	80
 collaborator	93
 collaborators	92
@@ -17493,7 +17500,7 @@ colleagues	120
 collect	125
 collectable	75
 collectables	60
-collected	121
+collected	122
 collectible	78
 collectibles	74
 collecting	116
@@ -17592,7 +17599,7 @@ colognes	44
 Colombia	102
 Colombia's	68
 Colombian	95
-Colombians	72
+Colombians	73
 Colombo	82
 Colombo's	41
 Colon	69
@@ -17775,7 +17782,7 @@ comely	63
 Comenius	57
 comer	75
 comers	71
-comes	151
+comes	152
 comestible	35
 comestibles	35
 comet	105
@@ -18107,7 +18114,7 @@ compete	122
 competed	103
 competence	89
 competencies	83
-competency	78
+competency	79
 competent	102
 competently	68
 competes	110
@@ -18210,7 +18217,7 @@ comporting	35
 comportment	44
 comports	40
 compos	47
-compose	98
+compose	99
 composed	117
 composer	112
 composer's	94
@@ -18242,7 +18249,7 @@ compound	117
 compound's	58
 compounded	81
 compounding	82
-compounds	101
+compounds	102
 comprador	35
 comprehend	94
 comprehended	66
@@ -18401,7 +18408,7 @@ conceptualized	82
 conceptualizes	48
 conceptualizing	64
 conceptually	86
-concern	129
+concern	130
 concerned	133
 concerning	115
 concerns	123
@@ -18798,7 +18805,7 @@ conglomerations	47
 Congo	99
 Congo's	50
 Congolese	77
-congrats	132
+congrats	140
 congratulate	101
 congratulated	84
 congratulates	74
@@ -18967,7 +18974,7 @@ Conoco	51
 conquer	111
 conquered	111
 conquerer	33
-conquering	93
+conquering	94
 conqueror	88
 conqueror's	40
 conquerors	81
@@ -19300,7 +19307,7 @@ contains	126
 contaminant	76
 contaminants	91
 contaminate	80
-contaminated	102
+contaminated	103
 contaminates	57
 contaminating	74
 contamination	98
@@ -19356,7 +19363,7 @@ contested	93
 contesters	44
 contesting	81
 contests	97
-context	116
+context	117
 contexts	109
 contextual	85
 contextualization	49
@@ -19512,7 +19519,7 @@ contrive	57
 contrived	81
 contrives	59
 contriving	50
-control	152
+control	153
 control's	35
 controllability	62
 controllable	84
@@ -19663,7 +19670,7 @@ convulsions	80
 convulsive	62
 Conway	96
 Conway's	50
-coo	77
+coo	78
 cooch	57	n
 coochie	63	n
 cooed	32
@@ -19770,7 +19777,7 @@ Copernican	61
 Copernicus	79
 Copernicus's	39
 copes	64
-copied	105
+copied	106
 copier	74
 copiers	61
 copies	124
@@ -19922,7 +19929,7 @@ cordillera	54
 cordilleras	34
 cording	46
 cordite	70
-cordless	70
+cordless	71
 Cordoba	75
 cordon	86
 cordoned	71
@@ -20200,7 +20207,7 @@ Corsicans	46
 Cort	69
 Cort's	32
 cortege	63
-Cortes	74
+Cortes	75
 cortex	98
 cortexes	35
 Cortez's	35
@@ -20291,7 +20298,7 @@ costar	71
 costarred	67
 costarring	57
 costars	64
-Costco	96
+Costco	110
 Costello	91
 Costello's	61
 costing	99
@@ -20366,7 +20373,7 @@ coughing	108
 coughs	100
 could	177
 could've	67
-couldn't	144
+couldn't	156
 coulee	48
 coulees	47
 coulisses	34
@@ -20375,14 +20382,14 @@ Coulomb	66
 coulomb	57
 Coulomb's	48
 coulombs	49
-Coulter	78
+Coulter	79
 Coulter's	48
 Coulthard	77
 council	135
 council's	95
 councilman	93
 councilmen	68
-councilor	87
+councilor	88
 councilors	84
 councilpersons	35
 councils	93
@@ -20717,7 +20724,7 @@ cowhide	53
 cowing	32
 cowl	87
 cowled	52
-Cowley	74
+Cowley	75
 Cowley's	38
 cowlick	40
 cowling	76
@@ -20779,7 +20786,7 @@ CPU's	63
 CPUs	94
 CQ	73
 CR's	35
-crab	107
+crab	108
 crab's	46
 crabapple	47
 crabapples	46
@@ -20856,7 +20863,7 @@ cramps	87
 crams	39
 Cranach	53
 cranberries	72
-cranberry	84
+cranberry	85
 Crandall	75
 Crandall's	35
 Crane	94
@@ -21186,10 +21193,11 @@ crimper	34
 crimping	58
 crimps	45
 crimson	92
-cringe	70
+cringe	115
 cringed	36
 cringes	35
 cringing	46
+cringy	105
 crinkle	46
 crinkled	48
 crinkling	33
@@ -21235,7 +21243,7 @@ criteria	105
 criterion	83
 critic	112
 critic's	67
-critical	127
+critical	128
 criticality	75
 critically	98
 criticism	114
@@ -21274,7 +21282,7 @@ crocheters	35
 crocheting	52
 crochets	35
 crock	76
-crockery	70
+crockery	71
 crockets	44
 Crockett	92
 Crockett's	51
@@ -21394,7 +21402,7 @@ crosspieces	36
 crosspoint	44
 crosspoints	39
 crossroad	73
-crossroads	98
+crossroads	99
 crosstalk	69
 crossties	41
 crosstown	81
@@ -21507,7 +21515,7 @@ cruisers	94
 cruiserweight	75
 cruises	86
 cruising	98
-crumb	78
+crumb	79
 Crumb's	50
 crumbing	37
 crumble	90
@@ -21518,7 +21526,7 @@ crumbly	64
 crumbs	87
 crumhorn	45
 crummy	76
-crumpet	61
+crumpet	62
 crumpets	59
 crumple	65
 crumpled	76
@@ -21768,7 +21776,7 @@ culottes	63
 culpa	68
 culpability	72
 culpable	74
-culprit	100
+culprit	101
 culprit's	35
 culprits	83
 culs	50
@@ -21807,7 +21815,7 @@ culvert	76
 culverts	73
 cum	102	n
 Cumae	50
-Cumberland	88
+Cumberland	89
 Cumberland's	51
 Cumbernauld	61
 cumbersome	79
@@ -21890,7 +21898,7 @@ curator's	43
 curatorial	72
 curators	82
 curatorship	50
-curb	101
+curb	102
 curbed	69
 curbing	74
 curbs	70
@@ -21902,7 +21910,7 @@ curdled	55
 curdles	39
 curdling	55
 curds	68
-cure	122
+cure	123
 cured	110
 curer	35
 curers	42
@@ -21946,7 +21954,7 @@ currant	63
 currants	65
 currawong	37
 currencies	80
-currency	112
+currency	113
 currency's	56
 current	137
 currently	133
@@ -22021,7 +22029,7 @@ Cushing's	56
 cushion	95
 cushioned	68
 cushioning	65
-cushions	85
+cushions	86
 Cushman	65
 cushy	68
 cusk	38
@@ -22317,7 +22325,7 @@ Dadaist	51
 dadaist	52
 daddies	67
 Daddy	60
-daddy	121
+daddy	122
 daddy's	50
 Dade	83
 dado	65
@@ -22364,7 +22372,7 @@ daintily	32
 dainty	78
 daiquiri	59
 dairies	74
-dairy	105
+dairy	106
 dairying	70
 dairyman	47
 dairymen	46
@@ -22411,9 +22419,9 @@ Dalton	100
 Dalton's	57
 Daly	100
 Daly's	63
-dam	108
+dam	109
 dam's	80
-damage	135
+damage	136
 damaged	124
 damages	107
 damaging	102
@@ -22442,7 +22450,7 @@ damning	97	o
 damningly	35
 damns	85	o
 Damocles	62
-Damon	104
+Damon	105
 Damon's	51
 damp	101
 damped	74
@@ -22481,7 +22489,7 @@ dancer	120
 dancer's	69
 dancers	111
 dances	112
-dancing	131
+dancing	132
 dandelion	76
 dandelions	64
 dander	62
@@ -22545,7 +22553,7 @@ Danzig	79
 Danzig's	49
 Daphne	102
 Daphne's	49
-dapper	71
+dapper	72
 dapple	52
 dappled	59
 dappling	32
@@ -22585,12 +22593,12 @@ darkened	84
 darkening	73
 darkens	67
 darker	107
-darkest	96
+darkest	97
 darkies	57	n
 darkish	47
 darkly	73
 darkness	122
-darkroom	79
+darkroom	80
 darkrooms	48
 darks	34
 Darla	82
@@ -22598,7 +22606,7 @@ Darla's	39
 Darleen	32
 Darlene	86
 Darling	92
-darling	121
+darling	122
 Darling's	49
 darlings	80
 Darlington	79
@@ -22651,7 +22659,7 @@ Dash's	41
 Dasha	60
 dashboard	88
 dashboards	63
-dashed	88
+dashed	89
 dasheen	35
 dasher	61
 dashes	72
@@ -22874,7 +22882,7 @@ dealkylation	38
 deallocate	42
 deallocated	48
 deallocation	48
-deals	118
+deals	119
 dealt	116
 deaminating	56
 Dean	114
@@ -22959,7 +22967,7 @@ Deborah	98
 Deborah's	41
 debouches	45
 debouching	32
-Debra	93
+Debra	94
 Debra's	36
 debride	36
 debrided	33
@@ -23349,7 +23357,7 @@ deemphasizes	35
 deemphasizing	39
 deems	77
 Deena	76
-deep	141
+deep	142
 deepen	75
 deepened	76
 deepening	74
@@ -23551,7 +23559,7 @@ defter	47
 deftly	72
 deftness	45
 defunct	89
-defuse	83
+defuse	84
 defused	71
 defuses	53
 defusing	67
@@ -23702,7 +23710,7 @@ deliberated	73
 deliberately	114
 deliberates	44
 deliberating	69
-deliberation	83
+deliberation	84
 deliberations	80
 deliberative	77
 Delibes	51
@@ -23802,6 +23810,7 @@ deluding	59
 deluge	79
 deluged	60
 deluges	34
+delulu	90
 delusion	91
 delusional	94
 delusions	92
@@ -24068,7 +24077,7 @@ denotation	67
 denotational	62
 denotations	50
 denotative	46
-denote	84
+denote	85
 denoted	109
 denotes	109
 denoting	97
@@ -24406,7 +24415,7 @@ Descartes's	36
 descend	101
 descendant	102
 descendant's	33
-descendants	108
+descendants	109
 descended	107
 descendent	76
 descender	60
@@ -24567,16 +24576,16 @@ destabilizing	71
 destination	119
 destination's	33
 destinations	95
-destined	108
+destined	109
 destines	33
 destinies	79
-destiny	118
+destiny	119
 destitute	87
 destitution	69
 destroy	135
 destroyable	32
 destroyed	138
-destroyer	107
+destroyer	108
 destroyer's	70
 destroyers	97
 destroying	118
@@ -24585,7 +24594,7 @@ destruct	80
 destructed	62
 destructible	62
 destructing	56
-destruction	124
+destruction	125
 destructions	62
 destructive	105
 destructively	61
@@ -24847,7 +24856,7 @@ devoured	87
 devourer	52
 devouring	81
 devours	73
-devout	94
+devout	95
 devoutly	71
 devoutness	43
 dew	93
@@ -25099,14 +25108,14 @@ Diderot	62
 Diderot's	42
 didgeridoo	70
 didgeridoos	42
-didn't	160
+didn't	175
 Dido	72
 Dido's	45
 die	149
 dieback	67
 Diebold	56
 diecast	66
-died	156
+died	157
 Diefenbaker	72
 Diego	119
 Diego's	69
@@ -25208,7 +25217,7 @@ digesting	71
 digestion	89
 digestive	93
 digests	70
-digger	89
+digger	90
 diggers	76
 digging	116
 diggings	71
@@ -25318,7 +25327,7 @@ dimensionally	70
 dimensioned	60
 dimensioning	54
 dimensionless	84
-dimensions	108
+dimensions	109
 dimer	75
 dimerization	65
 dimers	63
@@ -25383,7 +25392,7 @@ dings	88
 Dingus	56
 dingy	73
 dining	117
-dink	70
+dink	71
 Dink's	32
 dinkum	36
 dinky	67
@@ -25785,14 +25794,14 @@ discriminants	44
 discriminate	85
 discriminated	77
 discriminates	65
-discriminating	75
+discriminating	76
 discrimination	104
 discriminations	57
 discriminative	61
 discriminator	53
 discriminators	42
 discriminatory	94
-discs	95
+discs	96
 discursive	75
 discursively	37
 discus	77
@@ -25864,7 +25873,7 @@ disgorged	42
 disgorges	37
 disgorging	45
 disgrace	107
-disgraced	92
+disgraced	93
 disgraceful	88
 disgracefully	44
 disgraces	46
@@ -26032,7 +26041,7 @@ disorder	116
 disordered	82
 disordering	41
 disorderly	87
-disorders	101
+disorders	102
 disorganization	71
 disorganize	40
 disorganized	84
@@ -26114,7 +26123,7 @@ displayable	44
 displayed	107
 displaying	94
 displays	104
-displease	64
+displease	65
 displeased	87
 displeases	46
 displeasing	61
@@ -26159,7 +26168,7 @@ disputations	61
 disputatious	37
 dispute	113
 disputed	93
-disputes	99
+disputes	100
 disputing	73
 disqualification	95
 disqualifications	66
@@ -26538,7 +26547,7 @@ dizziness	87
 dizzy	98
 dizzying	64
 dizzyingly	34
-DJ	116
+DJ	117
 DJ's	84
 Djakarta	35
 djellaba	34
@@ -26597,7 +26606,7 @@ doable	67
 DOB	68
 Dobbin	62
 Dobbins	59
-Dobbs	86
+Dobbs	87
 dobby	63
 Dobell	53
 Doberman	55
@@ -26664,12 +26673,12 @@ documentations	52
 documented	106
 documenter	38
 documenting	88
-documents	126
+documents	127
 Dodd	88
 Dodd's	58
 dodder	49
 doddering	43
-Dodds	72
+Dodds	73
 dodecagonal	50
 dodecahedra	51
 dodecahedral	55
@@ -26701,7 +26710,7 @@ Doe's	45
 doer	73
 doers	62
 does	164
-doesn't	127
+doesn't	155
 doest	55
 doff	40
 doffed	33
@@ -26879,7 +26888,7 @@ dominus	70
 Domitian	69
 Domitian's	51
 Don's	64
-don't	185
+don't	195
 Dona	68
 dona	78
 Donahue	81
@@ -26967,15 +26976,17 @@ Doom's	60
 doomed	108
 dooming	58
 dooms	48
+doomscrolling	85
 doomsday	86
 Doomsday's	39
 Doonesbury	55
 door	152
 door's	53
-doorbell	103
+doorbell	104
 doorbells	46
 doorcase	34
 doorcases	34
+DoorDash	110
 doorframe	43
 doorframes	41
 doorkeeper	53
@@ -27082,8 +27093,8 @@ dotage	40
 dote	61
 doted	62
 dotes	57
-doth	89
-doting	70
+doth	90
+doting	71
 dots	103
 Dotson	52
 dotted	91
@@ -27446,7 +27457,7 @@ Dre's	59
 dread	93
 dreaded	88
 dreadful	104
-dreadfully	75
+dreadfully	76
 dreading	70
 dreadlocks	70
 dreadnaught	36
@@ -27483,7 +27494,7 @@ dreariness	34
 dreary	86
 dreck	38
 dredge	85
-dredged	74
+dredged	75
 dredger	56
 dredgers	51
 dredges	63
@@ -27537,7 +27548,7 @@ driest	77
 drift	108
 drifted	97
 drifter	83
-drifters	68
+drifters	69
 drifting	100
 driftless	35
 drifts	81
@@ -27570,7 +27581,7 @@ Driscoll	85
 Driscoll's	42
 drivability	51
 drivable	61
-drive	146
+drive	147
 drive's	60
 driveability	53
 drivel	71
@@ -27600,7 +27611,7 @@ drogue	70
 drogues	44
 droid	83
 droid's	34
-droids	79
+droids	80
 droits	58
 droll	71
 drollery	41
@@ -27701,7 +27712,7 @@ drumming	97
 Drummond	88
 Drummond's	58
 drumroll	67
-drums	119
+drums	120
 drumstick	70
 drumsticks	72
 drunk	132
@@ -27942,7 +27953,7 @@ dumbstruck	43
 dumbwaiter	52
 dumdum	32
 Dumfries	80
-dummies	85
+dummies	86
 dummy	108
 dummy's	55
 dummying	38
@@ -28002,7 +28013,7 @@ dunkers	37
 dunking	70
 Dunkirk	81
 dunks	66
-Dunlap	74
+Dunlap	75
 Dunlap's	41
 dunlin	35
 Dunlop	78
@@ -28090,7 +28101,7 @@ Durban	76
 Durban's	32
 durbar	58
 Durer	33
-duress	84
+duress	85
 Durex	34
 Durham	94
 Durham's	61
@@ -28368,7 +28379,7 @@ earthward	32
 earthwork	84
 earthworks	92
 earthworm	68
-earthworms	72
+earthworms	73
 earthy	78
 Earvin	37
 earwax	50
@@ -28395,7 +28406,7 @@ eastbound	87
 Eastbourne	78
 EastEnders	82
 Easter	103
-easter	96
+easter	97
 easterlies	48
 easterly	95
 Eastern	127
@@ -28596,7 +28607,7 @@ Eda	64
 Edam	45
 Edda	78
 Eddi	44
-Eddie	126
+Eddie	127
 Eddie's	70
 eddies	69
 Eddington	69
@@ -29208,7 +29219,7 @@ eliminative	51
 eliminator	67
 eliminators	39
 eliminatory	35
-Elinor	73
+Elinor	74
 Eliot	96
 Eliot's	68
 Elis	68
@@ -29244,7 +29255,7 @@ Elkhart	69
 Elkhound	34
 elks	57
 ell	81
-Ella	103
+Ella	104
 Ella's	48
 Elle	88
 Elle's	41
@@ -29281,7 +29292,7 @@ Elly	76
 Ellyn	49
 elm	91
 Elma	55
-Elmer	89
+Elmer	90
 Elmer's	50
 Elmhurst	67
 Elmira	77
@@ -29306,7 +29317,7 @@ elongating	59
 elongation	82
 elongations	44
 elope	88
-eloped	87
+eloped	88
 elopement	68
 elopes	59
 eloping	73
@@ -29380,11 +29391,11 @@ emaciated	70
 emaciation	53
 Emacs	63
 emacs	51
-email	121
+email	150
 email's	35
 emailed	80
 emailing	68
-emails	99
+emails	130
 emanate	74
 emanated	75
 emanates	72
@@ -29507,7 +29518,7 @@ embryological	37
 embryology	69
 embryonic	78
 embryos	89
-emcee	80
+emcee	81
 emcee's	33
 emceed	63
 emceeing	50
@@ -29523,7 +29534,7 @@ emerald	94
 emeralds	82
 emerge	107
 emerged	112
-emergence	92
+emergence	93
 emergences	36
 emergencies	97
 emergency	134
@@ -29607,14 +29618,14 @@ Emmerich	65
 Emmerich's	37
 Emmet	83
 Emmet's	40
-Emmett	92
+Emmett	93
 Emmett's	46
 Emmie	55
 Emmott	37
 Emmy's	37
 emo	76
-emoji	117
-emojis	107
+emoji	125
+emojis	115
 emollient	56
 emollients	45
 emolument	51
@@ -29658,7 +29669,7 @@ emphatically	78
 emphysema	77
 empire	127
 empire's	83
-empires	91
+empires	92
 empiric	53
 empirical	90
 empirically	85
@@ -29848,7 +29859,7 @@ encrusting	53
 encrypt	77
 encrypted	96
 encrypting	68
-encryption	96
+encryption	97
 encryptions	49
 encrypts	61
 encumber	45
@@ -29875,7 +29886,7 @@ endangerment	75
 endangers	67
 endear	70
 endeared	78
-endearing	81
+endearing	82
 endearingly	53
 endearment	69
 endearments	35
@@ -30241,7 +30252,7 @@ enterprise	116
 Enterprise's	47
 enterprise's	54
 enterprises	103
-enterprising	79
+enterprising	80
 enters	114
 entertain	106
 entertained	97
@@ -30425,7 +30436,7 @@ enwrapped	37
 enzymatic	84
 enzyme	102
 enzyme's	61
-enzymes	93
+enzymes	94
 Eocene	77
 EOD	70
 EOE	62
@@ -30679,7 +30690,7 @@ eras	82
 erasable	57
 erase	103
 erased	103
-eraser	77
+eraser	78
 Eraserhead	45
 Eraserheads	49
 erasers	66
@@ -30990,7 +31001,7 @@ estancia	52
 estancias	44
 estate	132
 estate's	77
-estates	103
+estates	104
 este	73
 Esteban	87
 Esteban's	35
@@ -31006,7 +31017,7 @@ ester	87
 esters	83
 Estes	70
 Estevan	55
-Esther	112
+Esther	113
 Esther's	52
 esthetic	66
 esthetically	42
@@ -31029,7 +31040,7 @@ Estonian	85
 Estonians	70
 estopped	48
 estoppels	36
-Estrada	76
+Estrada	77
 Estrada's	49
 estrange	44
 estranged	92
@@ -31067,7 +31078,7 @@ eternal	116
 eternalized	33
 eternally	90
 eternities	35
-eternity	106
+eternity	107
 ETH	74
 Ethan	109
 Ethan's	55
@@ -31200,7 +31211,7 @@ Eunice	83
 Eunice's	33
 eunuch	90
 eunuchs	81
-euphemism	83
+euphemism	84
 euphemisms	70
 euphemistic	63
 euphemistically	66
@@ -31224,7 +31235,7 @@ eurhythmics	38
 Euripides	71
 Euripides's	36
 Euro	101
-euro	101
+euro	102
 euro's	35
 EuroBasket	84
 eurobeat	54
@@ -31480,7 +31491,7 @@ Evreux	41
 Evros	49
 Evy	58
 Evzone	32
-ew	122
+ew	130
 Ewan	79
 Ewart	74
 ewe	70
@@ -31575,7 +31586,7 @@ excellent	134
 excellently	68
 excelling	79
 excels	74
-excelsior	70
+excelsior	71
 Excelsiors	39
 except	144
 excepted	71
@@ -31583,7 +31594,7 @@ excepting	77
 exception	121
 exceptional	110
 exceptionally	99
-exceptions	105
+exceptions	106
 excepts	36
 excerpt	94
 excerpted	73
@@ -31627,7 +31638,7 @@ exciton	34
 exclaim	78
 exclaimed	88
 exclaiming	95
-exclaims	96
+exclaims	97
 exclamation	85
 exclamations	63
 exclamatory	48
@@ -31767,7 +31778,7 @@ exhaust	104
 exhausted	116
 exhauster	35
 exhaustible	39
-exhausting	95
+exhausting	96
 exhaustion	96
 exhaustive	82
 exhaustively	70
@@ -31942,7 +31953,7 @@ expensively	64
 experience	142
 experienced	125
 experiences	119
-experiencing	107
+experiencing	108
 experiential	87
 experientially	46
 experiment	124
@@ -32219,7 +32230,7 @@ extralegal	61
 extramarital	76
 extramural	67
 extraneous	71
-extraordinarily	93
+extraordinarily	94
 extraordinary	123
 extrapolate	70
 extrapolated	75
@@ -32279,7 +32290,7 @@ extrusion	77
 extrusions	57
 extrusive	59
 exuberance	73
-exuberant	76
+exuberant	77
 exuberantly	54
 exudate	34
 exudates	59
@@ -32408,7 +32419,7 @@ faceplates	54
 faces	128
 facet	78
 faceted	84
-facetime	107
+FaceTime	115
 faceting	51
 facetious	67
 facetiously	64
@@ -32432,7 +32443,7 @@ facilitators	70
 facilities	121
 facility	127
 facility's	78
-facing	124
+facing	125
 facings	76
 facsimile	76
 facsimiles	67
@@ -32464,7 +32475,7 @@ factorized	49
 factorizes	42
 factorizing	35
 factors	113
-factory	131
+factory	132
 factory's	73
 factotum	54
 facts	124
@@ -32518,7 +32529,7 @@ failings	79
 fails	113
 failsafe	66
 failsafes	34
-failure	130
+failure	131
 failures	104
 fain	63
 Faina	40
@@ -32531,7 +32542,7 @@ faintly	84
 faintness	47
 faints	76
 Fair	110
-fair	138
+fair	139
 Fair's	49
 fair's	64
 Fairbanks	85
@@ -32803,7 +32814,7 @@ Fargo's	49
 farina	44
 Farina's	37
 farinaceous	41
-faring	74
+faring	75
 Farkas	57
 Farleigh	56
 Farley	88
@@ -32816,7 +32827,7 @@ Farmer	92
 farmer	119
 Farmer's	74
 farmer's	87
-farmers	119
+farmers	120
 farmhand	69
 farmhands	54
 farmhouse	96
@@ -33109,7 +33120,7 @@ feasible	91
 feasibly	57
 feast	116
 feasted	61
-feasting	79
+feasting	80
 feasts	82
 feat	103
 feather	105
@@ -33202,9 +33213,9 @@ feedstock	80
 feedstuffs	39
 feel	155
 feeler	49
-feelers	70
+feelers	71
 feeling	142
-feelings	133
+feelings	134
 feels	134
 feely	45
 Feeney	70
@@ -33223,7 +33234,7 @@ feints	57
 Feisal	42
 Feist's	38
 feistiness	39
-feisty	86
+feisty	87
 Felder	69
 Feldman	86
 Feldman's	50
@@ -33304,7 +33315,7 @@ femininity	79
 feminism	88
 feminism's	41
 feminisms	41
-feminist	101
+feminist	102
 feministic	37
 feminists	83
 feminization	62
@@ -33705,7 +33716,7 @@ figure's	68
 figured	124
 figurehead	80
 figureheads	65
-figures	128
+figures	129
 figurine	78
 figurines	84
 figuring	98
@@ -33722,14 +33733,14 @@ Filbert	55
 filbert	42
 file	135
 file's	65
-filed	120
+filed	121
 filefish	50
 FileMaker	64
 filename	81
 filenames	71
 filer	53
 filers	57
-files	127
+files	128
 filesharing	59
 filespec	34
 filesystem	88
@@ -33834,7 +33845,7 @@ financiers	76
 financing	102
 financings	53
 Finch	88
-finch	99
+finch	100
 Finch's	52
 finches	75
 Finchley	69
@@ -33874,7 +33885,7 @@ fingerless	50
 fingerlings	53
 fingernail	80
 fingernails	94
-fingerprint	96
+fingerprint	97
 fingerprinted	64
 fingerprinting	80
 fingerprints	108
@@ -34389,7 +34400,7 @@ flavoring	82
 flavorings	71
 flavorless	45
 flavors	99
-flaw	98
+flaw	99
 flawed	96
 flawless	91
 flawlessly	70
@@ -34566,7 +34577,7 @@ FLOC	55
 flocculation	33
 flock	103
 flocked	78
-flocking	72
+flocking	73
 flocks	88
 Flodden	58
 floe	64
@@ -34643,7 +34654,7 @@ Florian's	45
 floribunda	56
 floriculture	55
 florid	73
-Florida	124
+Florida	125
 Florida's	86
 Floridian	56
 Floridians	53
@@ -34870,7 +34881,7 @@ focus	136
 focusable	33
 focused	125
 focuser	37
-focuses	97
+focuses	98
 focusing	110
 fodder	87
 Fodor	59
@@ -35306,7 +35317,7 @@ forgetful	80
 forgetfulness	70
 forgets	96
 forgettable	70
-forgetting	106
+forgetting	107
 forging	89
 forgings	58
 forgivable	45
@@ -35332,7 +35343,7 @@ forklifts	61
 forks	95
 forlorn	76
 forlornly	43
-form	147
+form	148
 form's	58
 forma	73
 formability	39
@@ -35427,7 +35438,7 @@ forsworn	42
 Forsythe	75
 Forsythe's	35
 forsythia	37
-fort	123
+fort	124
 fort's	84
 Fortaleza	66
 fortalice	45
@@ -35463,6 +35474,7 @@ fortnight	94
 fortnight's	52
 fortnightly	83
 fortnights	37
+Fortnite	110
 FORTRAN	78
 Fortran	71
 fortress	113
@@ -35668,7 +35680,7 @@ FrameMaker	49
 framer	55
 framers	69
 frames	105
-framework	100
+framework	101
 framework's	35
 frameworks	92
 framing	95
@@ -35752,7 +35764,7 @@ Franklin	114
 franklin	86
 Franklin's	77
 franklinite	33
-frankly	108
+frankly	109
 Franklyn	66
 frankness	73
 Franks	91
@@ -35767,7 +35779,7 @@ Franz	107
 Franz's	45
 FRAP	55
 frappe	45
-Fraser	102
+Fraser	103
 Fraser's	69
 Frasers	51
 Frasier	97
@@ -35841,7 +35853,7 @@ Fredericksburg	80
 Frederickson	37
 Frederico	64
 Fredericton	75
-Frederik	82
+Frederik	83
 Frederik's	36
 Frederiksberg	56
 Frederique	37
@@ -35902,7 +35914,7 @@ frees	86
 freest	55
 freestanding	82
 freestone	61
-freestyle	93
+freestyle	94
 freestyles	60
 freethinker	58
 freethinkers	58
@@ -36052,7 +36064,7 @@ friend's	96
 friending	34
 friendless	67
 friendlier	73
-friendlies	77
+friendlies	78
 friendliest	63
 friendliness	72
 friendly	129
@@ -36137,7 +36149,7 @@ frocks	61
 froe	37
 Froebel	40
 Froehlich	42
-frog	115
+frog	116
 frog's	65
 frogfish	49
 frogged	43
@@ -36453,7 +36465,7 @@ funnily	59
 funniness	32
 funny	136
 funnyman	34
-fur	115
+fur	116
 furan	59
 furbished	50
 Furies	65
@@ -36527,7 +36539,7 @@ fusion	108
 fusional	56
 fusionism	41
 fusions	71
-fuss	100
+fuss	101
 fussed	36
 fusses	56
 fussiness	37
@@ -36565,6 +36577,7 @@ fuzziness	47
 fuzzy	99
 FWD	75
 fwd	40	n
+fwiw	95
 FYI	53
 fyi	122	s
 Fylde	66
@@ -37028,7 +37041,7 @@ Garrett's	59
 Garrick	75
 Garrick's	49
 Garrison	90
-garrison	109
+garrison	110
 Garrison's	56
 garrison's	59
 garrisoned	91
@@ -37079,7 +37092,8 @@ Gaskell	64
 Gaskell's	40
 gasket	79
 gaskets	69
-gaslight	54
+gaslight	95
+gaslighting	105
 gaslights	43
 gasohol	42
 gasoline	109
@@ -37300,7 +37314,7 @@ geeky	72
 Geelong	91
 Geelong's	56
 geese	97
-geez	83
+geez	84
 geezer	75
 GEF	67
 gefilte	45
@@ -37549,7 +37563,7 @@ geographic	99
 geographical	96
 geographically	85
 geographies	67
-geography	105
+geography	106
 geography's	32
 geologic	97
 geological	100
@@ -37722,7 +37736,7 @@ gesture	111
 gestured	58
 gestures	98
 gesturing	63
-get	188
+get	189
 getaway	97
 getaways	49
 Gethsemane	56
@@ -37781,8 +37795,8 @@ Ghirlandaio	53
 Ghislaine	42
 ghost	129
 ghost's	53
-ghosted	97
-ghosting	63
+ghosted	105
+ghosting	100
 ghostlike	41
 ghostly	90
 ghosts	116
@@ -37865,7 +37879,7 @@ gigabits	51
 gigabyte	64
 gigabytes	70
 gigahertz	58
-gigantic	103
+gigantic	104
 gigantism	59
 gigas	70
 gigatons	45
@@ -37911,7 +37925,7 @@ Giles	99
 Giles's	48
 Gilgamesh	68
 Gill	93
-gill	93
+gill	94
 Gill's	58
 Gillan	67
 gilled	56
@@ -37931,7 +37945,7 @@ Gillingham's	40
 gillnet	59
 gillnets	62
 Gillray	45
-gills	89
+gills	90
 Gilly	77
 Gilmore	92
 Gilmore's	50
@@ -38000,7 +38014,7 @@ Gippsland	76
 gipsy	62
 giraffe	91
 giraffe's	44
-giraffes	78
+giraffes	79
 Giralda	38
 Girard	78
 Girard's	50
@@ -38027,7 +38041,7 @@ girlie	80
 girlish	72
 girls	149
 girly	81
-giro	61
+giro	62
 Gironde	62
 girt	54
 girth	78
@@ -38060,7 +38074,7 @@ giver	84
 giver's	35
 givers	66
 gives	141
-giving	145
+giving	146
 Giza	75
 gizmo	68
 gizmos	60
@@ -38095,7 +38109,7 @@ gladiatorial	73
 gladiators	84
 gladioli	46
 gladiolus	40
-gladly	100
+gladly	101
 gladness	64
 Gladrags	35
 Gladstone	86
@@ -38152,7 +38166,7 @@ glassworkers	41
 glassworks	66
 glasswort	43
 glassy	74
-Glastonbury	74
+Glastonbury	75
 Glaswegian	54
 Glaswegians	37
 glaucoma	77
@@ -38290,7 +38304,7 @@ globulins	52
 globus	68
 glockenspiel	74
 glockenspiels	45
-gloom	85
+gloom	86
 gloomier	41
 gloomiest	37
 gloomily	44
@@ -38477,6 +38491,7 @@ goanna	65
 goannas	55
 goat	123	s
 goat's	70
+goated	95
 goatee	78
 goatees	37
 goatfish	49
@@ -38580,7 +38595,7 @@ Gogol	73
 Gogol's	54
 Goias	38
 going	181
-goings	77
+goings	78
 goiter	60
 goiters	40
 Golan	73
@@ -38665,7 +38680,7 @@ gonadal	40	n
 gonadectomy	40	n
 gonadotrophin	40	n
 gonadotropic	40	n
-gonads	70	n
+gonads	71	n
 Goncourt	58
 gond	35
 Gondar	64
@@ -38743,7 +38758,7 @@ goofy	91
 Google	101
 google	93
 Google's	72
-googled	97
+googled	105
 googlies	42
 googling	59
 googly	70
@@ -38950,7 +38965,7 @@ Gracie	97
 Gracie's	50
 Graciela	62
 gracing	59
-gracious	99
+gracious	100
 graciously	83
 graciousness	50
 grackle	35
@@ -39115,7 +39130,7 @@ granges	51
 granite	102
 granites	74
 granitic	77
-grannies	56
+grannies	57
 Granny	73
 granny	99
 Granny's	43
@@ -39431,7 +39446,7 @@ Gregg's	56
 Gregoire	65
 Gregor	88
 Gregor's	45
-Gregorian	76
+Gregorian	77
 Gregory	108
 Gregory's	72
 gremlin	69
@@ -39455,7 +39470,7 @@ Grenville	78
 Grenville's	42
 grep	58
 GRES	51
-Gresham	73
+Gresham	74
 Gresham's	61
 Greta	94
 Gretchen	94
@@ -39543,7 +39558,7 @@ grinded	39
 Grindelwald	52
 grinder	87
 grinders	73
-grinding	100
+grinding	101
 grinds	75
 grindstone	65
 grindstones	53
@@ -39591,7 +39606,7 @@ groat	62
 groats	59
 grocer	86
 grocer's	59
-groceries	99
+groceries	100
 grocers	74
 grocery	109
 Grodno	63
@@ -39726,13 +39741,13 @@ grow	137
 grower	73
 grower's	33
 growers	82
-growing	135
+growing	136
 growingly	35
 growl	88
 growled	59
 growler	42
 growlers	40
-growling	106
+growling	107
 growls	102
 grown	132
 grownup	69
@@ -39812,7 +39827,7 @@ Guanabara	56
 guanaco	53
 guanacos	46
 Guanajuato	72
-Guangzhou	81
+Guangzhou	82
 guanine	43
 guano	75
 guans	58
@@ -39945,7 +39960,7 @@ Guile's	32
 guileless	48
 Guilford	77
 Guilford's	37
-Guillaume	89
+Guillaume	90
 Guillaume's	36
 guillemot	44
 guillemots	55
@@ -40114,7 +40129,7 @@ gushed	59
 gusher	54
 gushers	35
 gushes	54
-gushing	77
+gushing	78
 gusset	57
 gussets	45
 Gussie	67
@@ -40170,7 +40185,7 @@ guzzler	41
 guzzlers	32
 guzzling	62
 Gwalior	76
-Gwen	105
+Gwen	106
 Gwen's	59
 Gwendolyn	72
 Gwent	70
@@ -40208,7 +40223,7 @@ Gypsies	76
 gypsies	90
 gypsum	75
 Gypsy	86
-gypsy	102
+gypsy	103
 Gypsy's	37
 gypsy's	35
 gyrate	46
@@ -40305,7 +40320,7 @@ Hadji	73
 Hadleigh	54
 Hadley	85
 Hadley's	46
-hadn't	102
+hadn't	126
 Hadrian	78
 Hadrian's	70
 hadron	65
@@ -40377,7 +40392,7 @@ hairbrushes	38
 haircare	48
 haircloth	34
 haircut	101
-haircuts	76
+haircuts	77
 haircutting	37
 hairdo	80
 hairdos	49
@@ -40560,7 +40575,7 @@ Hamilton's	82
 Hamiltonian	82
 Hamiltonians	45
 Hamiltons	51
-Hamish	82
+Hamish	83
 Hamitic	42
 Hamlet	92
 hamlet	111
@@ -40579,7 +40594,7 @@ hammered	93
 Hammerfest	53
 hammerhead	80
 hammerheads	54
-hammering	90
+hammering	91
 hammerless	55
 hammerlock	35
 hammers	89
@@ -40689,7 +40704,7 @@ handing	105
 handiwork	80
 handkerchief	97
 handkerchiefs	76
-handle	137
+handle	138
 handlebar	72
 handlebars	76
 handled	118
@@ -40752,7 +40767,7 @@ handymen	48
 Haney	65
 Haney's	34
 Hanford	70
-hang	134
+hang	135
 hangar	99
 hangared	39
 hangars	94
@@ -40773,7 +40788,7 @@ hangs	107
 Hangul	72
 hangup	37
 hangups	34
-Hangzhou	73
+Hangzhou	74
 Hank	97
 hank	96
 Hank's	59
@@ -40908,7 +40923,7 @@ hardpan	56
 hards	47
 hardscrabble	49
 hardshell	40
-hardship	97
+hardship	98
 hardships	94
 hardstand	45
 hardstands	66
@@ -41133,7 +41148,7 @@ hashes	72
 Hashim	70
 hashing	74
 hashish	76
-hashtag	102
+hashtag	110
 hasid	33
 hasidic	53
 Hasidim	69
@@ -41142,7 +41157,7 @@ Haskell	89
 Haskell's	45
 Haskins	69
 Haslett	47
-hasn't	101
+hasn't	129
 hasp	32
 Hassel	50
 Hasselt	58
@@ -41150,7 +41165,7 @@ hassle	88
 hassled	64
 hassles	69
 hassling	68
-hast	76
+hast	77
 hastate	35
 haste	96
 hasten	82
@@ -41185,11 +41200,11 @@ hatchlings	71
 hatchment	40
 hatchway	44
 hatchways	35
-hate	137
+hate	138
 hated	120
 hateful	88
 hater	73
-haters	73
+haters	74
 hates	116
 Hatfield	81
 Hatfield's	47
@@ -41197,7 +41212,7 @@ hath	102
 Hathaway	86
 Hathaway's	51
 Hathor	59
-hating	95
+hating	96
 hatless	36
 hatmaker	33
 hatmakers	33
@@ -41232,7 +41247,7 @@ haunted	110
 haunting	98
 hauntingly	60
 hauntings	65
-haunts	88
+haunts	89
 Hauptmann	72
 Hauptmann's	43
 Hausa	72
@@ -41253,7 +41268,7 @@ Havelock's	39
 Haven	103
 haven	99
 Haven's	55
-haven't	97
+haven't	138
 havens	74
 haversack	43
 haversacks	35
@@ -41273,7 +41288,7 @@ hawk's	49
 hawked	48
 hawker	69
 hawkers	69
-Hawkeye	90
+Hawkeye	91
 Hawkeye's	42
 Hawking	69
 hawking	83
@@ -41363,7 +41378,7 @@ Hazlitt's	42
 hazy	82
 hazzan	56
 HB	85
-HBO	95
+HBO	96
 HBO's	86
 HBOS	62
 hbu	122	s
@@ -41383,11 +41398,11 @@ HDTV	58
 HDTVs	45
 HDV	70
 HDZ	76
-he	198
+he	199
 he'd	107
 he'll	94
 He's	98
-he's	122
+he's	155
 Head	117
 head	160
 Head's	58
@@ -41541,7 +41556,7 @@ heartache	83
 heartaches	56
 heartbeat	100
 heartbeats	73
-heartbreak	87
+heartbreak	88
 heartbreaker	70
 Heartbreakers	64
 heartbreaking	85
@@ -41584,7 +41599,7 @@ heater	97
 heater's	33
 heaters	81
 Heath	100
-heath	96
+heath	97
 Heath's	59
 heathen	86
 heathenish	37
@@ -41669,7 +41684,7 @@ hedge	99
 hedged	64
 hedgehog	92
 hedgehog's	41
-hedgehogs	79
+hedgehogs	80
 hedgerow	62
 hedgerows	71
 hedgers	41
@@ -41830,7 +41845,7 @@ Heller	80
 heller	70
 Heller's	54
 Hellespont	58
-hellfire	74
+hellfire	75
 hellhole	68
 hellhound	40
 hellhounds	43
@@ -41880,7 +41895,7 @@ helpmate	52
 helpmates	44
 helps	127
 Helsingborg	64
-Helsinki	92
+Helsinki	93
 Helsinki's	45
 helter	60
 helve	39
@@ -42091,7 +42106,7 @@ Herculaneum	59
 Hercule	74
 Herculean	44
 herculean	49
-Hercules	109
+Hercules	110
 Hercules's	34
 herd	109
 herd's	42
@@ -42257,7 +42272,7 @@ hesitated	88
 hesitates	74
 hesitating	78
 hesitatingly	33
-hesitation	96
+hesitation	97
 hesitations	56
 Hesperia	54
 Hesperian	37
@@ -42403,7 +42418,7 @@ Hicks's	46
 Hickson	57
 Hicksville	53
 hid	115
-hidalgo	60
+hidalgo	61
 Hidalgo's	44
 hidalgos	44
 hidden	130
@@ -42496,7 +42511,7 @@ hijacks	61
 hijinks	55
 hike	104
 hiked	75
-hiker	71
+hiker	72
 hiker's	45
 hikers	84
 hikes	74
@@ -42556,7 +42571,7 @@ hilly	89
 Hillyer	49
 hilt	84
 hilted	56
-Hilton	96
+Hilton	97
 Hilton's	57
 hilts	58
 Hilversum	60
@@ -42641,7 +42656,7 @@ hippogriff	51
 hippopotami	51
 hippopotamus	78
 hippopotamuses	58
-hippos	77
+hippos	78
 hippy	79
 hips	102
 hipster	77
@@ -42713,7 +42728,7 @@ hitched	83
 hitches	67
 hitchhike	72
 hitchhiked	66
-hitchhiker	76
+hitchhiker	77
 hitchhiker's	34
 hitchhikers	66
 hitchhikes	46
@@ -42753,6 +42768,7 @@ HMO	69
 Hmong	78
 HMOs	61
 HMSO	54
+hmu	115
 HNC	63
 HND	62
 HNK	65
@@ -42774,7 +42790,7 @@ hoarders	51
 hoarding	81
 hoardings	59
 hoards	71
-hoarse	76
+hoarse	77
 hoarsely	54
 hoarseness	50
 hoary	64
@@ -42794,7 +42810,7 @@ Hobbes's	42
 Hobbesian	32
 hobbies	96
 hobbing	40
-hobbit	75
+hobbit	76
 Hobbiton	33
 hobbits	69
 hobble	65
@@ -42884,7 +42900,7 @@ Hohenlohe	62
 Hohenstaufen	69
 Hohenzollern	76
 hoi	78
-hoist	90
+hoist	91
 hoisted	82
 hoisting	77
 hoists	71
@@ -42934,14 +42950,14 @@ holed	91
 holes	122
 holey	44
 Holiday	97
-holiday	127
+holiday	128
 Holiday's	49
 holiday's	44
 holidayed	53
 holidaying	64
 holidaymaker	35
 holidaymakers	71
-holidays	116
+holidays	117
 holier	61
 holies	42
 holiest	78
@@ -43423,7 +43439,7 @@ horrendous	85
 horrendously	45
 horrible	122
 horribly	94
-horrid	86
+horrid	87
 horrific	97
 horrifically	55
 horrified	95
@@ -43504,7 +43520,7 @@ hospitable	84
 hospitably	52
 hospital	146
 hospital's	87
-hospitality	105
+hospitality	106
 hospitalization	76
 hospitalizations	65
 hospitalize	41
@@ -43512,7 +43528,7 @@ hospitalized	96
 hospitalizing	44
 hospitals	116
 Host	88
-host	129
+host	130
 host's	85
 hostage	117
 hostage's	34
@@ -43543,7 +43559,7 @@ Hotchkiss	72
 hotchpotch	35
 hotdog	69
 hotdogs	63
-hotel	141
+hotel	142
 hotel's	87
 hotelier	72
 hoteliers	57
@@ -43659,7 +43675,7 @@ hover	88
 hovercraft	78
 hovercrafts	46
 hovered	71
-hovering	93
+hovering	94
 hovers	72
 how	176
 how'd	74
@@ -43735,7 +43751,7 @@ huaraches	35
 Huascar	39
 hub	105
 hub's	38
-Hubbard	89
+Hubbard	90
 Hubbard's	69
 Hubbell	68
 Hubbell's	35
@@ -43799,7 +43815,7 @@ Hugh	112
 Hugh's	67
 Hughes	107
 Hughes's	59
-Hughie	68
+Hughie	69
 Hugo	109
 Hugo's	64
 hugs	92
@@ -44007,7 +44023,7 @@ hurdles	89
 hurdling	63
 hurds	39
 hurl	84
-hurled	84
+hurled	85
 hurler	71
 hurlers	73
 Hurley	88
@@ -44055,7 +44071,7 @@ husbandman	47
 husbandmen	47
 husbandry	90
 husbands	108
-hush	97
+hush	98
 hushed	79
 hushing	52
 husk	76
@@ -44386,10 +44402,10 @@ hysterics	70
 Hyundai	76
 Hyundai's	44
 I	215
-I'd	136
-I'll	164
-I'm	116
-I've	160
+I'd	158
+I'll	172
+I'm	190
+I've	165
 IAA	70
 IAAF	97
 IAB	71
@@ -44507,6 +44523,7 @@ icily	41
 icing	91
 icings	35
 ICJ	78
+ick	100
 icky	66
 ICL	80
 ICM	75
@@ -44700,7 +44717,7 @@ Ignaz	66
 Ignazio	57
 igneous	92
 ignitable	45
-ignite	91
+ignite	92
 ignited	90
 igniter	62
 igniters	42
@@ -44744,7 +44761,7 @@ Ikey	41
 ikr	122	s
 ile	55
 ILEA	61
-Ilene	62
+Ilene	63
 Ilesha	32
 ileum	39
 ilia	46
@@ -44833,7 +44850,7 @@ Iloilo	77
 Iloilo's	35
 Ilorin	48
 ILS	85
-Ilsa	70
+Ilsa	71
 Ilse	71
 ily	122	s
 Ilyich	68
@@ -45448,7 +45465,7 @@ inaugurate	74
 inaugurated	89
 inaugurates	53
 inaugurating	73
-inauguration	95
+inauguration	96
 inaugurations	63
 inauspicious	75
 inauspiciously	49
@@ -45520,7 +45537,7 @@ incest	90	n
 incestuous	77	n
 incestuously	36
 incestuousness	40	n
-inch	121
+inch	122
 inched	57
 inches	120
 inching	50
@@ -45571,7 +45588,7 @@ inclines	76
 inclining	57
 inclinometer	44
 inclinometers	38
-include	134
+include	135
 included	132
 includes	126
 including	147
@@ -46094,7 +46111,7 @@ infatuations	45
 infeasibility	43
 infeasible	72
 infect	93
-infected	116
+infected	117
 infecting	82
 infection	118
 infections	98
@@ -46167,7 +46184,7 @@ infinitive	87
 infinitives	66
 infinitude	52
 infinitum	65
-infinity	98
+infinity	99
 infirm	73
 infirmaries	45
 infirmary	94
@@ -46214,8 +46231,8 @@ inflowing	47
 inflows	74
 influence	132
 influenced	115
-influencer	48
-influencers	55
+influencer	100
+influencers	100
 influences	105
 influencing	87
 influent	54
@@ -46284,7 +46301,7 @@ infusion	85
 infusions	72
 Inga	79
 ingathering	39
-Inge	81
+Inge	82
 Inge's	45
 Ingeborg	68
 Ingemar	51
@@ -46628,11 +46645,11 @@ insectivore	60
 insectivore's	44
 insectivores	85
 insectivorous	89
-insects	115
+insects	116
 insecure	98
 insecurely	40
 insecurities	78
-insecurity	87
+insecurity	88
 inseminate	49
 inseminated	65
 inseminates	35
@@ -46643,7 +46660,7 @@ insensate	43
 insensibility	47
 insensible	57
 insensibly	37
-insensitive	96
+insensitive	97
 insensitively	38
 insensitivity	75
 insentient	36
@@ -46687,7 +46704,7 @@ insinuating	80
 insinuation	66
 insinuations	69
 insipid	70
-insist	114
+insist	115
 insisted	118
 insistence	91
 insistent	86
@@ -46736,6 +46753,7 @@ insta	122	s
 instabilities	74
 instability	93
 instable	35
+Instagram	125
 install	105
 installable	60
 installation	105
@@ -46752,7 +46770,7 @@ instalments	73
 instance	126
 instance's	33
 instanced	55
-instances	97
+instances	98
 instancing	43
 instant	116
 instant's	61
@@ -46824,7 +46842,7 @@ instructorship	36
 instructs	79
 instrument	120
 instrument's	81
-instrumental	121
+instrumental	122
 instrumentalism	50
 instrumentalist	95
 instrumentalists	84
@@ -46937,7 +46955,7 @@ intellectualization	37
 intellectualize	32
 intellectualized	40
 intellectually	87
-intellectuals	97
+intellectuals	98
 intelligence	131
 intelligence's	33
 intelligencer	32
@@ -47333,7 +47351,7 @@ interrobang	46
 interrogate	94
 interrogated	95
 interrogates	73
-interrogating	84
+interrogating	85
 interrogation	109
 interrogations	83
 interrogative	76
@@ -47437,7 +47455,7 @@ intestacy	51
 intestate	65
 intestinal	88
 intestine	91
-intestines	91
+intestines	92
 intifada	61
 intima	53
 intimacies	45
@@ -47672,7 +47690,7 @@ Invesco	47
 invest	109
 investable	46
 Investcorp	44
-invested	111
+invested	112
 investigate	122
 investigated	110
 investigates	84
@@ -47786,6 +47804,7 @@ ionone	36
 ionosphere	82
 ionospheric	44
 ions	89
+iOS	110
 iota	71
 IOU	70
 IOUs	58
@@ -47794,7 +47813,7 @@ Iowa's	76
 Iowan	42
 Iowans	47
 IPA	94
-iPad	89
+iPad	110
 iPads	62
 Ipanema	54
 iPAQ	50
@@ -47803,7 +47822,8 @@ IPCC	86
 IPCRESS	46
 ipecac	54
 Iphigenia	53
-iPhone	95
+iPhone	125
+iPhones	110
 iPhoto	56
 IPI	60
 IPL	84
@@ -48088,7 +48108,7 @@ islanding	45
 islands	124
 Islay	66
 isle	92
-isles	85
+isles	86
 islet	90
 islets	93
 Islington	82
@@ -48098,7 +48118,7 @@ Ismail	85
 Ismaili	70
 Ismailia	48
 isms	59
-isn't	115
+isn't	149
 ISNA	62
 isobar	44
 isobaric	58
@@ -48178,7 +48198,7 @@ Isuzu	73
 it	205
 it'd	62
 it'll	75
-it's	162
+it's	185
 Ital	50
 ital	37
 Italia	81
@@ -48467,7 +48487,7 @@ Jammu	85
 jammy	54
 jams	92
 Jamshedpur	59
-Jan	113
+Jan	114
 Jan's	54
 Jana	87
 Jana's	34
@@ -48480,16 +48500,16 @@ Janek	68
 Janel	35
 Janelle	76
 Janesville	62
-Janet	111
+Janet	112
 Janet's	54
 Janette	67
 Janeway	78
 Janey	83
-jangle	73
+jangle	74
 jangled	33
 jangling	70
 jangly	60
-Janice	99
+Janice	100
 Janice's	46
 Janie	84
 Janie's	35
@@ -48524,7 +48544,7 @@ Japheth	54
 Japhetic	35
 Japonica	36
 Japp	63
-jar	106
+jar	107
 Jared	100
 Jared's	46
 jargon	84
@@ -48553,7 +48573,7 @@ Jarvis	94
 Jarvis's	35
 Jasmin	66
 Jasmine	80
-jasmine	94
+jasmine	95
 Jasmine's	48
 jasmines	32
 Jason	125
@@ -48615,7 +48635,7 @@ jazzed	63
 jazzier	53
 jazzman	46
 jazzmen	50
-jazzy	85
+jazzy	86
 JC	83
 JCB	70
 JCC	64
@@ -48681,7 +48701,7 @@ Jeffersonians	41
 Jeffersons	59
 Jeffersonville	65
 Jeffery's	34
-Jeffrey	107
+Jeffrey	108
 Jeffrey's	48
 Jeffreys	67
 Jeffries	86
@@ -48957,7 +48977,7 @@ Jo	116
 Jo's	58
 Joachim	84
 Joachim's	45
-Joan	115
+Joan	116
 Joan's	62
 Joanie	79
 Joann	63
@@ -48967,7 +48987,7 @@ Joanne	92
 Joanne's	36
 Joannes	60
 Joaquin	91
-job	155
+job	156
 Job's	52
 job's	48
 jobbed	37
@@ -49301,7 +49321,7 @@ judges	123
 judgeship	76
 judgeships	61
 judging	110
-judgment	120
+judgment	121
 judgmental	82
 judgments	92
 Judi	77
@@ -49332,7 +49352,7 @@ Juggernaut	66
 juggernaut	70
 Juggernaut's	32
 juggernauts	40
-juggle	80
+juggle	81
 juggled	62
 juggler	73
 juggler's	34
@@ -49399,7 +49419,7 @@ jumbo	90
 jumbos	32
 jump	134
 jumped	120
-jumper	101
+jumper	102
 jumper's	48
 jumpers	85
 jumping	119
@@ -49696,7 +49716,7 @@ Karena	32
 Karenina	66
 Kari	88
 Karim	87
-Karin	89
+Karin	90
 Karin's	44
 Karina	76
 Karl	117
@@ -49782,7 +49802,7 @@ katipo	52
 Katmai	47
 Katmandu	41
 Katowice	75
-Katrina	100
+Katrina	101
 Katrina's	51
 Kattegat	54
 Katy	94
@@ -50094,7 +50114,7 @@ kettles	69
 Ketty	34
 Keuka	48
 Kev	88
-Kevin	127
+Kevin	128
 Kevin's	71
 Kevlar	75
 Kevorkian	53
@@ -50398,7 +50418,7 @@ Kingstown	63
 Kingwood	59
 kinin	42
 kinins	35
-kink	75
+kink	76
 kinkajou	40
 kinkajous	39
 kinked	53
@@ -50657,7 +50677,7 @@ knits	56
 knitted	81
 knitter	57
 knitters	60
-knitting	95
+knitting	96
 knitwear	65
 knives	109
 knob	96
@@ -50665,7 +50685,7 @@ knobbed	56
 knobbly	45
 knobby	58
 knobs	84
-knock	128
+knock	129
 knockabout	47
 knockdown	79
 knockdowns	66
@@ -50936,7 +50956,7 @@ Kristofer	46
 Kristofferson	64
 Kristofferson's	39
 Kristopher	46
-Kristy	75
+Kristy	76
 Kroc	53
 Kroger	71
 Kroger's	35
@@ -51334,7 +51354,7 @@ lambasting	56
 lambda	83
 lambdas	33
 lambent	33
-Lambert	99
+Lambert	100
 Lambert's	66
 Lambeth	73
 lambing	52
@@ -51356,7 +51376,7 @@ lamentably	42
 lamentation	65
 Lamentations	59
 lamentations	60
-lamented	76
+lamented	77
 lamenting	75
 laments	88
 lamer	34
@@ -51378,7 +51398,7 @@ Lamont	85
 Lamont's	43
 LaMotta	66
 Lamour	53
-lamp	114
+lamp	115
 lamp's	51
 lampas	32
 lampblack	45
@@ -51433,7 +51453,7 @@ Land's	67
 land's	70
 landau	70
 landaulet	43
-landed	124
+landed	125
 lander	83
 lander's	39
 landers	75
@@ -51527,7 +51547,7 @@ laneway	55
 Laney	70
 Lanfranc	55
 Lang's	69
-Langdon	78
+Langdon	79
 Langdon's	43
 Lange	84
 Lange's	57
@@ -51619,7 +51639,7 @@ lapping	76
 Lapps	35
 laps	104
 lapse	91
-lapsed	80
+lapsed	81
 lapses	77
 lapsing	59
 lapstrake	32
@@ -51738,7 +51758,7 @@ lasted	119
 lasting	108
 lastingly	44
 lastly	87
-lasts	109
+lasts	110
 Laszlo	76
 Lat	71
 lat	76
@@ -51816,7 +51836,7 @@ lattice	83
 latticed	55
 lattices	85
 latticework	59
-Latvia	82
+Latvia	83
 Latvia's	60
 Latvian	80
 Latvians	65
@@ -51887,7 +51907,7 @@ laurel	102
 Laurel's	49
 laurels	77
 Laurelton	44
-Lauren	108
+Lauren	109
 Laurence	94
 Laurence's	53
 Laurens	73
@@ -52128,7 +52148,7 @@ leaner	70
 leanest	35
 leaning	104
 leanings	90
-Leann	65
+Leann	66
 Leanna	45
 Leanne	83
 Leanne's	37
@@ -52136,7 +52156,7 @@ leanness	40
 leans	84
 leant	62
 leap	110
-leaped	77
+leaped	78
 leaper	54
 leapers	42
 leapfrog	65
@@ -52410,7 +52430,7 @@ Leicestershire	92
 Leicestershire's	45
 Leichhardt	63
 Leiden	86
-Leif	79
+Leif	80
 Leif's	33
 Leigh	98
 Leigh's	61
@@ -52474,7 +52494,7 @@ lenders	79
 lending	100
 lends	88
 length	127
-lengthen	73
+lengthen	74
 lengthened	96
 lengthening	87
 lengthens	61
@@ -52484,7 +52504,7 @@ lengthily	35
 lengths	105
 lengthways	43
 lengthwise	77
-lengthy	97
+lengthy	98
 lenience	47
 leniencies	39
 leniency	80
@@ -52610,7 +52630,7 @@ lessened	88
 lessening	79
 lessens	69
 Lesseps	55
-lesser	108
+lesser	109
 Lessing's	45
 lesson	132
 lessons	121
@@ -52620,8 +52640,8 @@ lessors	54
 lest	94
 Lester	105
 Lester's	58
-let	169
-let's	145
+let	170
+let's	165
 letch	40	n
 Letchworth	60
 letdown	68
@@ -52789,7 +52809,7 @@ LHD	69
 Lhotse	45
 Li's	70
 liabilities	82
-liability	105
+liability	106
 liable	104
 liaise	69
 liaised	56
@@ -52837,7 +52857,7 @@ liberalize	64
 liberalized	72
 liberalizing	63
 liberally	81
-liberals	92
+liberals	93
 liberate	94
 liberated	102
 liberates	66
@@ -52929,7 +52949,7 @@ Liddell's	41
 Lidia	69
 Lidice	44
 lidless	39
-lido	72
+lido	73
 lidos	32
 lids	79
 lie	140
@@ -52990,7 +53010,7 @@ lifesaver	73
 lifesavers	50
 lifesaving	71
 lifesize	62
-lifespan	87
+lifespan	88
 lifespans	74
 lifestyle	114
 lifestyles	84
@@ -53090,7 +53110,7 @@ liking	107
 likings	41
 Likud	73
 Likud's	39
-Lil	98
+Lil	99
 Lila	92
 Lila's	43
 lilac	82
@@ -53303,7 +53323,7 @@ linkable	44
 linkage	79
 linkages	87
 linked	120
-LinkedIn	65
+LinkedIn	110
 linker	76
 linkers	58
 linking	103
@@ -53414,7 +53434,7 @@ lisps	35
 Lissa	69
 list	146
 list's	70
-listed	122
+listed	123
 listen	147
 listenable	60
 listened	114
@@ -53604,7 +53624,7 @@ llano	41
 llanos	54
 Llewellyn	73
 Llewellyn's	39
-Lloyd	113
+Lloyd	114
 Lloyd's	78
 LM	91
 LMA	80
@@ -53624,7 +53644,7 @@ loaded	122
 loader	82
 loader's	44
 loaders	81
-loading	110
+loading	111
 loadings	73
 loads	113
 loaf	95
@@ -53915,7 +53935,7 @@ Lome	55
 Lomond	70
 Lon	86
 Lona	42
-London	141
+London	142
 London's	100
 Londonderry	81
 Londoner	54
@@ -53994,7 +54014,7 @@ lookers	48
 lookin	94
 looking	154
 lookout	101
-lookouts	74
+lookouts	75
 looks	148
 lookup	82
 lookups	63
@@ -54087,7 +54107,7 @@ Loretta	90
 Loretta's	33
 Lorette	49
 lorgnette	34
-Lori	97
+Lori	98
 Lori's	40
 Loria	54
 Lorie	63
@@ -54200,7 +54220,7 @@ Louvre	93
 lovable	88
 lovage	42
 Lovat	64
-love	172
+love	173
 Love's	77
 love's	64
 loveable	70
@@ -54223,7 +54243,7 @@ Lovell's	45
 lovelorn	65
 lovely	127
 lovemaking	67	n
-lover	127
+lover	128
 lover's	77
 Lovering	49
 lovers	118
@@ -54347,7 +54367,7 @@ Luca	98
 Luca's	44
 Lucan	70
 Lucan's	42
-Lucas	116
+Lucas	117
 Lucas's	62
 Lucca	77
 Luce	83
@@ -54392,7 +54412,7 @@ lucks	35
 Lucky	95
 lucky	132
 Lucky's	49
-lucrative	98
+lucrative	99
 lucratively	34
 lucre	39
 Lucretia	67
@@ -54453,7 +54473,7 @@ Luigi	96
 Luigi's	52
 Luis	111
 Luis's	44
-Luisa	90
+Luisa	91
 Luisa's	41
 Luise	68
 luk	72
@@ -54684,6 +54704,7 @@ lye	73
 Lyell	69
 Lyell's	48
 lyes	37
+Lyft	110
 lying	138
 Lyle	96
 Lyle's	41
@@ -54726,7 +54747,7 @@ Lynne's	44
 Lynnette	44
 lynx	80
 lynxes	54
-Lyon	99
+Lyon	100
 Lyon's	62
 Lyonnais	66
 Lyons	90
@@ -54992,7 +55013,7 @@ Madrid's	66
 madrigal	77
 madrigals	83
 Madsen	77
-Madurai	78
+Madurai	79
 madwoman	65
 Mae	101
 Mae's	44
@@ -55060,7 +55081,7 @@ magisterial	70
 magistracies	53
 magistracy	65
 magistral	46
-magistrate	106
+magistrate	107
 magistrate's	65
 magistrates	87
 magistrature	46
@@ -55224,7 +55245,7 @@ Maine's	65
 Mainer	32
 mainframe	93
 mainframes	79
-mainland	112
+mainland	113
 mainland's	48
 mainlander	47
 mainlanders	58
@@ -55310,7 +55331,7 @@ makeup	128
 makeups	67
 makeweight	39
 Makhachkala	51
-making	156
+making	157
 makings	73
 Makkah	61
 mako	78
@@ -55390,7 +55411,7 @@ malfeasance	69
 malformation	75
 malformations	77
 malformed	68
-malfunction	96
+malfunction	97
 malfunctioned	77
 malfunctioning	84
 malfunctions	76
@@ -55595,7 +55616,7 @@ mandrels	44
 mandrill	49
 mandrills	41
 Mandurah	63
-Mandy	100
+Mandy	101
 Mandy's	48
 mane	87
 maned	61
@@ -55630,7 +55651,7 @@ mangosteen	58
 mangosteens	32
 mangrove	80
 mangroves	75
-mangy	69
+mangy	70
 manhandle	44
 manhandled	65
 manhandles	35
@@ -55808,7 +55829,7 @@ manu	81
 Manu's	35
 manual	116
 manual's	47
-manually	96
+manually	97
 manuals	88
 Manuel	108
 Manuel's	60
@@ -56006,12 +56027,12 @@ margrave	77
 margrave's	34
 margraves	69
 Margret	62
-Marguerite	95
+Marguerite	96
 Marguerite's	43
 Mari	92
 Mari's	39
 Maria	118
-maria	106
+maria	107
 Maria's	72
 mariachi	79
 mariachis	47
@@ -56040,7 +56061,7 @@ Mariette	63
 Marigold	57
 marigold	75
 marigolds	55
-marijuana	109
+marijuana	110
 marijuana's	35
 Marika	73
 Marilyn	105
@@ -56369,7 +56390,7 @@ Marylou	37
 Marymount	70
 Marys	79
 Marysville	72
-marzipan	72
+marzipan	73
 Masaccio	48
 Masaccio's	32
 Masada	62
@@ -56493,13 +56514,13 @@ master's	114
 MasterCard	75
 MasterCard's	40
 masterclass	59
-mastered	98
+mastered	99
 masterful	81
 masterfully	66
 masteries	32
 mastering	82
 masterly	75
-mastermind	93
+mastermind	94
 masterminded	74
 masterminding	65
 masterminds	65
@@ -56610,7 +56631,7 @@ mathematically	86
 mathematician	98
 mathematician's	44
 mathematicians	87
-mathematics	113
+mathematics	114
 Mather	80
 Mather's	45
 Mathew	77
@@ -56689,7 +56710,7 @@ matter's	40
 mattered	93
 Matterhorn	66
 mattering	32
-matters	132
+matters	133
 mattes	56
 Matteson	49
 Matthaeus	33
@@ -56814,7 +56835,7 @@ Maximilian	84
 Maximilian's	52
 Maximilien	57
 maximization	75
-maximize	89
+maximize	90
 maximized	77
 maximizer	33
 maximizers	39
@@ -56992,7 +57013,7 @@ McClintock's	52
 McCloskey	79
 McCloud	76
 McClung	71
-McClure	82
+McClure	83
 McClure's	67
 McCluskey	77
 McCluskey's	46
@@ -57206,7 +57227,7 @@ McMahan	59
 McMahon	90
 McMahon's	79
 McMahons	64
-McManus	87
+McManus	88
 McMartin	61
 McMaster	91
 McMasters	55
@@ -57353,11 +57374,11 @@ measuring	107
 meat	138
 meat's	37
 meatball	79
-meatballs	85
+meatballs	86
 Meath	84
 meatier	44
 meatless	53
-meatloaf	75
+meatloaf	76
 meatpacking	69
 meats	90
 meaty	73
@@ -57570,7 +57591,7 @@ megohm	42
 megohms	36
 meh	114	s
 Mei's	41
-Meier	74
+Meier	75
 Meier's	55
 Meighen	60
 Meiji	81
@@ -57695,7 +57716,7 @@ membrane's	44
 membraneous	39
 membranes	86
 membranous	73
-meme	112
+meme	120
 Memel	61
 memento	84
 mementoes	50
@@ -57738,7 +57759,7 @@ memory's	42
 memoryless	52
 memos	82
 Memphians	34
-Memphis	102
+Memphis	103
 Memphis's	38
 men	160
 men's	128
@@ -58209,7 +58230,7 @@ methyl	99
 methylase	47
 methylated	40
 methylene	44
-meticulous	90
+meticulous	91
 meticulously	82
 meticulousness	45
 metier	41
@@ -58311,8 +58332,8 @@ micas	52
 Micawber	40
 mice	111
 micelles	38
-Mich	65
-Michael	141
+Mich	66
+Michael	142
 Michael's	94
 Michaelangelo	36
 Michaelis	63
@@ -58344,7 +58365,7 @@ mick	83
 Mick's	49
 Mickelson	61
 Mickey	100
-mickey	92
+mickey	93
 Mickey's	72
 Micki	73
 Mickie	61
@@ -58881,7 +58902,7 @@ mimosa	67
 mimosas	57
 min	111
 Min's	45
-Mina	94
+Mina	95
 Mina's	49
 minable	32
 Minard	45
@@ -58918,6 +58939,7 @@ mindstream	66
 Mindszenty	37
 Mindy	90
 mine	147
+Minecraft	110
 mined	94
 minefield	86
 minefields	75
@@ -58967,7 +58989,7 @@ Minh	87
 Minh's	50
 Minho	59
 mini	114
-miniature	103
+miniature	104
 miniatures	81
 miniaturist	62
 miniaturists	46
@@ -59060,7 +59082,7 @@ Minorca	64
 minored	58
 minoring	49
 minorities	95
-minority	110
+minority	111
 minority's	48
 minors	97
 Minos	71
@@ -59149,7 +59171,7 @@ Miriam	97
 Miriam's	42
 Miro	74
 Mirrlees	45
-mirror	125
+mirror	126
 mirror's	53
 mirrored	85
 mirroring	87
@@ -59192,7 +59214,7 @@ misbelief	40
 misbranded	43
 misbranding	38
 misc	54
-miscalculated	72
+miscalculated	73
 miscalculates	33
 miscalculating	34
 miscalculation	73
@@ -59276,7 +59298,7 @@ misfits	77
 misfortune	102
 misfortunes	84
 misgiving	37
-misgivings	79
+misgivings	80
 misgovernment	51
 misguide	39
 misguided	92
@@ -59437,7 +59459,7 @@ mist	100
 Mist's	37
 mistake	136
 mistaken	118
-mistakenly	92
+mistakenly	93
 mistakes	121
 mistaking	85
 mistakingly	37
@@ -59469,7 +59491,7 @@ Mistresses	47
 mistresses	86
 mistrial	81
 mistrials	40
-mistrust	83
+mistrust	84
 mistrusted	66
 mistrustful	55
 mistrusting	46
@@ -59776,7 +59798,7 @@ moire	42
 Moise	53
 Moises	51
 Moishe	48
-moist	106
+moist	107
 moisten	53
 moistened	66
 moistening	46
@@ -60132,7 +60154,7 @@ Monroe	108
 Monroe's	67
 Monrovia	71
 Mons	75
-Monsanto	75
+Monsanto	76
 Monsanto's	42
 monsieur	107
 Monsignor	76
@@ -60216,9 +60238,9 @@ Montreux	74
 Montrose	80
 Montrose's	44
 Montserrat	74
-monument	111
+monument	112
 monument's	66
-monumental	96
+monumental	97
 monumentality	59
 monumentally	53
 monuments	101
@@ -60390,7 +60412,7 @@ Morgen	54
 morgen	66
 morgue	101
 morgues	52
-Moriarty	85
+Moriarty	86
 Moriarty's	42
 moribund	80
 Morin	68
@@ -60409,7 +60431,7 @@ morn	78
 morning	155
 morning's	64
 mornings	104
-Moro	79
+Moro	80
 Moro's	43
 Moroccan	89
 Moroccans	58
@@ -60703,7 +60725,7 @@ mourn	95
 mourned	82
 mourner	62
 mourner's	35
-mourners	81
+mourners	82
 mournful	77
 mournfully	52
 mourning	106
@@ -60741,7 +60763,7 @@ mouths	107
 mouthwash	73
 mouthwashes	47
 mouthwatering	36
-mouthy	60
+mouthy	61
 Mouton	69
 mouton	44
 Mouton's	39
@@ -60751,7 +60773,7 @@ move	159
 move's	40
 moveable	81
 moved	149
-movement	135
+movement	136
 movement's	92
 movements	120
 mover	85
@@ -60978,7 +61000,7 @@ Mullen's	46
 Mullens	49
 Muller	87
 Muller's	50
-mullet	81
+mullet	82
 mullets	66
 Mulligan	76
 mulligan	73
@@ -61327,7 +61349,7 @@ must	175
 must've	48
 mustache	99
 mustached	52
-mustaches	68
+mustaches	69
 mustachioed	55
 mustang	83
 mustangs	68
@@ -61359,8 +61381,8 @@ muted	85
 mutely	32
 muteness	48
 mutes	67
-mutilate	68
-mutilated	91
+mutilate	69
+mutilated	92
 mutilates	49
 mutilating	66
 mutilation	84
@@ -61371,7 +61393,7 @@ muting	63
 mutinied	80
 mutinies	71
 mutinous	71
-mutiny	99
+mutiny	100
 mutinying	39
 mutism	60
 mutt	87
@@ -61540,7 +61562,7 @@ Nadya	65
 nae	71
 Nafpaktos	37
 NAFTA	83
-nag	84
+nag	85
 naga	75
 Nagaland	68
 Nagano	77
@@ -61976,7 +61998,7 @@ nearby	131
 neared	88
 nearer	99
 nearest	117
-nearing	92
+nearing	93
 nearly	140
 nearness	67
 nears	73
@@ -62009,7 +62031,7 @@ nebulous	70
 NEC	97
 NEC's	60
 necessaries	60
-necessarily	120
+necessarily	121
 necessary	138
 necessitate	79
 necessitated	98
@@ -62060,7 +62082,7 @@ Neddie	40
 Neddy	58
 Nederland	70
 nee	80
-need	167
+need	168
 needed	146
 needful	64
 Needham	76
@@ -62168,7 +62190,7 @@ nematodes	81
 nemeses	32
 nemesis	78
 Nene	76
-neo	95
+neo	96
 neoclassic	60
 neoclassical	97
 neoclassicism	69
@@ -62284,7 +62306,7 @@ NetBIOS	64
 netbook	62
 netbooks	66
 Netcong	41
-Netflix	76
+Netflix	120
 nether	70
 Netherland	71
 Netherlanders	38
@@ -62395,7 +62417,7 @@ neutrals	63
 neutrino	79
 neutrinos	80
 Neutrogena	38
-neutron	95
+neutron	96
 neutrons	87
 Nev	68
 Neva	70
@@ -62419,7 +62441,7 @@ nevus	59
 new	173
 Newark	95
 Newark's	52
-newbie	75
+newbie	76
 newbies	65
 Newbold	56
 newborn	100
@@ -62465,7 +62487,7 @@ Newnham	65
 Newport	98
 Newport's	50
 NeWS	56
-news	150
+news	151
 News's	49
 newsagent	76
 newsagent's	48
@@ -62546,7 +62568,7 @@ NFP	76
 NFPA	72
 NFS	75
 NFU	72
-ng	104
+ng	105
 NGC	93
 NGF	65
 NGK	54
@@ -62710,7 +62732,7 @@ nightmares	105
 nightmarish	70
 NightRider	42
 nights	128
-nightshade	69
+nightshade	70
 nightshades	39
 nightshift	32
 nightshirt	60
@@ -62720,7 +62742,7 @@ Nightstalkers	40
 nightstand	69
 nightstick	63
 nightsticks	42
-nighttime	94
+nighttime	95
 nightwear	44
 nihil	58
 nihilism	79
@@ -62795,7 +62817,7 @@ Ninette	48
 ninety	100
 Nineveh	66
 Ningpo	43
-ninja	108
+ninja	109
 ninja's	43
 ninjas	85
 Ninon	38
@@ -62928,7 +62950,7 @@ noblewoman	83
 noblewomen	58
 nobly	70
 nobodies	62
-nobody	137
+nobody	138
 nobody's	62
 nock	41
 nocturnal	93
@@ -63099,7 +63121,7 @@ nonentity	47
 nonenzymatic	33
 nonessential	55
 nonet	55
-nonetheless	104
+nonetheless	105
 nonexclusive	44
 nonexistence	62
 nonexistent	86
@@ -63449,8 +63471,8 @@ noticeable	95
 noticeably	100
 noticeboard	44
 noticed	129
-notices	103
-noticing	98
+notices	104
+noticing	99
 notifiable	47
 notification	90
 notifications	74
@@ -64042,7 +64064,7 @@ obligations	104
 obligato	35
 obligatorily	55
 obligatory	87
-oblige	87
+oblige	88
 obliged	111
 obliges	69
 obliging	73
@@ -64099,7 +64121,7 @@ observably	38
 observance	98
 observances	82
 observant	87
-observation	115
+observation	116
 observational	79
 observationally	49
 observations	105
@@ -64168,7 +64190,7 @@ obviated	62
 obviates	55
 obviating	62
 obviation	40
-obvious	128
+obvious	129
 obviously	131
 obviousness	58
 OCA	74
@@ -64268,7 +64290,7 @@ octant	60
 octants	49
 octave	91
 octaves	91
-Octavia	82
+Octavia	83
 Octavian	66
 octavo	68
 octavos	35
@@ -64371,7 +64393,7 @@ offender's	67
 offenders	100
 offending	90
 offends	79
-offense	120
+offense	121
 offense's	48
 offenses	94
 offensive	120
@@ -64383,7 +64405,7 @@ offer	143
 offered	137
 offeree	48
 offerer	45
-offering	127
+offering	128
 offerings	101
 offers	125
 offertories	40
@@ -64547,7 +64569,7 @@ Oldfield	77
 Oldfield's	57
 Oldham	78
 Oldham's	56
-oldie	68
+oldie	69
 oldies	88
 oldness	33
 olds	89
@@ -64595,7 +64617,7 @@ Oliveira	77
 Oliver	119
 Oliver's	70
 Olivers	42
-olives	95
+olives	96
 Olivette	37
 Olivetti	58
 Olivia	110
@@ -64714,7 +64736,7 @@ Onion	75
 onion	104
 onions	104
 Onitsha	53
-online	130
+online	150
 onload	37
 onlooker	60
 onlookers	80
@@ -64738,7 +64760,7 @@ onside	76
 onsite	78
 onslaught	84
 onslaughts	57
-onstage	100
+onstage	101
 OnStar	64
 Ontarian	54
 Ontarians	49
@@ -64956,7 +64978,7 @@ opulent	74
 opulently	40
 opus	88
 opuses	41
-or	185
+or	186
 Ora	73
 Oracle	93
 oracle	96
@@ -64967,7 +64989,7 @@ oracular	66
 Oradea	62
 oral	109
 orality	60
-orally	81
+orally	82
 Oran	73
 orang	64
 Orange	113
@@ -65012,7 +65034,7 @@ Orbitz	46
 orbs	74
 orca	74
 orcas	65
-orchard	94
+orchard	95
 orchardist	45
 orchardists	44
 orchards	87
@@ -65044,7 +65066,7 @@ ordeals	66
 order	156
 order's	76
 ordered	137
-ordering	111
+ordering	112
 orderings	67
 orderlies	71
 orderliness	54
@@ -65134,7 +65156,7 @@ orient	88
 Orient's	39
 orientable	74
 Oriental	98
-oriental	95
+oriental	96
 orientalism	58
 orientalist	76
 Orientals	41
@@ -65552,7 +65574,7 @@ outlaw's	32
 outlawed	90
 outlawing	79
 outlawry	57
-outlaws	94
+outlaws	95
 outlay	72
 outlaying	35
 outlays	63
@@ -65719,7 +65741,7 @@ ova	72
 oval	100
 ovals	79
 Ovaltine	46
-ovarian	80
+ovarian	81
 ovaries	84
 ovary	78
 OVAs	76
@@ -65810,7 +65832,7 @@ overdose	101
 overdosed	75
 overdoses	72
 overdosing	63
-overdraft	70
+overdraft	71
 overdrafts	54
 overdraw	44
 overdrawn	65
@@ -65995,7 +66017,7 @@ overrule	74
 overruled	95
 overrules	53
 overruling	66
-overrun	95
+overrun	96
 overrunning	73
 overruns	81
 oversampled	33
@@ -66022,7 +66044,7 @@ overshoes	43
 overshoot	71
 overshooting	57
 overshoots	51
-overshot	70
+overshot	71
 oversight	99
 oversights	55
 oversimplification	63
@@ -66555,7 +66577,7 @@ Palermo	93
 Palermo's	46
 pales	66
 palest	46
-Palestine	100
+Palestine	101
 Palestine's	42
 Palestinian	99
 Palestinians	91
@@ -66804,7 +66826,7 @@ Paolo's	37
 pap	78
 PAP's	59
 Papa	55
-papa	108
+papa	109
 papacies	35
 papacy	80
 papacy's	43
@@ -67128,7 +67150,7 @@ parliament's	73
 parliamentarian	85
 parliamentarianism	52
 parliamentarians	85
-parliamentary	101
+parliamentary	102
 Parliaments	74
 parliaments	92
 parlor	100
@@ -67294,7 +67316,7 @@ parturition	61
 partway	73
 party	156
 party's	118
-partying	96
+partying	97
 parvenu	47
 parvenus	34
 parvovirus	58
@@ -67372,7 +67394,7 @@ passphrase	58
 passport	117
 passport's	41
 passports	103
-password	109
+password	135
 passwords	87
 past	150
 past's	34
@@ -67463,7 +67485,7 @@ patent	109
 patent's	44
 patentability	68
 patentable	70
-patented	93
+patented	94
 patentee	62
 patentees	49
 patenting	71
@@ -67650,7 +67672,7 @@ pauperism	46
 paupers	70
 Pausanias	73
 pause	104
-paused	80
+paused	81
 pauses	79
 pausing	71
 pavan	38
@@ -67673,7 +67695,7 @@ pavilions	94
 paving	86
 pavings	35
 Pavlodar	44
-Pavlov	70
+Pavlov	71
 Pavlov's	47
 Pavlova	58
 pavlova	46
@@ -67912,7 +67934,7 @@ peddler	79
 peddler's	32
 peddlers	68
 peddles	32
-peddling	79
+peddling	80
 Peder	67
 pederast	43	n
 pederastic	59	n
@@ -67969,7 +67991,7 @@ pee	103	n
 Peebles	74
 peed	78	n
 peeing	75	n
-peek	94
+peek	95
 Peek's	34
 peeked	67
 peeking	80
@@ -67994,7 +68016,7 @@ peepers	62
 peephole	67
 peepholes	39
 peeping	85
-peeps	71
+peeps	72
 peepshow	32
 peepshows	40	n
 peer	105
@@ -68015,7 +68037,7 @@ peeves	40
 peevish	45
 peewee	62
 peg	103
-Pegasus	89
+Pegasus	90
 pegboard	42
 pegbox	49
 pegged	88
@@ -68079,7 +68101,7 @@ pen	123
 Pen's	47
 pen's	45
 Pena	74
-penal	96
+penal	97
 penalization	42
 penalize	69
 penalized	77
@@ -68131,7 +68153,7 @@ penetrative	69
 penetrator	69
 penetrators	59
 Penfield	62
-peng	72
+peng	73
 penguin	99
 penguin's	35
 penguins	97
@@ -68165,7 +68187,7 @@ pennant	88
 pennants	81
 pennate	44
 penned	87
-Penner	71
+Penner	72
 Penney	74
 Penney's	43
 Penni	33
@@ -68260,7 +68282,7 @@ peony	70
 people	175
 people's	114
 peopled	71
-peoples	113
+peoples	114
 PeopleSoft	56
 peopling	55
 Peoria	75
@@ -68304,7 +68326,7 @@ peptides	92
 Pepys	72
 Pepys's	35
 Pequot	68
-per	123
+per	124
 Perak	77
 perambulation	39
 perambulator	41
@@ -68364,14 +68386,14 @@ percussive	77
 percussively	35
 Percy	105
 Percy's	60
-perdition	66
+perdition	67
 perdue	40
 Perdue's	33
 Perdy	53
 pere	55
 peregrination	37
 peregrinations	40
-peregrine	72
+peregrine	73
 peregrines	32
 Pereira	80
 Pereira's	39
@@ -68706,7 +68728,7 @@ pertain	73
 pertained	71
 pertaining	91
 pertains	77
-Perth	90
+Perth	91
 Perth's	65
 Perthshire	71
 pertinacity	35
@@ -68890,7 +68912,7 @@ Petunia	52
 petunia	65
 petunias	46
 Petworth	59
-Peugeot	81
+Peugeot	82
 Peugeot's	46
 Peugeots	38
 Pevsner	65
@@ -69302,7 +69324,7 @@ phylum	83
 phys	46
 physiatrists	32
 physic	62
-physical	134
+physical	135
 physicalism	70
 physicality	68
 physically	119
@@ -69555,7 +69577,7 @@ Pike's	61
 pikeman	37
 pikemen	70
 pikes	70
-pilaf	62
+pilaf	63
 Pilar	86
 Pilar's	37
 pilaster	61
@@ -69586,7 +69608,7 @@ Pilgrims	76
 pilgrims	100
 piling	87
 pilings	73
-pill	109
+pill	110
 pillage	78
 pillaged	75
 pillager	32
@@ -69735,6 +69757,7 @@ pintail	48
 pintails	45
 Pinter	71
 Pinter's	64
+Pinterest	110
 pintle	64
 pinto	80
 Pinto's	41
@@ -69761,7 +69784,7 @@ Piotr	77
 pious	95
 piously	54
 piousness	39
-pip	88
+pip	89
 Pip's	42
 pipa	70
 pipe	121
@@ -69811,7 +69834,7 @@ Pirandello's	43
 Piranesi	45
 piranha	76
 piranhas	70
-pirate	112
+pirate	113
 pirate's	58
 pirated	77
 pirates	113
@@ -70013,7 +70036,7 @@ plagiarize	47
 plagiarized	72
 plagiarizes	35
 plagiarizing	64
-plague	113
+plague	114
 plague's	37
 plagued	97
 plagues	82
@@ -70241,13 +70264,13 @@ playmate	77
 playmates	71	n
 playoff	95
 playoff's	39
-playoffs	104
+playoffs	105
 playpen	60
 playroom	70
 playrooms	39
 plays	140
 playschool	42
-PlayStation	98
+PlayStation	110
 PlayStation's	54
 Playtex	43
 plaything	70
@@ -70337,7 +70360,7 @@ pliable	69
 pliant	58
 plicate	46
 plied	79
-pliers	81
+pliers	82
 plies	67
 plight	97
 plights	47
@@ -70369,7 +70392,7 @@ plotting	102
 Plovdiv	74
 plover	75
 plovers	73
-plow	89
+plow	90
 plowed	78
 plowing	79
 plowman	45
@@ -70403,7 +70426,7 @@ plumages	69
 plumb	79
 plumbago	42
 plumbed	56
-plumber	95
+plumber	96
 plumber's	54
 plumbers	78
 plumbing	100
@@ -70523,13 +70546,13 @@ Poconos	50
 pocus	62
 pod	106
 pod's	36
-podcast	112
+podcast	120
 podcast's	35
 podcasted	33
 podcaster	55
 podcasters	51
 podcasting	74
-podcasts	102
+podcasts	110
 podded	51
 Podgorica	70
 podia	44
@@ -70644,7 +70667,7 @@ Polaroids	61
 polder	73
 polders	66
 Pole	96
-pole	121
+pole	122
 Pole's	39
 pole's	45
 poleaxe	37
@@ -70744,7 +70767,7 @@ pollinations	33
 pollinator	70
 pollinators	81
 polling	93
-Pollock	85
+Pollock	86
 Pollock's	55
 polloi	49
 polls	105
@@ -71073,14 +71096,14 @@ porgies	32
 porgy	60
 poring	52
 pork	115
-porky	67
+porky	68
 porn	112	n
 porn's	40	n
 porno	89	n
 pornocracy	40	n
 pornographer	57	n
 pornographers	40	n
-pornographic	92	n
+pornographic	93	n
 pornographical	40	n
 pornographically	40	n
 pornography	101	n
@@ -71180,7 +71203,7 @@ Portsmouth's	55
 Portugal	106
 Portugal's	77
 Portuguese	112
-pos	90
+pos	91
 posable	43
 Posada's	36
 pose	112
@@ -71247,7 +71270,7 @@ possibly	137
 possum	86
 possums	72
 Post	123
-post	139
+post	140
 Post's	64
 post's	58
 postage	90
@@ -71371,8 +71394,8 @@ potage	37
 potash	79
 potassic	43
 potassium	100
-potato	113
-potatoes	114
+potato	114
+potatoes	115
 potbellied	38
 potbelly	43
 potboiler	55
@@ -71575,7 +71598,7 @@ Prague's	54
 prairie	99
 prairies	77
 praise	120
-praised	110
+praised	111
 praises	94
 praiseworthy	67
 praising	95
@@ -71622,7 +71645,7 @@ prays	85
 PRC	104
 preach	102
 preached	92
-preacher	107
+preacher	108
 preacher's	58
 preachers	84
 preaches	74
@@ -71712,7 +71735,7 @@ precludes	77
 precluding	69
 preclusion	42
 precocial	62
-precocious	79
+precocious	80
 precociously	46
 precociousness	40
 precocity	51
@@ -71979,7 +72002,7 @@ preparedness	75
 preparer	52
 preparers	53
 prepares	98
-preparing	119
+preparing	120
 prepay	52
 prepayment	65
 prepayments	52
@@ -72024,7 +72047,7 @@ prerecording	34
 preregistration	33
 prerequisite	79
 prerequisites	79
-prerogative	86
+prerogative	87
 prerogatives	80
 Pres	61
 pres	67
@@ -72098,7 +72121,7 @@ preserved	114
 preserver	67
 preservers	53
 preserves	90
-preserving	97
+preserving	98
 preset	83
 presets	66
 preside	81
@@ -72319,7 +72342,7 @@ primates	88
 prime	131
 Prime's	65
 primed	81
-primer	83
+primer	84
 Primerica	41
 primero	41
 primeros	33
@@ -72353,7 +72376,7 @@ princelings	38
 princely	87
 princeps	76
 princes	106
-princess	128
+princess	129
 princess's	64
 princesses	92
 Princeton	101
@@ -72432,7 +72455,7 @@ Pritchard's	42
 Prius	96
 privacy	116
 Private	108
-private	145
+private	146
 privateer	93
 privateer's	37
 privateering	73
@@ -72596,7 +72619,7 @@ prodigious	81
 prodigiously	58
 prodigy	91
 prods	61
-produce	130
+produce	131
 produced	133
 producer	129
 producer's	75
@@ -72676,7 +72699,7 @@ profiteering	70
 profiteers	57
 profiting	74
 profitless	40
-profits	113
+profits	114
 profligacy	55
 profligate	64
 profound	109
@@ -72824,7 +72847,7 @@ promotes	91
 promoting	108
 promotion	125
 promotion's	75
-promotional	96
+promotional	97
 promotionally	46
 promotions	95
 prompt	92
@@ -72959,7 +72982,7 @@ proposal	123
 proposal's	47
 proposals	105
 propose	115
-proposed	124
+proposed	125
 proposer	58
 proposers	53
 proposes	94
@@ -73175,7 +73198,7 @@ protrusive	35
 protuberance	63
 protuberances	59
 protuberant	42
-proud	132
+proud	133
 prouder	64
 proudest	79
 Proudhon	62
@@ -73188,7 +73211,7 @@ provable	77
 provably	64
 prove	137
 proved	127
-proven	116
+proven	117
 provenance	80
 provenances	42
 Provencal	33
@@ -73216,7 +73239,7 @@ provider	101
 provider's	67
 providers	89
 provides	121
-providing	119
+providing	120
 province	121
 province's	100
 provinces	107
@@ -73535,7 +73558,7 @@ Puckett's	32
 puckish	39
 pucks	68
 pudding	104
-puddings	72
+puddings	73
 puddingstone	47
 puddle	89
 puddled	44
@@ -73552,7 +73575,7 @@ pudic	40	n
 Pudsey	59
 Puebla	81
 Pueblo	89
-pueblo	78
+pueblo	79
 Pueblos	57
 pueblos	73
 puerile	59
@@ -73574,7 +73597,7 @@ puffiness	41
 puffing	73
 puffins	66
 puffs	84
-puffy	80
+puffy	81
 Pufnstuf	43
 pug	78
 Puget	87
@@ -73895,7 +73918,7 @@ pushdown	53
 pushed	127
 pusher	86
 pushers	72
-pushes	101
+pushes	102
 pushing	121
 Pushkin	77
 Pushkin's	58
@@ -74168,11 +74191,11 @@ quantizers	34
 quantizing	53
 quantum	113
 quarantine	98
-quarantined	80
+quarantined	81
 quarantines	53
 quarantining	49
 quare	39
-quark	90
+quark	91
 quarks	80
 quarrel	104
 quarreled	81
@@ -74295,7 +74318,7 @@ queries	79
 quern	57
 querns	45
 querulous	46
-query	88
+query	89
 querying	69
 Quesnay	43
 quest	113
@@ -74525,13 +74548,13 @@ rabble	83
 Rabelais	62
 rabid	85
 rabidly	49
-rabies	89
+rabies	90
 Rabin	74
 Rabin's	50
 RAC	84
 raccoon	91
 raccoons	82
-race	144
+race	145
 race's	79
 racecar	76
 racecars	59
@@ -74540,7 +74563,7 @@ racecourses	62
 raced	100
 racegoers	41
 racehorse	87
-racehorses	72
+racehorses	73
 racemate	52
 raceme	36
 racemes	60
@@ -74615,13 +74638,13 @@ radian	62
 radiance	78
 radiances	36
 radians	77
-radiant	93
+radiant	94
 radiantly	42
 radiate	79
 radiated	78
 radiates	72
 radiating	81
-radiation	120
+radiation	121
 radiation's	37
 radiations	65
 radiative	82
@@ -74773,7 +74796,7 @@ railheads	58
 railing	87
 railings	78
 raillery	35
-railroad	119
+railroad	120
 railroad's	87
 railroaded	62
 railroader	48
@@ -74803,7 +74826,7 @@ raincoat	81
 raincoats	63
 raindrop	62
 raindrops	74
-Raine	70
+Raine	71
 Raine's	35
 rained	93
 Rainer	85
@@ -74910,7 +74933,7 @@ ramify	41
 ramifying	37
 Ramirez	91
 Ramirez's	35
-Ramiro	78
+Ramiro	79
 Ramiro's	33
 ramjet	76
 ramjets	59
@@ -75109,7 +75132,7 @@ rarefied	68
 rarely	120
 rareness	42
 rarer	80
-rarest	86
+rarest	87
 rarified	35
 Raritan	75
 rarities	87
@@ -75187,7 +75210,7 @@ rationalist	81
 rationalistic	65
 rationalists	62
 rationalities	33
-rationality	80
+rationality	81
 rationalization	74
 rationalizations	51
 rationalize	74
@@ -75256,7 +75279,7 @@ ravine	91
 ravines	86
 raving	86
 ravings	62
-ravioli	76
+ravioli	77
 ravish	56
 ravished	53
 ravishing	77
@@ -75357,7 +75380,7 @@ reacquire	61
 reacquired	76
 reacquiring	48
 reacquisition	46
-react	113
+react	114
 reactance	71
 reactant	75
 reactants	80
@@ -75467,7 +75490,7 @@ reallocate	57
 reallocated	72
 reallocating	47
 reallocation	62
-really	164
+really	165
 realm	113
 realm's	55
 realms	91
@@ -75576,7 +75599,7 @@ reassessing	50
 reassessment	73
 reassessments	62
 reassign	66
-reassigned	94
+reassigned	95
 reassigning	56
 reassignment	77
 reassignments	48
@@ -75732,7 +75755,7 @@ recd	32
 recede	74
 receded	84
 recedes	65
-receding	82
+receding	83
 receipt	107
 receipts	100
 receivable	72
@@ -75913,7 +75936,7 @@ recommences	45
 recommencing	44
 recommend	114
 recommendable	44
-recommendation	109
+recommendation	110
 recommendations	100
 recommended	117
 recommender	48
@@ -76175,6 +76198,7 @@ reddening	61
 redder	67
 reddest	42
 reddish	87
+Reddit	110
 Redditch	64
 reddy	76
 redeclared	32
@@ -76276,7 +76300,7 @@ Redmond's	51
 redneck	83
 rednecks	69
 redness	72
-redo	84
+redo	85
 redoing	65
 redolent	61
 Redondo	69
@@ -76517,7 +76541,7 @@ reflectivity	79
 reflector	80
 reflectors	83
 reflects	105
-reflex	96
+reflex	97
 reflexed	62
 reflexes	93
 reflexive	87
@@ -76677,7 +76701,7 @@ Regan	87
 Regan's	47
 regard	118
 regarded	113
-regarding	124
+regarding	125
 regardless	116
 regards	114
 regather	40
@@ -76778,7 +76802,7 @@ regressions	60
 regressive	75
 regressor	42
 regressors	55
-regret	121
+regret	122
 regretful	68
 regretfully	67
 regrets	104
@@ -76827,7 +76851,7 @@ regurgitated	63
 regurgitates	50
 regurgitating	54
 regurgitation	72
-rehab	104
+rehab	105
 rehabbed	48
 rehabbing	52
 rehabilitate	80
@@ -77037,7 +77061,7 @@ rejoiced	71
 rejoices	68
 rejoicing	79
 rejoicings	42
-rejoin	94
+rejoin	95
 rejoinder	61
 rejoinders	43
 rejoined	85
@@ -77166,7 +77190,7 @@ religion	129
 religion's	70
 religionist	45
 religionists	67
-religions	104
+religions	105
 religiosity	74
 religious	132
 religiously	81
@@ -77249,7 +77273,7 @@ remarriage	78
 remarriages	37
 remarried	98
 remarries	59
-remarry	83
+remarry	84
 remarrying	61
 remaster	76
 remastered	106
@@ -77380,7 +77404,7 @@ rename	81
 renamed	101
 renames	69
 renaming	102
-Renard	75
+Renard	76
 renascence	33
 renascent	46
 Renata	80
@@ -77420,7 +77444,7 @@ renege	65
 reneged	78
 reneges	51
 reneging	59
-renegotiate	75
+renegotiate	76
 renegotiated	70
 renegotiating	55
 renegotiation	65
@@ -77459,7 +77483,7 @@ renouncer	33
 renouncers	41
 renounces	71
 renouncing	80
-renovate	84
+renovate	85
 renovated	97
 renovates	45
 renovating	83
@@ -77653,7 +77677,7 @@ replicating	78
 replication	83
 replications	56
 replicative	53
-replicator	74
+replicator	75
 replicators	73
 replied	108
 replies	94
@@ -78003,13 +78027,13 @@ residuary	57
 residue	102
 residues	102
 residuum	51
-resign	113
+resign	114
 resignalled	46
 resignation	114
 resignations	84
 resigned	116
 resignedly	44
-resigning	94
+resigning	95
 resigns	76
 resilience	79
 resiliency	64
@@ -78172,7 +78196,7 @@ restiveness	35
 restless	102
 restlessly	58
 restlessness	76
-restock	66
+restock	67
 restocked	58
 restocking	58
 restorable	40
@@ -78342,13 +78366,13 @@ retinopathy	68
 retinue	76
 retinues	56
 retire	116
-retired	128
+retired	129
 retiree	67
 retirees	85
-retirement	122
+retirement	123
 retirements	77
 retires	81
-retiring	108
+retiring	109
 retitle	38
 retitled	96
 retitling	56
@@ -78405,7 +78429,7 @@ retrenchment	66
 retrenchments	40
 retrial	78
 retrials	41
-retribution	94
+retribution	95
 retributions	45
 retributive	58
 retried	67
@@ -78469,6 +78493,8 @@ returner	84
 returners	54
 returning	128
 returns	124
+retweet	100
+retweeted	90
 retype	35
 retyped	39
 retyping	35
@@ -78521,7 +78547,7 @@ revanchism	49
 revanchist	46
 revascularization	52
 reveal	122
-revealed	126
+revealed	127
 revealer	46
 revealing	108
 revealingly	37
@@ -78530,7 +78556,7 @@ revegetate	38
 revegetated	44
 revegetation	56
 reveille	66
-revel	74
+revel	75
 Revelation	87
 revelation	105
 Revelations	68
@@ -78663,7 +78689,7 @@ revocable	54
 revocation	85
 revocations	42
 revoke	85
-revoked	95
+revoked	96
 revokes	56
 revoking	73
 revolt	107
@@ -78695,7 +78721,7 @@ revue's	33
 revues	80
 revulsion	71
 revved	62
-revving	91
+revving	92
 reward	122
 rewarded	107
 rewarding	93
@@ -78837,7 +78863,7 @@ Rhys's	42
 rhythm	118
 rhythmic	101
 rhythmical	69
-rhythmically	83
+rhythmically	84
 rhythmicity	45
 rhythmics	35
 rhythms	94
@@ -78861,7 +78887,7 @@ riboflavin	71
 ribosomes	43
 ribs	109
 Ric	82
-Rica	93
+Rica	94
 Rican	95
 Ricans	76
 Ricard	64
@@ -78907,7 +78933,7 @@ Richter's	56
 Richthofen	70
 Richthofen's	48
 Rick	108
-rick	98
+rick	99
 Rick's	64
 Rickard	66
 Rickard's	32
@@ -78930,13 +78956,13 @@ Ricky	116
 Ricky's	57
 Rico	112
 Rico's	76
-ricochet	73
+ricochet	74
 ricocheted	63
 ricocheting	64
 ricochets	62
 Ricoh	61
 ricotta	69
-rid	128
+rid	129
 ridable	47
 riddance	73
 ridden	98
@@ -79003,7 +79029,7 @@ riffing	69
 riffle	56
 riffled	32
 riffles	61
-riffraff	64
+riffraff	65
 riffs	79
 rifle	121
 rifle's	66
@@ -79398,6 +79424,7 @@ robins	72
 Robinson	113
 Robinson's	81
 Robles	71
+Roblox	110
 RoboCop	79
 RoboCop's	49
 RoboCup	54
@@ -79530,6 +79557,7 @@ roes	39
 Roeselare	50
 Roethke	41
 ROF	71
+rofl	100
 ROFs	52
 Roger	115
 roger	98
@@ -80023,7 +80051,7 @@ Rove	71
 rove	64
 roved	39
 Rover	93
-rover	98
+rover	99
 Rover's	56
 rover's	51
 rovers	74
@@ -80044,7 +80072,7 @@ rowdiest	39
 rowdiness	54
 rowdy	89
 rowdyism	37
-Rowe	81
+Rowe	82
 Rowe's	52
 rowed	80
 rowel	39
@@ -80291,7 +80319,7 @@ rummaged	37
 rummages	40
 rummaging	68
 rummy	75
-rumor	109
+rumor	110
 rumored	95
 rumors	116
 rump	88
@@ -80546,7 +80574,7 @@ sacramentals	48
 sacramentary	48
 Sacramento	96
 Sacramento's	50
-sacraments	76
+sacraments	77
 sacred	123
 sacredly	34
 sacredness	65
@@ -80738,7 +80766,7 @@ sales	128
 salesclerk	38
 salesgirl	63
 saleslady	35
-salesman	108
+salesman	109
 salesman's	45
 salesmanship	54
 salesmen	85
@@ -80889,7 +80917,7 @@ sameness	65
 samiti	57
 samizdat	68
 Sammie	58
-Sammy	109
+Sammy	110
 Sammy's	50
 Samnite	60
 Samoa	80
@@ -81158,7 +81186,7 @@ sarcophagus	87
 Sardi's	40
 sardine	79
 sardines	88
-Sardinia	80
+Sardinia	81
 Sardinian	73
 Sardinians	46
 Sardis	63
@@ -81171,7 +81199,7 @@ Saree	64
 Sargasso	51
 sargassum	43
 Sarge	64
-sarge	84
+sarge	85
 Sargent	80
 Sargent's	54
 Sargodha	60
@@ -81641,7 +81669,7 @@ scenario	112
 scenario's	36
 scenarios	97
 scenarist	56
-scene	143
+scene	144
 scene's	67
 sceneries	57
 scenery	104
@@ -81741,7 +81769,7 @@ Schloss	77
 Schlumberger	62
 schmaltz	53
 schmaltzy	46
-Schmidt	103
+Schmidt	104
 Schmidt's	62
 Schmitt	71
 Schmitt's	45
@@ -81782,7 +81810,7 @@ school	164
 school's	127
 schoolbook	47
 schoolbooks	60
-schoolboy	90
+schoolboy	91
 schoolboy's	42
 schoolboys	74
 schoolchild	42
@@ -81870,13 +81898,13 @@ Schwyz	62
 sci	80
 sciatic	66
 sciatica	68
-science	139
+science	140
 science's	54
 sciences	105
 scientific	128
 scientifically	94
 scientism	59
-scientist	121
+scientist	122
 scientist's	69
 scientists	126
 scientologists	35
@@ -82020,7 +82048,7 @@ Scout's	53
 scout's	40
 scouted	81
 scouter	44
-scouting	95
+scouting	96
 scoutmaster	53
 scoutmasters	33
 scouts	105
@@ -82089,7 +82117,7 @@ screaming	127
 screamingly	32
 screams	121
 scree	72
-screech	95
+screech	96
 screeched	41
 screeches	82
 screeching	101
@@ -82163,7 +82191,7 @@ scriptable	50
 scripted	86
 scripter	60
 scripting	95
-scripts	102
+scripts	103
 scriptum	41
 scriptural	86
 scripturally	40
@@ -82275,7 +82303,7 @@ sculpture's	58
 sculptured	79
 sculptures	100
 sculpturing	55
-scum	99
+scum	100
 scumbag	82
 scumbags	68
 Scunthorpe	79
@@ -82397,7 +82425,7 @@ seaport	78
 seaports	81
 seaQuest	78
 sear	74
-search	139
+search	140
 searchable	81
 searched	114
 searcher	63
@@ -82523,7 +82551,7 @@ secretively	43
 secretiveness	43
 secretly	116
 secretory	78
-secrets	122
+secrets	123
 secs	67
 sect	102
 sect's	59
@@ -82576,7 +82604,7 @@ sedates	45
 sedating	59
 sedation	82
 sedative	93
-sedatives	77
+sedatives	78
 Seddon	65
 sedentary	89
 Seder	70
@@ -82772,7 +82800,7 @@ self	133
 self's	52
 selfhood	53
 selfie	112	s
-selfies	97
+selfies	105
 selfish	113
 selfishly	69
 selfishness	86
@@ -82855,7 +82883,7 @@ semimonthly	35
 semina	40	n
 seminal	89	n
 seminally	40	n
-seminar	101
+seminar	102
 seminar's	32
 seminarian	65
 seminarians	80
@@ -82912,7 +82940,7 @@ senator	121
 senator's	70
 senatorial	92
 senators	99
-send	146
+send	147
 Sendai	70
 sender	89
 sender's	59
@@ -83007,7 +83035,7 @@ sententious	49
 sentience	75
 sentient	88
 sentients	50
-sentiment	103
+sentiment	104
 sentimental	105
 sentimentalism	60
 sentimentalist	39
@@ -83114,7 +83142,7 @@ Serbians	56
 Serbs	92
 Serena	100
 Serena's	50
-serenade	78
+serenade	79
 serenaded	55
 serenades	63
 serenading	57
@@ -83275,7 +83303,7 @@ settlement's	74
 settlements	104
 settler	83
 settler's	56
-settlers	107
+settlers	108
 settles	95
 settling	109
 setup	109
@@ -83570,7 +83598,7 @@ shaping	96
 Shapiro	85
 Shapiro's	48
 sharable	37
-shard	81
+shard	82
 shards	85
 share	142
 shareable	47
@@ -83589,7 +83617,7 @@ sharer	52
 sharers	60
 shares	121
 shareware	84
-Shari	71
+Shari	72
 Shari'a	54
 Sharia	74
 sharia	74
@@ -83650,7 +83678,7 @@ Shaun's	39
 Shauna	73
 shave	105
 shaved	101
-shaven	74
+shaven	75
 shaver	68
 shavers	55
 shaves	72
@@ -83669,7 +83697,7 @@ Shawn's	53
 Shawna	63
 Shawnee	77
 Shawnees	51
-Shawshank	60
+Shawshank	61
 Shawwal	40
 Shay	72
 shay	78
@@ -83678,7 +83706,7 @@ Shayne	79
 she	186
 she'd	92
 she'll	84
-she's	112
+she's	150
 Shea	91
 Shea's	54
 sheaf	87
@@ -83738,7 +83766,7 @@ sheet	119
 sheet's	37
 sheeted	57
 sheeting	75
-sheets	115
+sheets	116
 Sheffield	101
 sheik	80
 sheikh	85
@@ -83759,11 +83787,11 @@ Sheldon's	52
 Sheldrake	54
 Sheldrake's	33
 shelduck	52
-shelf	109
+shelf	110
 Shelford	55
 Shelia	59
 Shell	95
-shell	122
+shell	123
 Shell's	53
 shell's	57
 shellac	72
@@ -83782,7 +83810,7 @@ Shelly	96
 Shelly's	42
 shelter	121
 shelter's	42
-sheltered	95
+sheltered	96
 sheltering	79
 shelters	99
 Shelton	89
@@ -83801,7 +83829,7 @@ Shep	79
 Shepard	90
 Shepard's	59
 Shepherd	94
-shepherd	107
+shepherd	108
 Shepherd's	73
 shepherd's	70
 shepherded	68
@@ -83815,7 +83843,7 @@ Shepstone	44
 Sher	79
 sher	66
 Sheraton	72
-sherbet	68
+sherbet	69
 Sherbrooke	75
 Sheree	48
 Sheremetyevo	44
@@ -83927,7 +83955,7 @@ shins	70
 Shinto	73
 Shintoism	41
 shiny	105
-ship	147
+ship	148
 ship's	116
 shipboard	82
 shipborne	55
@@ -84167,7 +84195,7 @@ shot's	39
 shotgun	111
 shotguns	86
 shotput	50
-shots	127
+shots	128
 SHOTTS	69
 should	169
 should've	60
@@ -84175,7 +84203,7 @@ shoulder	126
 shouldered	79
 shouldering	55
 shoulders	116
-shouldn't	93
+shouldn't	130
 shout	113
 shouted	102
 shouter	49
@@ -84184,7 +84212,7 @@ shouting	123
 shouts	108
 shove	99
 shoved	94
-shovel	100
+shovel	101
 shoveled	50
 shoveler	40
 shovelers	39
@@ -84272,7 +84300,7 @@ shrilly	32
 shrimp	109
 shrimpers	41
 shrimping	57	n
-shrimps	79
+shrimps	80
 shrine	110
 shrine's	59
 shrines	85
@@ -84707,7 +84735,7 @@ Silverstein	71
 Silverstone	76
 silvertip	49
 Silverton	67
-silverware	89
+silverware	90
 silvery	84
 Silvester	59
 Silvia	89
@@ -84758,7 +84786,7 @@ simpering	40
 simple	143
 simpleminded	42
 simpleness	32
-simpler	106
+simpler	107
 simples	56
 simplest	99
 simpleton	75
@@ -84809,7 +84837,7 @@ Sinai	85
 Sinaloa	68
 Sinatra	94
 Sinatra's	69
-Sinbad	81
+Sinbad	82
 since	164
 sincere	106
 sincerely	98
@@ -84851,7 +84879,7 @@ Singh's	74
 singing	139
 singings	50
 single	151
-singled	88
+singled	89
 singlehanded	52
 singlehandedly	72
 singleness	52
@@ -84931,7 +84959,7 @@ sips	70
 Siqueiros	52
 Sir	130
 sir	140
-sire	109
+sire	110
 sire's	47
 sired	80
 siren	111
@@ -84954,7 +84982,7 @@ Sisley	50
 Sismondi	35
 sissies	64
 Sissy	62
-sissy	87
+sissy	88
 sister	151
 sister's	96
 sisterhood	81
@@ -84994,6 +85022,7 @@ situational	85
 situationally	43
 situationist	58
 situations	118
+situationship	90
 Sitwell	60
 sitz	37
 Siva	79
@@ -85142,13 +85171,13 @@ skinks	71
 skinless	49
 skinned	93
 Skinner	91
-skinner	77
+skinner	78
 Skinner's	67
 skinners	37
 skinnier	60
 skinning	72
 skinny	104
-skins	98
+skins	99
 skintight	53
 Skip	82
 skip	113
@@ -85343,7 +85372,7 @@ slaughterer	48
 slaughterers	37
 slaughterhouse	86
 slaughterhouses	68
-slaughtering	83
+slaughtering	84
 slaughters	67
 Slav	70
 slave	125
@@ -85440,7 +85469,7 @@ sleuths	54
 slew	88
 slewed	48
 slewing	51
-slice	108
+slice	109
 sliced	97
 slicer	63
 slicers	42
@@ -85605,19 +85634,19 @@ slovenly	61
 slow	138
 slowdown	80
 slowdowns	55
-slowed	101
+slowed	102
 slower	110
 slowest	82
 slowing	101
 slowly	131
 slowness	73
-slows	92
+slows	93
 SLP	78
 SLR	91
 SLRs	77
 SLS	75
 SLT	62
-sludge	84
+sludge	85
 sludging	32
 sludgy	47
 slug	97
@@ -85672,7 +85701,7 @@ Slyke	44
 slyly	62
 slyness	44
 Slytherin	49
-smack	96
+smack	97
 smacked	82
 smacking	79
 smacks	80
@@ -85703,7 +85732,7 @@ smarties	32
 smarting	56
 smartly	70
 smartness	59
-smartphone	77
+smartphone	105
 smarts	78
 smartwatch	100
 smash	111
@@ -85832,6 +85861,7 @@ SMPTE	74
 SMRT	74
 SMS	91
 SMSA	44
+smth	110
 SMTP	82
 SMU	87
 SMU's	59
@@ -85895,6 +85925,7 @@ snakeskin	63
 snaking	58
 snaky	35
 snap	114
+Snapchat	115
 snapdragon	47
 snapdragons	39
 Snape	70
@@ -86011,7 +86042,7 @@ snooker	87
 snooker's	39
 snookered	35
 snookers	37
-snoop	80
+snoop	81
 Snoop's	44
 snooper	54
 snoopers	40
@@ -86034,7 +86065,7 @@ snorkellers	35
 snorkels	49
 snort	79
 snorted	65
-snorting	85
+snorting	86
 snorts	81
 snot	80
 snotty	72
@@ -86270,7 +86301,7 @@ soften	91
 softened	83
 softener	67
 softeners	55
-softening	76
+softening	77
 softens	69
 softer	98
 softest	68
@@ -86446,7 +86477,7 @@ some	179
 somebody	136
 somebody's	66
 someday	113
-somehow	126
+somehow	127
 someone	158
 someone's	87
 someplace	99
@@ -86649,7 +86680,7 @@ sorties	97
 sorting	97
 sorts	115
 SOS	92
-sos	69
+sos	70
 Sosa	75
 Sosa's	38
 Sosnowiec	50
@@ -86865,7 +86896,7 @@ spaghetti	100
 Spahn	61
 Spain	125
 Spain's	87
-spake	81
+spake	82
 Spalding	77
 Spalding's	44
 spall	54
@@ -86878,7 +86909,7 @@ spammer's	43
 spammers	75
 spamming	71
 Span	68
-span	107
+span	108
 span's	34
 Spandau	66
 spandex	74
@@ -87015,7 +87046,7 @@ spearmint	58
 Spears	90
 spears	98
 spec	89
-special	151
+special	152
 special's	45
 specialism	70
 specialist	116
@@ -87156,7 +87187,7 @@ spellbound	68
 spellcaster	55
 spellcasters	58
 spellcasting	59
-spelled	106
+spelled	107
 speller	50
 spellers	45
 spelling	109
@@ -87413,7 +87444,7 @@ splashing	90
 splashy	52
 splat	73
 splats	35
-splatter	76
+splatter	77
 splattered	74
 splattering	62
 splatters	50
@@ -87501,7 +87532,7 @@ sponsors	104
 sponsorship	95
 sponsorships	83
 spontaneity	80
-spontaneous	104
+spontaneous	105
 spontaneously	92
 spoof	81
 spoofed	83
@@ -87571,6 +87602,7 @@ sportswriter	84
 sportswriters	77
 sporty	84
 spot	137
+Spotify	115
 spotless	80
 spotlight	103
 spotlighted	68
@@ -87821,7 +87853,7 @@ squinty	32
 squire	94
 squire's	46
 squires	71
-squirm	70
+squirm	71
 squirmed	34
 squirming	67
 squirrel	104
@@ -87911,7 +87943,7 @@ stacks	93
 Stacy	99
 Stacy's	53
 stadia	84
-stadium	120
+stadium	121
 stadium's	91
 stadiums	85
 Stael	32
@@ -87941,7 +87973,7 @@ stagehands	60
 stages	116
 stagey	37
 stagflation	66
-stagger	74
+stagger	75
 staggered	87
 staggering	93
 staggeringly	54
@@ -87973,7 +88005,7 @@ stairway	90
 stairways	80
 stairwell	88
 stairwells	67
-stake	121
+stake	122
 staked	87
 stakeholder	81
 stakeholders	97
@@ -88119,7 +88151,7 @@ Stapleton	78
 Stapleton's	42
 stapling	54
 Star	127
-star	143
+star	144
 Star's	67
 star's	87
 starboard	103
@@ -88241,7 +88273,7 @@ stating	110
 station	152
 station's	119
 stationary	96
-stationed	109
+stationed	110
 stationer	63
 stationer's	33
 stationers	58
@@ -88446,7 +88478,7 @@ stemless	45
 stemma	45
 stemmed	97
 stemming	80
-stems	98
+stems	99
 stemware	41
 stench	90
 stencil	71
@@ -88493,7 +88525,7 @@ Stephenson	79
 Stephenson's	64
 Stephensons	35
 stepladder	62
-stepmother	98
+stepmother	99
 stepmother's	58
 stepmothers	49
 Stepney	70
@@ -88645,7 +88677,7 @@ stifle	78
 stifled	81
 Stifler	60
 stifles	53
-stifling	81
+stifling	82
 stigma	87
 stigmas	64
 stigmata	70
@@ -88706,7 +88738,7 @@ stingers	69
 stinginess	45
 stinging	83
 stingless	52
-stingray	78
+stingray	79
 stingray's	34
 stingrays	72
 stings	88
@@ -88729,7 +88761,7 @@ stipple	50
 stippled	48
 stippling	51
 stipulate	74
-stipulated	84
+stipulated	85
 stipulates	74
 stipulating	75
 stipulation	77
@@ -88783,7 +88815,7 @@ Stockholm	104
 Stockholm's	51
 stockier	55
 stocking	92
-stockings	96
+stockings	97
 stockist	41
 stockless	32
 stockman	67
@@ -88869,7 +88901,7 @@ stonemason	77
 stonemason's	41
 stonemasonry	57
 stonemasons	72
-stoner	83
+stoner	84
 stoners	60
 stones	123
 stonewall	65
@@ -89045,7 +89077,7 @@ straightjacket	37
 straightness	58
 straights	71
 straightway	51
-strain	112
+strain	113
 strained	99
 strainer	66
 strainers	46
@@ -89096,7 +89128,7 @@ stratagems	57
 strategic	113
 strategical	65
 strategically	90
-strategies	102
+strategies	103
 strategist	86
 strategists	77
 strategize	66
@@ -89149,8 +89181,8 @@ streaky	56
 stream	120
 stream's	67
 streamed	89
-streamer	69
-streamers	76
+streamer	100
+streamers	95
 streaming	97
 streamlet	42
 streamline	74
@@ -89196,7 +89228,7 @@ stressful	97
 stressing	90
 stressor	60
 stressors	71
-stretch	121
+stretch	122
 stretchable	53
 stretched	106
 stretcher	93
@@ -89279,7 +89311,7 @@ stripers	41
 stripes	107
 striping	77
 stripling	37
-stripped	108
+stripped	109
 stripper	100	n
 stripper's	40	n
 strippers	87	n
@@ -89310,7 +89342,7 @@ stroked	75
 stroker	49
 strokers	36
 strokes	101
-stroking	77
+stroking	78
 stroll	96
 strolled	67
 stroller	77
@@ -89328,7 +89360,7 @@ strongarm	56
 Strongbow	59
 strongbox	52
 stronger	127
-strongest	114
+strongest	115
 stronghold	98
 strongholds	95
 strongly	120
@@ -89416,7 +89448,7 @@ studentship	56
 studentships	41
 studied	130
 studies	130
-studio	135
+studio	136
 studio's	92
 studios	112
 studious	73
@@ -89446,7 +89478,7 @@ stumpage	34
 stumped	81
 stumping	68
 stumps	85
-stumpy	69
+stumpy	70
 stun	90
 stung	88
 stunk	61
@@ -89593,7 +89625,7 @@ subcomponent	42
 subcomponents	55
 subconjunctival	40
 subconscious	95
-subconsciously	78
+subconsciously	79
 subconsciousness	41
 subcontinent	100
 subcontinent's	41
@@ -89746,7 +89778,7 @@ submarine	116
 submarine's	79
 submariner	61
 submariners	68
-submarines	100
+submarines	101
 submerge	74
 submerged	96
 submergence	64
@@ -89845,7 +89877,7 @@ subscriptions	80
 subscripts	70
 subsea	69
 subsect	53
-subsection	76
+subsection	77
 subsections	74
 subsector	54
 subsequence	70
@@ -90189,7 +90221,7 @@ suite's	45
 suited	109
 suites	92
 suiting	67
-suitor	88
+suitor	89
 suitor's	36
 suitors	87
 suits	120
@@ -90295,7 +90327,7 @@ summonings	32
 summons	97
 summonsed	43
 summonses	59
-Sumner	84
+Sumner	85
 Sumner's	52
 Sumners	37
 sumo	94
@@ -90345,7 +90377,7 @@ Sunderland	80
 Sunderland's	60
 sundew	59
 sundews	55
-sundial	76
+sundial	77
 sundial's	37
 sundials	66
 sundown	90
@@ -90630,7 +90662,7 @@ supervening	35
 supervillain	77
 supervillains	85
 supervise	96
-supervised	98
+supervised	99
 supervisee	33
 supervises	85
 supervising	92
@@ -90704,7 +90736,7 @@ suppositions	56
 supposititious	35
 suppositories	57
 suppository	62
-suppress	101
+suppress	102
 suppressant	65
 suppressants	55
 suppressed	99
@@ -90758,7 +90790,7 @@ surf	108
 surface	135
 surface's	52
 surfaced	95
-surfaces	101
+surfaces	102
 surfacing	76
 surfactant	78
 surfactants	75
@@ -90852,7 +90884,7 @@ survey	115
 survey's	54
 surveyed	87
 surveying	87
-surveyor	91
+surveyor	92
 surveyor's	60
 surveyors	76
 surveys	93
@@ -91172,7 +91204,7 @@ swill	67
 swilling	44
 swim	123
 swimmable	35
-swimmer	98
+swimmer	99
 swimmer's	53
 swimmers	90
 swimming	126
@@ -91182,7 +91214,7 @@ swimsuits	71
 swimwear	73
 Swinburne	69
 Swinburne's	42
-swindle	80
+swindle	81
 swindled	76
 swindler	77
 swindlers	65
@@ -91212,7 +91244,7 @@ swirl	82
 swirled	66
 swirling	85
 swirls	69
-swirly	56
+swirly	57
 swish	73
 swished	35
 Swisher	56
@@ -91229,7 +91261,7 @@ switchblade	72
 switchblades	54
 switchboard	82
 switchboards	57
-switched	119
+switched	120
 switcher	75
 switcheroo	53
 switchers	67
@@ -91369,7 +91401,7 @@ symmetry	97
 Symon	59
 Symonds	74
 Symons	66
-sympathetic	106
+sympathetic	107
 sympathetically	76
 sympathies	92
 sympathize	85
@@ -91685,7 +91717,7 @@ Taegu	46
 Taejon	40
 taffeta	64
 Taffy	65
-taffy	76
+taffy	77
 Taft	89
 Taft's	59
 tag	119
@@ -91810,7 +91842,7 @@ tale	121
 tale's	58
 talent	130
 talented	119
-talentless	64
+talentless	65
 talents	112
 tales	115
 tali	61
@@ -91910,7 +91942,7 @@ Tammany	73
 Tammi	66
 Tammie	32
 Tammuz	55
-Tammy	97
+Tammy	98
 Tammy's	42
 tamp	45
 Tampa	97
@@ -92188,7 +92220,7 @@ Tatar	84
 Tatars	83
 Tate	104
 Tate's	65
-tater	63
+tater	64
 Tati's	39
 Tatiana	85
 Tatiana's	37
@@ -92288,6 +92320,7 @@ Tayside	57
 TBA	68
 TBC	63
 TBD	45
+tbf	105
 tbh	152	s
 TBI	72
 Tbilisi	86
@@ -92335,7 +92368,7 @@ team	159
 team's	126
 teamed	97
 teaming	85
-teammate	99
+teammate	100
 teammate's	53
 teammates	102
 teams	134
@@ -92382,7 +92415,7 @@ tech	114
 techie	40
 techies	46
 technetium	48
-technical	123
+technical	124
 technicalities	71
 technicality	84
 technically	120
@@ -92558,7 +92591,7 @@ telephony	92
 telephoto	70
 teleplay	78
 teleplays	61
-teleport	90
+teleport	91
 teleportation	83
 teleported	76
 teleporter	71
@@ -92688,7 +92721,7 @@ tempts	66
 tempura	70
 tempus	66
 Temuco	48
-ten	149
+ten	150
 ten's	42
 tenable	66
 tenacious	83
@@ -92763,7 +92796,7 @@ tenpin	51
 tenpins	35
 tenrec	44
 tenrecs	59
-tens	107
+tens	108
 tense	116
 tensed	81
 tensely	36
@@ -92790,7 +92823,7 @@ tentatively	96
 tented	67
 tenterhooks	36
 tenters	35
-tenth	111
+tenth	112
 tenths	81
 tenting	55
 tents	99
@@ -92896,7 +92929,7 @@ terrier	83
 terriers	75
 terrific	112
 terrifically	48
-terrified	109
+terrified	110
 terrifies	71
 terrify	74
 terrifying	104
@@ -92909,7 +92942,7 @@ territorialism	40
 territoriality	59
 territorially	67
 Territorials	37
-territories	109
+territories	110
 territory	129
 Territory's	56
 territory's	82
@@ -92939,7 +92972,7 @@ tertiaries	56
 Tertiary	85
 tertiary	115
 TESL	40
-Tesla	92
+Tesla	110
 Tesla's	58
 teslas	56
 TESOL	61
@@ -92982,7 +93015,7 @@ testifying	93
 testimonial	79
 testimonials	70
 testimonies	82
-testimony	119
+testimony	120
 testing	126
 testings	48
 testis	78	n
@@ -93033,12 +93066,12 @@ Texas	128
 Texas's	64
 text	136
 text's	67
-textbook	100
+textbook	101
 textbooks	95
-texted	112
+texted	120
 textile	97
 textiles	90
-texting	112
+texting	120
 Textron	55
 texts	117
 textual	99
@@ -93055,7 +93088,7 @@ TFG	78
 TFS	82
 TFW	84
 Thacher	60
-Thackeray	69
+Thackeray	70
 Thackeray's	47
 Thad	78
 Thaddeus	78
@@ -93092,7 +93125,7 @@ thapsus	40
 that	205
 that'd	108
 that'll	60
-that's	160
+that's	175
 Thatch	46
 thatch	78
 thatched	89
@@ -93110,7 +93143,7 @@ Thayer	80
 Thayer's	50
 THC	76
 the	224
-Thea	86
+Thea	87
 theater	128
 theater's	76
 theatergoers	52
@@ -93127,7 +93160,7 @@ thee	135
 theft	115
 thefts	84
 Theiler	33
-their	177
+their	178
 theirs	108
 theism	76
 theist	60
@@ -93218,7 +93251,7 @@ Theravada	75
 there	187
 there'd	53
 there'll	56
-there's	111
+there's	155
 thereabout	36
 thereabouts	69
 thereafter	103
@@ -93256,7 +93289,7 @@ thermoelastic	34
 thermoelectric	74
 thermoelectricity	42
 thermometer	89
-thermometers	70
+thermometers	71
 thermometric	48
 thermometry	43
 thermonuclear	77
@@ -93288,8 +93321,8 @@ Thessaly	74
 theta	93
 they	189
 they'd	110
-they'll	88
-they're	109
+they'll	135
+they're	155
 they've	97
 thiamine	77
 Thibaud	46
@@ -93435,14 +93468,14 @@ thoughtfulness	55
 thoughtless	79
 thoughtlessly	48
 thoughtlessness	42
-thoughts	126
+thoughts	127
 thousand	137
 thousandfold	49
 thousands	134
 thousandth	70
 thousandths	61
 THQ	75
-Thrace	72
+Thrace	73
 Thracian	56
 thrall	70
 thralls	57
@@ -93679,10 +93712,10 @@ tickler	46
 tickles	77
 tickling	83
 ticklish	72
-ticks	89
+ticks	90
 Ticonderoga	74
 tics	71
-tidal	100
+tidal	101
 tidally	65
 tidbit	59
 tidbits	60
@@ -93693,7 +93726,7 @@ Tide's	39
 tide's	32
 tideland	37
 tidelands	54
-tides	95
+tides	96
 tidewater	69
 tidied	71
 tidier	39
@@ -93753,7 +93786,8 @@ Tigris	70
 Tijuana	86
 Tijuana's	35
 tiki	77
-tiktok	122	s
+TikTok	125
+TikToker	110
 til	101
 tilapia	74
 Tilburg	66
@@ -94055,9 +94089,10 @@ TiVo's	39
 Tivoli	73
 Tjader	48
 Tlaxcala	60
-TLC	80
+TLC	81
 TLC's	66
 TLD	71
+tldr	100
 TLDs	62
 Tlingit	73
 TLR	66
@@ -94072,7 +94107,7 @@ TNG	76
 TNT	90
 TNT's	68
 to	219
-toad	100
+toad	101
 toad's	49
 toadfish	46
 toadflax	40
@@ -94148,7 +94183,7 @@ TOEIC	56
 toeing	46
 toenail	70
 toenails	79
-toes	113
+toes	114
 toffee	78
 toffees	32
 tofu	91
@@ -94156,7 +94191,7 @@ tog	40	n
 toga	78
 togas	53
 together	162
-togetherness	71
+togetherness	72
 toggle	77
 toggled	58
 toggles	54
@@ -94244,7 +94279,7 @@ tomahawked	43
 tomahawks	53
 toman	47
 Tomaso	57
-tomato	106
+tomato	107
 tomatoes	104
 tomb	117
 tomb's	60
@@ -94383,7 +94418,7 @@ toothy	53
 tooting	61
 Tootsie	71
 Toowoomba	73
-top	153
+top	154
 top's	36
 topaz	72
 topazes	34
@@ -94411,7 +94446,7 @@ topminnow	38
 topmost	78
 topnotch	43
 topnotcher	39
-topo	66
+topo	67
 topographer	59
 topographers	38
 topographic	92
@@ -94451,7 +94486,7 @@ topspin	62
 Topsy	67
 toque	57
 toques	48
-tora	65
+tora	66
 Torah	91
 Torah's	42
 Torahs	33
@@ -95077,7 +95112,7 @@ transfiguring	33
 transfinite	67
 transfixed	60
 transfixing	35
-transform	111
+transform	112
 transformable	61
 transformation	110
 transformational	75
@@ -95216,7 +95251,7 @@ transpire	65
 transpired	83
 transpires	74
 transpiring	53
-transplant	106
+transplant	107
 transplantation	77
 transplantations	46
 transplanted	82
@@ -95381,7 +95416,7 @@ treasons	51
 treasure	123
 treasure's	36
 treasured	84
-treasurer	96
+treasurer	97
 treasurer's	54
 treasurers	61
 treasurership	41
@@ -95390,7 +95425,7 @@ Treasuries	44
 treasuries	67
 treasuring	40
 Treasury	101
-treasury	103
+treasury	104
 Treasury's	49
 treasury's	34
 treat	132
@@ -95797,7 +95832,7 @@ trivially	73
 trivium	60
 Triwizard	43
 Trix	69
-Trixie	81
+Trixie	82
 tRNA	85
 tRNAs	55
 Trobriand	45
@@ -95858,7 +95893,7 @@ tropism	54
 tropisms	34
 troposphere	77
 tropospheric	39
-trot	88
+trot	89
 troth	60
 trotline	37
 trots	48
@@ -95868,7 +95903,7 @@ Trotskyism	59
 trotskyist	41
 trotted	56
 trotter	75
-trotters	68
+trotters	69
 trotting	74
 trouble	143
 troubled	113
@@ -96460,12 +96495,12 @@ tweeds	45
 Tweedsmuir	49
 tweedy	34
 tween	65
-tweet	86
-tweeted	77
+tweet	110
+tweeted	100
 tweeter	63
 tweeters	57
 tweeting	72
-tweets	78
+tweets	105
 Tweety	71
 tweezers	76
 tweezing	37
@@ -96633,7 +96668,7 @@ tyrannosaur	54
 tyrannosaurs	50
 tyrannosaurus	67
 tyrannous	40
-tyranny	96
+tyranny	97
 tyrant	98
 tyrant's	49
 tyrants	81
@@ -96670,6 +96705,7 @@ UAVs	78
 UAW	83
 UB	76
 Ubangi	46
+Uber	125
 ubiquitous	82
 ubiquitously	63
 ubiquity	77
@@ -96856,7 +96892,7 @@ unabashed	70
 unabashedly	66
 unabated	76
 unabbreviated	37
-unable	127
+unable	128
 Unabomber	60
 unabridged	74
 unabsorbed	39
@@ -97026,7 +97062,7 @@ unbound	75
 unbounded	84
 unbowed	41
 unboxed	44
-unboxing	40
+unboxing	80
 unbraced	35
 unbracketed	33
 unbraided	34
@@ -97178,7 +97214,7 @@ unconquerable	54
 unconquered	62
 unconscionability	44
 unconscionable	68
-unconscious	116
+unconscious	117
 unconsciously	82
 unconsciousness	77
 unconsecrated	55
@@ -97531,7 +97567,7 @@ undeserved	67
 undeservedly	47
 undeserving	58
 undesirability	44
-undesirable	88
+undesirable	89
 undesirables	66
 undesirably	43
 undesired	79
@@ -97763,7 +97799,7 @@ unforeseeable	58
 unforeseen	85
 unforested	39
 unforgeable	34
-unforgettable	90
+unforgettable	91
 unforgettably	37
 unforgivable	83
 unforgivably	37
@@ -98160,7 +98196,7 @@ unmarred	38
 unmarriageable	34
 unmarried	100
 unmask	74
-unmasked	76
+unmasked	77
 unmasking	67
 unmasks	60
 unmastered	47
@@ -98206,11 +98242,11 @@ unmuffled	34
 unmusical	48
 unnameable	34
 unnamed	92
-unnatural	96
+unnatural	97
 unnaturally	69
 unnavigable	63
 unnecessarily	92
-unnecessary	110
+unnecessary	111
 unneeded	70
 unnerve	48
 unnerved	68
@@ -98333,7 +98369,7 @@ unproblematically	33
 unprocessed	68
 unproduced	74
 unproductive	98
-unprofessional	86
+unprofessional	87
 unprofessionally	41
 unprofitable	87
 unpromising	59
@@ -98873,7 +98909,7 @@ update	113
 updated	100
 updater	43
 updates	100
-updating	87
+updating	88
 Updike	63
 Updike's	48
 updraft	70
@@ -99182,7 +99218,7 @@ USAir	68
 USAR	68
 USAREUR	56
 USAS	61
-USB	90
+USB	91
 USBA	74
 USBC	65
 USBL	62
@@ -99500,7 +99536,7 @@ valuate	34
 valuated	37
 valuation	84
 valuations	77
-value	135
+value	136
 valued	106
 valueless	60
 valuer	42
@@ -99715,6 +99751,7 @@ vaunting	33
 Vauxhall	79
 VAX	81
 Vax	37
+vaxxed	85
 Vazquez	56
 VBA	68
 VCR	86
@@ -99728,7 +99765,7 @@ veal	90
 VEB	64
 Veblen	61
 Veblen's	37
-vector	107
+vector	108
 vector's	39
 vectored	66
 vectorial	53
@@ -99859,6 +99896,7 @@ venial	55
 Venice	111
 Venice's	55
 venison	79
+Venmo	110
 Venn	62
 venom	101
 venomous	87
@@ -99967,7 +100005,7 @@ verify	105
 verifying	77
 verily	68
 verisimilitude	67
-veritable	83
+veritable	84
 veritably	37
 veritas	63
 verities	47
@@ -100020,11 +100058,11 @@ Verrocchio	47
 vers	65
 versa	99
 Versace	75
-Versailles	93
+Versailles	94
 versant	38
 versatile	92
 versatility	79
-verse	113
+verse	114
 verse's	48
 versed	84
 verses	104
@@ -100143,13 +100181,15 @@ Viacom's	50
 viaduct	81
 viaduct's	39
 viaducts	81
-Viagra	78
+Viagra	79
 vial	89
 vials	81
 viands	39
 Viareggio	55
 vibe	122	s
 vibes	117	s
+vibey	90
+vibing	105
 vibist	39
 Viborg	64
 vibraharp	33
@@ -100168,7 +100208,7 @@ vibration	96
 vibrational	83
 vibrationally	42
 vibrations	96
-vibrato	74
+vibrato	75
 vibrator	79	n
 vibrators	61	n
 vibratory	65
@@ -100208,7 +100248,7 @@ vicious	109
 viciously	79
 viciousness	58
 vicissitudes	72
-Vick	79
+Vick	80
 Vick's	50
 Vickers	86
 Vickery	60
@@ -100584,7 +100624,7 @@ visitation	90
 visitations	72
 visited	126
 visiting	125
-visitor	115
+visitor	116
 visitor's	79
 visitors	125
 visits	117
@@ -100971,7 +101011,7 @@ VW's	54
 vWF	58
 Vyatka	51
 Vyborg	60
-vying	78
+vying	79
 Vyshinsky	39
 WA's	50
 WAAC	55
@@ -101013,7 +101053,7 @@ Wadsworth's	32
 WAF	62
 Wafd	48
 wafer	80
-wafers	76
+wafers	77
 waffle	84
 waffled	36
 waffles	85
@@ -101145,7 +101185,7 @@ Walford's	42
 Walgreen	43
 Walhalla	58
 wali	66
-walk	145
+walk	146
 walkable	68
 walkabout	64
 walked	130
@@ -101217,8 +101257,8 @@ walls	132
 Wally	90
 wally	80
 Wally's	52
-Walmart	78
-walnut	91
+Walmart	110
+walnut	92
 walnuts	83
 Walpole	74
 Walpole's	57
@@ -101380,7 +101420,7 @@ warm	133
 warmblood	59
 warmbloods	54
 warmed	94
-warmer	105
+warmer	106
 warmers	65
 warmest	86
 warmhearted	46
@@ -101395,7 +101435,7 @@ warms	85
 warmth	104
 warmup	66
 warmups	56
-warn	120
+warn	121
 warned	122
 Warner	113
 warner	82
@@ -101408,7 +101448,7 @@ Warnock's	34
 warns	91
 warp	103
 warpage	34
-warpath	68
+warpath	69
 warped	87
 warping	82
 warplane	53
@@ -101492,7 +101532,7 @@ washstands	32
 Washtenaw	59
 washtub	53
 washy	49
-wasn't	124
+wasn't	150
 WASP	75
 wasp	90
 wasp's	46
@@ -101733,9 +101773,9 @@ WCTU	65
 WD	73
 we	197
 we'd	89
-we'll	94
-we're	106
-we've	97
+we'll	140
+we're	155
+we've	138
 weak	131
 weaken	95
 weakened	103
@@ -101776,7 +101816,7 @@ wearily	52
 weariness	70
 wearing	139
 wearisome	50
-wears	117
+wears	118
 weary	100
 wearying	44
 weasel	95
@@ -101855,7 +101895,7 @@ webpage	87
 webpages	71
 webs	84
 webserver	59
-website	124
+website	135
 website's	80
 websites	99
 Webster	101
@@ -101904,7 +101944,7 @@ weekend	134
 weekend's	66
 weekender	43
 weekenders	49
-weekends	111
+weekends	112
 weeklies	77
 weeklong	65
 weekly	117
@@ -102062,7 +102102,7 @@ Wentworth	87
 Wentworth's	52
 wept	90
 were	187
-weren't	105
+weren't	133
 werewolf	102
 werewolf's	39
 werewolves	90
@@ -102132,7 +102172,7 @@ Westover	64
 Westphalia	88
 Westport	75
 Wests	72
-westside	72
+westside	73
 westward	91
 westwardly	50
 westwards	94
@@ -102160,6 +102200,7 @@ Weyerhauser	33
 Weymouth	83
 Weymouth's	37
 WFF	53
+wfh	105
 WG	77
 whack	91
 whacked	84
@@ -102174,7 +102215,7 @@ whalebone	59
 Whalen	65
 whaler	71
 whalers	82
-whales	106
+whales	107
 Whaley	62
 whaling	88
 wham	70
@@ -102189,13 +102230,14 @@ Wharton's	55
 wharves	84
 what	191
 what'll	75
-what's	154
+what's	160
 whatcha	101	s
 whatever	143
 whatever's	77
 Whatley	56
 whatnot	75
 whats	83
+WhatsApp	125
 whatsoever	108
 wheal	55
 wheat	113
@@ -102354,7 +102396,7 @@ whisk	77
 whisked	73
 whisker	70
 whiskered	59
-whiskers	88
+whiskers	89
 whiskery	39
 whiskey	111
 whiskeys	63
@@ -102750,7 +102792,7 @@ Williamsport	76
 Willie	113
 Willie's	57
 Willies	62
-willing	131
+willing	132
 willingly	100
 willingness	95
 Willis	101
@@ -102951,7 +102993,7 @@ winners	116
 Winnetka	57
 Winnie	94
 Winnie's	35
-winning	136
+winning	137
 winningest	85
 winningly	36
 winnings	93
@@ -102995,7 +103037,7 @@ wipe	113
 wiped	112
 wipeout	47
 wiper	76
-wipers	78
+wipers	79
 wipes	87
 wiping	94
 WIPO	75
@@ -103157,7 +103199,7 @@ Wodehouse	73
 Wodehouse's	53
 woe	90
 woeful	68
-woefully	68
+woefully	69
 woes	86
 WOF	34
 woggle	50
@@ -103222,8 +103264,8 @@ women	154
 women's	132
 womenfolk	66
 womenswear	58
-won	169
-won't	158
+won	170
+won't	165
 Wonder	100
 wonder	132
 Wonderbra	44
@@ -103358,7 +103400,7 @@ Worcester	83
 Worcester's	53
 Worcestershire	93
 Worcestershire's	51
-word	153
+word	154
 word's	74
 worded	75
 Worden	67
@@ -103483,7 +103525,7 @@ worriedly	44
 worrier	56
 worries	113
 worrisome	69
-worry	141
+worry	142
 worrying	108
 worryingly	44
 worse	136
@@ -103527,7 +103569,7 @@ Wotan	67
 Wotton	64
 would	181
 would've	79
-wouldn't	111
+wouldn't	144
 wouldst	80
 wound	126
 wounded	128
@@ -103610,7 +103652,7 @@ wrestles	74
 wrestling	117
 wrestling's	56
 wrests	46
-wretch	85
+wretch	86
 wretched	98
 wretchedly	46
 wretchedness	55
@@ -103715,6 +103757,7 @@ WWI	88
 WWII	84
 WWOR	70
 www	71
+wya	110
 Wyalusing	46
 Wyandanch	52
 Wyandot	63
@@ -103751,7 +103794,7 @@ Xanadu	72
 Xanthus	44
 Xavier	100
 Xavier's	74
-Xbox	91
+Xbox	110
 Xcel	52
 xd	110	s
 xebecs	43
@@ -103838,7 +103881,7 @@ Yamaha's	52
 Yamamoto	87
 Yamamoto's	55
 Yamasaki	53
-Yamashita	73
+Yamashita	74
 Yamashita's	40
 yams	80
 yamuna	32
@@ -103855,7 +103898,7 @@ yank	82
 yanked	77
 Yankee	102
 Yankee's	38
-Yankees	103
+Yankees	104
 yanking	69
 Yanks	61
 yanks	76
@@ -103908,6 +103951,7 @@ Yazd	58
 Yazoo	69
 Ybarra	42
 yds	73
+yea	140
 Yeager	73
 Yeager's	37
 yeah	170
@@ -103989,7 +104033,7 @@ yesterday's	61
 yesterdays	55
 yesteryear	66
 yesteryears	46
-yet	155
+yet	156
 yeti	78
 yetis	32
 Yevtushenko	48
@@ -104051,6 +104095,7 @@ Yolanda's	32
 Yolande	63
 yolk	84
 yolks	69
+yolo	110
 yom	63
 yonder	82
 Yong	95
@@ -104083,9 +104128,9 @@ Yost	71
 Yost's	47
 you	205
 you'd	85
-you'll	95
-you're	160
-you've	95
+you'll	140
+you're	170
+you've	140
 Young	124
 young	157
 Young's	86
@@ -104112,8 +104157,10 @@ youth's	67
 youthful	98
 youthfulness	57
 youths	95
-YouTube	105
+YouTube	125
 YouTube's	57
+YouTuber	110
+YouTubers	100
 yow	65
 yowie	34
 yowling	58
@@ -104181,7 +104228,7 @@ Zacharias	64
 Zachary	90
 Zachary's	35
 Zachery	32
-Zack	102
+Zack	103
 Zack's	50
 Zadar	72
 Zadie	39
@@ -104227,7 +104274,7 @@ Zapatista	57
 Zapf	50
 Zaporozhye	33
 Zapotec	64
-Zappa	76
+Zappa	77
 Zappa's	67
 zapped	72
 zapper	47
@@ -104308,12 +104355,12 @@ zeros	89
 Zest	48
 zest	79
 zesty	44
-zeta	87
+zeta	88
 Zetland	53
 zeugma	36
 Zeus	100
 Zeus's	45
-zhan	65
+zhan	66
 Zhang	104
 Zhang's	67
 Zhao	96

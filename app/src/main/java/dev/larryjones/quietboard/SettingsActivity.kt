@@ -95,7 +95,7 @@ class SettingsActivity : Activity() {
         switchRow(typing, "Double-space period", "Double-tap space to type \". \"", Prefs.DOUBLE_SPACE_PERIOD, true)
         switchRow(typing, "Show suggestion strip", null, Prefs.SUGGESTIONS, true)
         switchRow(typing, "Learn new words", "Remembers words you type, on this device only", Prefs.LEARN_WORDS, true)
-        switchRow(typing, "Next-word suggestions", "Predicts from your own typing history", Prefs.NEXT_WORD, true)
+        switchRow(typing, "Next-word suggestions", "Common next words, then what you usually type (learned on this phone)", Prefs.NEXT_WORD, true)
         switchRow(typing, "Block offensive words", "Hide swear words from suggestions and glide typing", Prefs.BLOCK_OFFENSIVE, false)
         switchRow(typing, "Emoji suggestions", "Offer \uD83C\uDF55 when you type \u201Cpizza\u201D", Prefs.EMOJI_SUGGESTIONS, true)
         shortcutSummary = actionRow(typing, "Text shortcuts", "") { openShortcuts() }
@@ -113,7 +113,15 @@ class SettingsActivity : Activity() {
         switchRow(keys, "Number row", null, Prefs.NUMBER_ROW, false)
         switchRow(keys, "Long press for symbols", "Show symbol hints on letter keys", Prefs.LONG_PRESS_SYMBOLS, false)
         switchRow(keys, "Popup on keypress", null, Prefs.KEY_PREVIEW, true)
-        choiceRow(keys, "Vibration on keypress", listOf("Off", "Light", "Medium", "Strong"), listOf(0, 1, 2, 3), Prefs.VIBRATION, 1)
+        choiceRow(
+            keys, "Vibration on keypress", listOf("Off", "Light", "Medium", "Strong", "Phone default"),
+            listOf(Feedback.OFF, Feedback.LIGHT, Feedback.MEDIUM, Feedback.STRONG, Feedback.SYSTEM), Prefs.VIBRATION, Feedback.LIGHT,
+        ) {
+            // Let the user feel the choice right away: a key press, then a firmer function key.
+            val f = Feedback(this, prefs).apply { attach(window.decorView) }
+            f.haptic(Haptic.KEY)
+            window.decorView.postDelayed({ f.haptic(Haptic.FUNCTION) }, 160L)
+        }
         switchRow(keys, "Sound on keypress", null, Prefs.SOUND, false)
 
         // --- Look
@@ -372,7 +380,10 @@ class SettingsActivity : Activity() {
         row.setOnClickListener { sw.toggle() }
     }
 
-    private fun choiceRow(parent: LinearLayout, title: String, labels: List<String>, values: List<Int>, key: String, def: Int) {
+    private fun choiceRow(
+        parent: LinearLayout, title: String, labels: List<String>, values: List<Int>, key: String, def: Int,
+        onPicked: (() -> Unit)? = null,
+    ) {
         val (row, _, summary) = rowBase(parent, title, labels[values.indexOf(prefs.sp.getInt(key, def)).coerceAtLeast(0)])
         summary.visibility = View.VISIBLE
         row.setOnClickListener {
@@ -383,6 +394,7 @@ class SettingsActivity : Activity() {
                     prefs.sp.edit().putInt(key, values[which]).apply()
                     summary.text = labels[which]
                     d.dismiss()
+                    onPicked?.invoke()
                 }
                 .show()
         }

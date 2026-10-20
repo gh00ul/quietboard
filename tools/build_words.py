@@ -73,7 +73,7 @@ slang = dict(x.split() for x in """lol 195|lmao 185|omg 178|idk 178|tbh 152|ngl 
 |kinda 152|sorta 122|lemme 132|gimme 127|dunno 132|tho 147|cuz 142|bc 122|rn 137|wyd 132|hbu 122|wbu 117|ikr 122|istg 100|thx 142|ty 142
 |np 132|pls 152|plz 132|ok 190|u 152|ur 142|lowkey 132|highkey 100|deadass 110|sus 132|finna 110|tryna 122|slay 112|simp 100|stan 100
 |yeet 100|rizz 100|bussin 90|homie 122|ugh 142|meh 122|hmm 147|hmmm 112|haha 172|hahaha 152|hehe 132|oof 122|welp 112|omw 147|ofc 132
-|dm 132|dms 112|pic 142|pics 132|selfie 120|ig 122|insta 122|tiktok 122|wifi 132|bday 132|convo 122|gf 132|bf 132|bff 122|hella 122
+|dm 132|dms 112|pic 142|pics 132|selfie 120|ig 122|insta 122|wifi 132|bday 132|convo 122|gf 132|bf 132|bff 122|hella 122
 |legit 132|gotcha 122|aight 122|ight 112|sup 122|wassup 112|whatcha 102|prolly 112|probs 100|obvi 90|totes 90|cya 112|gn 112|gm 100
 |hru 112|iykyk 90|fomo 102|gg 122|ez 102|yikes 130|vibe 130|vibes 125|lit 135|goat 125|bet 145|cap 130|mid 125|yo 150|dope 125
 |chill 140|nvm 135|jk 140|ily 130|ilysm 110|tmrw 120|tmr 110|bae 110|xd 110|asap 140|fyi 130|thru 120|nite 110|luv 110|wat 100
@@ -90,13 +90,43 @@ for w, f in low.items():
 
 # Everyday words AOSP (2014) lacks. Curated: the subtitle list alone is too noisy (OCR errors,
 # foreign syllables, British spellings, slurs).
-modern = {'congrats': 140, 'covid': 130, 'grey': 120, 'ew': 130, 'bitcoin': 110, 'crypto': 110,
-          'podcast': 120, 'podcasts': 110, 'hashtag': 110, 'emoji': 125, 'emojis': 115, 'livestream': 100,
-          'vape': 100, 'ghosted': 105, 'facetime': 115, 'meme': 120, 'memes': 115, 'googled': 105,
-          'texted': 120, 'texting': 120, 'unfollow': 100, 'selfies': 105, 'smartwatch': 100, 'lmk': 125}
+# Values are minimum frequencies. Brands keep their spelling ("youtube" -> "YouTube"); ones people
+# type in lowercase need >= 110 so they're recased, not "corrected" (Lyft -> lift).
+modern = {
+    # everyday words AOSP lacks or under-ranks
+    'congrats': 140, 'covid': 130, 'grey': 120, 'ew': 130, 'bitcoin': 110, 'crypto': 110, 'yea': 140,
+    'podcast': 120, 'podcasts': 110, 'hashtag': 110, 'emoji': 125, 'emojis': 115, 'livestream': 100,
+    'vape': 100, 'ghosted': 105, 'ghosting': 100, 'meme': 120, 'memes': 115, 'googled': 105,
+    'texted': 120, 'texting': 120, 'unfollow': 100, 'selfies': 105, 'smartwatch': 100, 'smartphone': 105,
+    'app': 150, 'apps': 135, 'online': 150, 'email': 150, 'emails': 130, 'website': 135, 'password': 135,
+    'tweet': 110, 'tweets': 105, 'tweeted': 100, 'retweet': 100, 'retweeted': 90,
+    'influencer': 100, 'influencers': 100, 'streamer': 100, 'streamers': 95, 'binge': 105, 'bingeing': 85,
+    'unboxing': 80, 'cringe': 115, 'cringy': 105, 'bestie': 115, 'besties': 100, 'situationship': 90,
+    'doomscrolling': 85, 'gaslight': 95, 'gaslighting': 105, 'delulu': 90, 'goated': 95, 'ick': 100,
+    'vibing': 105, 'vibey': 90, 'vaxxed': 85,
+    # texting abbreviations
+    'lmk': 125, 'hmu': 115, 'wya': 110, 'wfh': 105, 'yolo': 110, 'afk': 95, 'tbf': 105, 'rofl': 100,
+    'smth': 110, 'fwiw': 95, 'tldr': 100,
+    # brands and apps, in their own spelling
+    'YouTube': 125, 'YouTuber': 110, 'YouTubers': 100, 'TikTok': 125, 'TikToker': 110, 'Instagram': 125,
+    'Snapchat': 115, 'WhatsApp': 125, 'Spotify': 115, 'Netflix': 120, 'Venmo': 110, 'Uber': 125,
+    'Lyft': 110, 'Airbnb': 110, 'AirPods': 110, 'iPhone': 125, 'iPhones': 110, 'iPad': 110, 'iOS': 110,
+    'Bluetooth': 110, 'Reddit': 110, 'ChatGPT': 110, 'DoorDash': 110, 'Fortnite': 110, 'Minecraft': 110,
+    'Roblox': 110, 'Pinterest': 110, 'PlayStation': 110, 'Xbox': 110, 'Costco': 110, 'Walmart': 110,
+    'Tesla': 110, 'LinkedIn': 110, 'FaceTime': 115, 'Android': 110,
+    # contractions with an apostrophe ending: the subtitle list lost those ("m" is 46k for "I'm"),
+    # so they'd stay at AOSP's book-text levels; in texting they're among the most common words
+    "I'm": 190, "it's": 185, "that's": 175, "can't": 175, "I'll": 172, "you're": 170, "I've": 165,
+    "let's": 165, "won't": 165, "what's": 160, "I'd": 158, "there's": 155, "he's": 155, "we're": 155,
+    "they're": 155, "she's": 150, "you'll": 140, "we'll": 140, "you've": 140, "we've": 138, "they'll": 135,
+}
 present = {w.lower() for w in words} | {w.lower() for w in off} | set(never)
 for w, f in modern.items():
-    if w not in present: words[w] = f
+    if w in words: words[w] = max(words[w], f)       # same spelling already there: just rank it up
+    elif w.lower() not in present: words[w] = f      # new word
+    elif w != w.lower() and w.lower() in words and words[w.lower()] < f:
+        # only a lowercase copy exists (AOSP "facetime"): the brand spelling replaces it
+        del words[w.lower()]; words[w] = f
 
 rows = [[w, f, ''] for w, f in words.items()] + [[w, f, 'o'] for w, f in off.items()] + \
     [[w, f, 'n'] for w, f in never.items()]
@@ -118,8 +148,23 @@ for k, i in (pref.items() if BLEND else []):
     if k in sub and sub[k] >= 20:
         fs = min(250, max(0, a * math.log(sub[k]) + b))
         rows[i][1] = int(round((1 - blend) * rows[i][1] + blend * fs))
-for k, v in list(slang.items()) + list(modern.items()):   # curated words keep at least their set level
-    if k in pref: rows[pref[k]][1] = max(rows[pref[k]][1], v - 8)
+exact = {r[0]: i for i, r in enumerate(rows)}
+for k, v in slang.items():   # curated slang keeps at least (roughly) its hand-set level
+    if k in exact: rows[exact[k]][1] = max(rows[exact[k]][1], v - 8)
+for k, v in modern.items():  # curated modern words and brands keep exactly their minimum
+    if k in exact: rows[exact[k]][1] = max(rows[exact[k]][1], v)
+
+# Contractions: the subtitle list splits them ("don't" -> "don" + "t", "I'm" -> "i" + "m"), so the
+# stems' counts are really the contractions' counts. Rank the contractions by them.
+contractions = {'don': "don't", 'didn': "didn't", 'doesn': "doesn't", 'isn': "isn't", 'wasn': "wasn't",
+                'aren': "aren't", 'weren': "weren't", 'couldn': "couldn't", 'wouldn': "wouldn't",
+                'shouldn': "shouldn't", 'hasn': "hasn't", 'haven': "haven't", 'hadn': "hadn't",
+                'ain': "ain't"}
+for stem, c in contractions.items():
+    if c in exact and stem in sub:
+        fs = min(250, a * math.log(sub[stem]) + b)
+        r = rows[exact[c]]
+        r[1] = max(r[1], int(round((1 - blend) * r[1] + blend * fs)))
 
 # Anything built on a profanity root is offensive (hidden by "Block offensive words"), whatever AOSP
 # says ("shittiest", "bitch's"); a few hateful words are never suggested at all.

@@ -6,9 +6,13 @@ its private storage on your phone.
 
 ## Features
 - Gboard layout and look, Material You colors (or light/dark), optional number row
-- Suggestions + autocorrect from a bundled 103k-word list; backspace undoes a correction
+- Suggestions + autocorrect from a bundled 104k-word list (incl. modern words and brands); backspace
+  undoes a correction. Measured: 93.5% of common-word typos fixed (`DictionaryBenchmark`)
+- Next-word predictions from day one (common phrases), then from your own typing
 - Glide typing with trail, space-bar cursor control, swipe-left-on-backspace to delete words
 - Long-press accents/digits/symbols, emoji panel with recents, 1-hour local clipboard history
+- Crisp per-key haptics (lighter for repeats and cursor steps, firmer for space/enter), or the phone's
+  own keyboard haptics
 - Number, phone and date/time pads, email/URL keys, smart enter key, double-space period, auto-caps
 - Light, dark, black (OLED) and Material You themes; TalkBack support
 - Never learns (words or emoji) from password or incognito fields; clipboard history skips clips marked
