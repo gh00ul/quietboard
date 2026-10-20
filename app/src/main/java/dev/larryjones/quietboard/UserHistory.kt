@@ -139,6 +139,16 @@ class UserHistory(dir: File) {
         dirty = true
     }
 
+    /** Every word typed at least twice, with its count. Safe from any thread (the glide decoder's). */
+    fun forEachKnown(fn: (word: String, count: Int) -> Unit) {
+        for (e in words.values) if (e.count >= 2) fn(e.word, e.count)
+    }
+
+    /** What you've typed after [prevLower], with counts (main thread). */
+    fun followers(prevLower: String, fn: (word: String, count: Int) -> Unit) {
+        pairs[prevLower]?.forEach { (w, c) -> fn(w, c) }
+    }
+
     fun completions(prefixLower: String, out: (word: String, count: Int) -> Unit) {
         for ((k, e) in words) if (k.startsWith(prefixLower) && k != prefixLower) out(e.word, e.count)
     }

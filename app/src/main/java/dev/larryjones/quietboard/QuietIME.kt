@@ -58,6 +58,12 @@ class QuietIME : InputMethodService(),
     private val gestureExec: ExecutorService = Executors.newSingleThreadExecutor()
     private var pendingGesture: Future<List<String>>? = null
     private var pendingGestureId = 0
+    // Live glide preview: what the previous word makes likely (captured when the glide starts), which
+    // glide is on screen, and whether a preview decode is already running (never queue them up).
+    private var glideContext: Map<String, Float> = emptyMap()
+    private var glideId = 0
+    private var glidePreviewing = false
+    private var previewBusy = false
 
     // Views (recreated by onCreateInputView)
     private var root: InputRoot? = null
@@ -178,6 +184,7 @@ class QuietIME : InputMethodService(),
         refreshSuggestions()
     }
     private var configDirty = true
+    private var effectsOn: Boolean? = null
 
     // ------------------------------------------------------------------ lifecycle
 
@@ -311,12 +318,17 @@ class QuietIME : InputMethodService(),
 
     private fun applyConfig() {
         val t = KbTheme.resolve(this, prefs)
-        if (t != theme || configDirty) {
+        // Fun themes' tap bursts and twinkling lights; also off when the phone turns animations off.
+        val effects = prefs.themeEffects && android.animation.ValueAnimator.areAnimatorsEnabled()
+        if (t != theme || configDirty || effects != effectsOn) {
             theme = t
+            effectsOn = effects
             topBar?.theme = t
             keyboard?.theme = t
+            keyboard?.effects = effects
             overlay?.theme = t
-            root?.setBackgroundColor(t.background)
+            overlay?.effects = effects
+            root?.background = ThemeBackdrop(t, (topBar?.barHeight ?: 0).toFloat(), resources.displayMetrics.density, effects)
             emojiPanel?.applyTheme(t)
             clipPanel?.applyTheme(t)
             editPanel?.applyTheme(t)
@@ -369,7 +381,7 @@ class QuietIME : InputMethodService(),
     private fun colorNavBar(t: KbTheme) {
         val w = window?.window ?: return
         @Suppress("DEPRECATION")
-        w.navigationBarColor = t.background
+        w.navigationBarColor = t.backgroundEnd // the bottom of a fun theme's gradient
         w.isNavigationBarContrastEnforced = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             w.insetsController?.setSystemBarsAppearance(
@@ -1033,17 +1045,70 @@ class QuietIME : InputMethodService(),
         refreshSuggestions()
     }
 
-    override fun onGesture(xs: FloatArray, ys: FloatArray, count: Int) {
-        flushGesture()
+    override fun onGestureStart() {
+        flushGesture() // the previous glide's word is the context for this one
+        glideId++
+        glidePreviewing = true
+        previewBusy = false
+        glideContext = currentGlideContext()
+    }
+
+    override fun onGestureProgress(xs: FloatArray, ys: FloatArray, count: Int) {
+        if (previewBusy || !glidePreviewing || !suggestionsOn) return
         val dec = decoder ?: return
         val kv = keyboard ?: return
         val (cx, cy) = kv.letterCenters()
         val kw = kv.keyWidthPx()
         val kh = kv.rowHeightPx()
+        val id = glideId
+        val ctx = glideContext
+        previewBusy = true
+        try {
+            gestureExec.execute {
+                val best = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 1, ctx) }.getOrDefault(emptyList()).firstOrNull()
+                main.post {
+                    previewBusy = false
+                    if (id == glideId && glidePreviewing && best != null) {
+                        topBar?.setSuggestions(listOf(null, SuggestionItem(gestureCase(best), bold = true), null))
+                    }
+                }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            previewBusy = false
+        }
+    }
+
+    override fun onGestureCancel() {
+        glidePreviewing = false
+        glideId++
+        refreshSuggestions()
+    }
+
+    /** What's likely next after the word before the cursor (or the glided word still showing). */
+    private fun currentGlideContext(): Map<String, Float> {
+        val s = suggest ?: return emptyMap()
+        val learned = !noLearning && !onLockScreen
+        if (composing.isNotEmpty()) return s.contextFor(composing.toString(), false, learned)
+        val before = conn?.getTextBeforeCursor(64, 0)
+        val trimmed = before?.trimEnd()
+        val sentenceStart = trimmed.isNullOrEmpty() || trimmed.last() in ".!?\n"
+        return s.contextFor(lastWord(before), sentenceStart, learned)
+    }
+
+    override fun onGesture(xs: FloatArray, ys: FloatArray, count: Int) {
+        flushGesture()
+        glidePreviewing = false
+        glideId++ // late preview results are stale now
+        val dec = decoder ?: return
+        val kv = keyboard ?: return
+        val (cx, cy) = kv.letterCenters()
+        val kw = kv.keyWidthPx()
+        val kh = kv.rowHeightPx()
+        val ctx = glideContext
         val id = ++pendingGestureId
         pendingGesture = try {
             gestureExec.submit(Callable {
-                val results = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 4) }.getOrDefault(emptyList())
+                val results = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 4, ctx) }.getOrDefault(emptyList())
                 main.post { if (pendingGestureId == id && pendingGesture != null) flushGesture() }
                 results
             })

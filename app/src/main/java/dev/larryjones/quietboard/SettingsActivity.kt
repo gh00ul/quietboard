@@ -21,6 +21,7 @@ import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import java.util.Calendar
 
 class SettingsActivity : Activity() {
     private lateinit var prefs: Prefs
@@ -126,10 +127,11 @@ class SettingsActivity : Activity() {
 
         // --- Look
         val look = section("Appearance")
-        choiceRowString(look, "Theme", listOf("Follow system", "Light", "Dark", "Black (OLED)"), listOf("system", "light", "dark", "black"), Prefs.THEME, "system")
+        themeRow(look)
+        switchRow(look, "Theme effects", "In the fun themes: snow, embers or petals from each key you tap, and twinkling lights", Prefs.THEME_EFFECTS, true)
         choiceRowString(look, "Font", listOf("Google Sans (Gboard)", "System font"), listOf("google", "system"), Prefs.FONT, "google")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            switchRow(look, "Material You colors", "Match your wallpaper colors", Prefs.DYNAMIC_COLOR, true)
+            switchRow(look, "Material You colors", "Match your wallpaper colors (Light, Dark, Black and Follow system)", Prefs.DYNAMIC_COLOR, true)
         }
         choiceRow(look, "Keyboard height", listOf("Short", "Normal", "Tall", "Extra tall"), listOf(88, 100, 112, 124), Prefs.HEIGHT, 100)
 
@@ -414,6 +416,77 @@ class SettingsActivity : Activity() {
                 }
                 .show()
         }
+    }
+
+    // ---------------------------------------------------------------- theme picker
+
+    private fun themeRow(parent: LinearLayout) {
+        val (row, _, summary) = rowBase(parent, "Theme", themeLabel(prefs.theme))
+        summary.visibility = View.VISIBLE
+        row.setOnClickListener { pickTheme(summary) }
+    }
+
+    private fun themeLabel(id: String): String {
+        val choice = KbTheme.CHOICES.firstOrNull { it.id == id } ?: KbTheme.CHOICES[0]
+        if (choice.id != "seasonal") return choice.label
+        val now = KbTheme.effectiveId("seasonal", Calendar.getInstance().get(Calendar.MONTH))
+        return KbTheme.CHOICES.firstOrNull { it.id == now && now != "system" }?.let { "Seasonal · ${it.label} now" } ?: "Seasonal"
+    }
+
+    /** Every theme with a miniature keyboard in its colours; a tap picks it. */
+    private fun pickTheme(summary: TextView) {
+        val list = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, dpi(6f), 0, dpi(6f))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Theme")
+            .setView(ScrollView(this).apply { addView(list) })
+            .setNegativeButton("Cancel", null)
+            .create()
+        val current = prefs.theme
+        val month = Calendar.getInstance().get(Calendar.MONTH)
+        for (choice in KbTheme.CHOICES) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(dpi(20f), dpi(8f), dpi(20f), dpi(8f))
+                isClickable = true
+                val out = TypedValue()
+                if (theme.resolveAttribute(android.R.attr.selectableItemBackground, out, true)) foreground = getDrawable(out.resourceId)
+                contentDescription = choice.label + (if (choice.id == current) ", selected" else "")
+            }
+            val look = KbTheme.forChoice(this, prefs, choice.id, month)
+            row.addView(ThemeSwatch(this, look), LinearLayout.LayoutParams(dpi(96f), dpi(96f * ThemeSwatch.ASPECT)))
+            val texts = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+            texts.addView(TextView(this).apply {
+                text = choice.label
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                setTextColor(textPrimary)
+                if (choice.id == current) typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            })
+            texts.addView(TextView(this).apply {
+                text = choice.blurb
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+                setTextColor(textSecondary)
+            })
+            row.addView(texts, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dpi(14f) })
+            if (choice.id == current) {
+                row.addView(TextView(this).apply {
+                    text = "✓"
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                    setTextColor(accent)
+                    setPadding(dpi(8f), 0, 0, 0)
+                })
+            }
+            row.setOnClickListener {
+                prefs.sp.edit().putString(Prefs.THEME, choice.id).apply()
+                summary.text = themeLabel(choice.id)
+                dialog.dismiss()
+            }
+            list.addView(row)
+        }
+        dialog.show()
     }
 
     private fun actionRow(parent: LinearLayout, title: String, summary: String?, onClick: () -> Unit): TextView {

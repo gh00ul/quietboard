@@ -9,12 +9,17 @@ its private storage on your phone.
 - Suggestions + autocorrect from a bundled 104k-word list (incl. modern words and brands); backspace
   undoes a correction. Measured: 93.5% of common-word typos fixed (`DictionaryBenchmark`)
 - Next-word predictions from day one (common phrases), then from your own typing
-- Glide typing with trail, space-bar cursor control, swipe-left-on-backspace to delete words
+- Glide typing with a live preview of the word while you swipe, tuned on simulated sloppy swipes of
+  the 1,500 most common words (79.4% exactly right on words it was not tuned on, 92% in the strip;
+  `GlideBenchmark`), using the previous word to settle ties and gliding words you've taught it
+- Space-bar cursor control, swipe-left-on-backspace to delete words
 - Long-press accents/digits/symbols, emoji panel with recents, 1-hour local clipboard history
 - Crisp per-key haptics (lighter for repeats and cursor steps, firmer for space/enter), or the phone's
   own keyboard haptics
 - Number, phone and date/time pads, email/URL keys, smart enter key, double-space period, auto-caps
-- Light, dark, black (OLED) and Material You themes; TalkBack support
+- Light, dark, black (OLED) and Material You themes, plus fun ones: Halloween, Christmas, Neon,
+  Sakura, Ocean and Retro terminal, each with its own scenery and swipe trail, and a Seasonal theme
+  that switches to Halloween in October and Christmas in December. TalkBack support
 - Never learns (words or emoji) from password or incognito fields; clipboard history skips clips marked
   sensitive, images, and copies made while a password/incognito field is active (best effort)
 

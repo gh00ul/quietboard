@@ -5,7 +5,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.os.SystemClock
 import android.view.View
+import kotlin.math.floor
+import kotlin.math.sqrt
 
 /**
  * Transparent layer above the whole input view. Never takes touches; the keyboard view feeds it
@@ -50,6 +53,23 @@ class PopupOverlay(context: Context) : View(context) {
     private var trailX = FloatArray(256)
     private var trailY = FloatArray(256)
     private var trailN = 0
+    private val measure = android.graphics.PathMeasure()
+
+    // Tap bursts (fun themes): a ring buffer of particles that fly off a key and fade.
+    var effects = true
+    private val px = FloatArray(MAX_PARTICLES)
+    private val py = FloatArray(MAX_PARTICLES)
+    private val vx = FloatArray(MAX_PARTICLES)
+    private val vy = FloatArray(MAX_PARTICLES)
+    private val gravity = FloatArray(MAX_PARTICLES)
+    private val size = FloatArray(MAX_PARTICLES)
+    private val rot = FloatArray(MAX_PARTICLES)
+    private val spin = FloatArray(MAX_PARTICLES)
+    private val tint = IntArray(MAX_PARTICLES)
+    private val life = IntArray(MAX_PARTICLES)
+    private val born = LongArray(MAX_PARTICLES)
+    private var nextParticle = 0
+    private val rnd = java.util.Random()
 
     init {
         isClickable = false
@@ -160,7 +180,179 @@ class PopupOverlay(context: Context) : View(context) {
 
     fun hideAll() {
         previewOn = false; popupOn = false; trailN = 0
+        born.fill(0L)
         invalidate()
+    }
+
+    /** A fun theme's little burst from a tapped key at ([x], [y]). */
+    fun burst(x: Float, y: Float) {
+        val t = theme ?: return
+        if (!effects || t.decor == Decor.NONE) return
+        val now = SystemClock.uptimeMillis()
+        val n = when (t.decor) {
+            Decor.NEON -> 1
+            Decor.HALLOWEEN, Decor.CHRISTMAS -> 5
+            else -> 4
+        }
+        // Speeds in dp per second, gravity in dp per second squared (negative floats up).
+        fun r(a: Float, b: Float) = a + (b - a) * rnd.nextFloat()
+        for (k in 0 until n) {
+            val i = nextParticle
+            nextParticle = (nextParticle + 1) % MAX_PARTICLES
+            px[i] = x + r(-6f, 6f) * dp
+            py[i] = y + r(-3f, 3f) * dp
+            rot[i] = r(0f, 360f)
+            tint[i] = rnd.nextInt(2)
+            var g = 0f
+            when (t.decor) {
+                Decor.HALLOWEEN -> { vx[i] = r(-40f, 40f); vy[i] = r(-120f, -50f); g = 40f; size[i] = r(1.4f, 2.4f); life[i] = 650 }
+                Decor.CHRISTMAS -> { vx[i] = r(-60f, 60f); vy[i] = r(-110f, -40f); g = 220f; size[i] = r(3f, 5f); life[i] = 700; spin[i] = r(-180f, 180f) }
+                Decor.NEON -> { vx[i] = 0f; vy[i] = 0f; size[i] = 8f; life[i] = 380; tint[i] = (now / 7 % 2).toInt(); px[i] = x; py[i] = y }
+                Decor.SAKURA -> { vx[i] = r(-70f, 70f); vy[i] = r(-100f, -40f); g = 200f; size[i] = r(3.5f, 5f); life[i] = 750; spin[i] = r(-240f, 240f) }
+                Decor.OCEAN -> { vx[i] = r(-25f, 25f); vy[i] = r(-90f, -45f); g = -30f; size[i] = r(1.6f, 3.2f); life[i] = 700 }
+                Decor.RETRO -> { vx[i] = r(-90f, 90f); vy[i] = r(-90f, 20f); size[i] = 2.6f; life[i] = 320 }
+                Decor.NONE -> Unit
+            }
+            // To px per ms (and px per ms squared).
+            vx[i] *= dp / 1000f
+            vy[i] *= dp / 1000f
+            gravity[i] = g * dp / 1e6f
+            size[i] *= dp
+            born[i] = now
+        }
+        invalidate()
+    }
+
+    private fun drawParticles(canvas: Canvas, t: KbTheme): Boolean {
+        val now = SystemClock.uptimeMillis()
+        var alive = false
+        for (i in 0 until MAX_PARTICLES) {
+            if (born[i] == 0L) continue
+            val age = (now - born[i]).toFloat()
+            if (age >= life[i]) { born[i] = 0L; continue }
+            alive = true
+            val f = age / life[i]
+            val x = px[i] + vx[i] * age
+            val y = py[i] + vy[i] * age + 0.5f * gravity[i] * age * age
+            val a = (255 * (1f - f) * (1f - f * 0.5f)).toInt().coerceIn(0, 255)
+            Scenery.particle(canvas, t.decor, x, y, size[i], rot[i] + spin[i] * age / 1000f, a, f, tint[i], dp)
+        }
+        return alive
+    }
+
+    private fun drawTrail(canvas: Canvas, t: KbTheme) {
+        // Fades in from the tail like Gboard's. Drawn as ~12 continuous paths with butt caps:
+        // per-segment lines would overlap at every joint and look beaded when translucent.
+        val start = maxOf(1, trailN - 160)
+        val span = trailN - start
+        if (t.trail == Trail.PIXEL) { drawPixelTrail(canvas, t, start, span); return }
+        val chunk = maxOf(3, span / 12)
+        val glow = t.trail == Trail.GLOW && t.dark
+        val stripe = 5f * dp
+        var dashPhase = 0f
+        trailPaint.strokeCap = Paint.Cap.BUTT
+        var a = start
+        while (a < trailN) {
+            val b = minOf(trailN - 1, a + chunk)
+            val f = (b - start + 1).toFloat() / span
+            trailPath.reset()
+            trailPath.moveTo(trailX[a - 1], trailY[a - 1])
+            for (i in a..b) trailPath.lineTo(trailX[i], trailY[i])
+            val alpha = (50 + 205 * f).toInt()
+            val color = when (t.trail) {
+                Trail.GLOW -> KbTheme.blend(t.trailTail, t.accent, f)
+                Trail.CANDY -> 0xFFFFFFFF.toInt()
+                else -> t.accent
+            }
+            trailPaint.color = color
+            trailPaint.alpha = alpha
+            trailPaint.strokeWidth = when (t.trail) {
+                Trail.CANDY -> (3.5f + 3.5f * f) * dp
+                Trail.GLOW -> (2.8f + 3.4f * f) * dp
+                else -> (2.5f + 3f * f) * dp
+            }
+            if (glow) trailPaint.setShadowLayer((2f + 6f * f) * dp, 0f, 0f, color)
+            canvas.drawPath(trailPath, trailPaint)
+            if (glow) trailPaint.clearShadowLayer()
+            if (t.trail == Trail.CANDY) {
+                // Red stripes that carry on from one piece of the trail to the next.
+                measure.setPath(trailPath, false)
+                val len = measure.length
+                trailPaint.color = t.trailTail
+                trailPaint.alpha = alpha
+                trailPaint.pathEffect = android.graphics.DashPathEffect(floatArrayOf(stripe, stripe), dashPhase)
+                canvas.drawPath(trailPath, trailPaint)
+                trailPaint.pathEffect = null
+                dashPhase = (dashPhase + len) % (2 * stripe)
+            }
+            a = b + 1
+        }
+        // Scenery dropped along the way: embers, snowflakes, petals, bubbles.
+        if (t.decor != Decor.NONE) {
+            var i = start + ((9 - start % 9) % 9)
+            while (i < trailN) {
+                val dx = trailX[i] - trailX[i - 1]
+                val dy = trailY[i] - trailY[i - 1]
+                val d = sqrt(dx * dx + dy * dy)
+                if (d > 0.01f) {
+                    val side = (noise(i, 41) * 2f - 1f) * 9f * dp
+                    val f = (i - start + 1).toFloat() / span
+                    Scenery.trailBit(
+                        canvas, t.decor, trailX[i] - dy / d * side, trailY[i] + dx / d * side,
+                        (3.5f + 2f * noise(i, 42)) * dp, noise(i, 43) * 360f, (40 + 180 * f).toInt(), dp,
+                    )
+                }
+                i += 9
+            }
+        }
+        val hx = trailX[trailN - 1]
+        val hy = trailY[trailN - 1]
+        when (t.trail) {
+            Trail.GLOW -> {
+                fill.color = t.accent
+                if (t.dark) fill.setShadowLayer(7f * dp, 0f, 0f, t.accent)
+                canvas.drawCircle(hx, hy, 3.6f * dp, fill)
+                fill.clearShadowLayer()
+                fill.color = if (t.dark) 0xFFFFFFFF.toInt() else t.accentPressed
+                canvas.drawCircle(hx, hy, 1.6f * dp, fill)
+            }
+            Trail.CANDY -> {
+                fill.color = 0xFFFFFFFF.toInt()
+                canvas.drawCircle(hx, hy, 4f * dp, fill)
+                fill.color = t.trailTail
+                canvas.drawCircle(hx, hy, 2f * dp, fill)
+            }
+            else -> {
+                fill.color = t.accent
+                canvas.drawCircle(hx, hy, 2.75f * dp, fill)
+            }
+        }
+    }
+
+    /** The retro terminal's trail: chunky pixels on a grid, gaps filled so fast swipes stay solid. */
+    private fun drawPixelTrail(canvas: Canvas, t: KbTheme, start: Int, span: Int) {
+        val cell = 5.5f * dp
+        val inset = 0.6f * dp
+        fill.color = t.accent
+        if (t.glow != 0) fill.setShadowLayer(3f * dp, 0f, 0f, t.glow)
+        var lastX = floor(trailX[start - 1] / cell).toInt()
+        var lastY = floor(trailY[start - 1] / cell).toInt()
+        for (i in start until trailN) {
+            val cx = floor(trailX[i] / cell).toInt()
+            val cy = floor(trailY[i] / cell).toInt()
+            if (cx == lastX && cy == lastY) continue
+            val steps = maxOf(kotlin.math.abs(cx - lastX), kotlin.math.abs(cy - lastY))
+            fill.alpha = (60 + 195 * (i - start + 1).toFloat() / span).toInt()
+            for (s in 1..steps) {
+                val gx = lastX + kotlin.math.round((cx - lastX) * s.toFloat() / steps).toInt()
+                val gy = lastY + kotlin.math.round((cy - lastY) * s.toFloat() / steps).toInt()
+                canvas.drawRect(gx * cell + inset, gy * cell + inset, (gx + 1) * cell - inset, (gy + 1) * cell - inset, fill)
+            }
+            lastX = cx
+            lastY = cy
+        }
+        fill.clearShadowLayer()
+        fill.alpha = 255
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -168,29 +360,10 @@ class PopupOverlay(context: Context) : View(context) {
         val radius = 12 * dp
         text.typeface = t.fonts.regular
 
-        if (trailN > 1) {
-            // Fades in from the tail like Gboard's. Drawn as ~12 continuous paths with butt caps:
-            // per-segment lines would overlap at every joint and look beaded when translucent.
-            val start = maxOf(1, trailN - 160)
-            val span = trailN - start
-            val chunk = maxOf(3, span / 12)
-            trailPaint.strokeCap = Paint.Cap.BUTT
-            var a = start
-            while (a < trailN) {
-                val b = minOf(trailN - 1, a + chunk)
-                val f = (b - start + 1).toFloat() / span
-                trailPath.reset()
-                trailPath.moveTo(trailX[a - 1], trailY[a - 1])
-                for (i in a..b) trailPath.lineTo(trailX[i], trailY[i])
-                trailPaint.color = t.accent
-                trailPaint.alpha = (50 + 205 * f).toInt()
-                trailPaint.strokeWidth = (2.5f + 3f * f) * dp
-                canvas.drawPath(trailPath, trailPaint)
-                a = b + 1
-            }
-            fill.color = t.accent
-            canvas.drawCircle(trailX[trailN - 1], trailY[trailN - 1], 2.75f * dp, fill)
-        }
+        if (t.decor == Decor.RETRO) Scenery.scanlines(canvas, width.toFloat(), height.toFloat(), dp)
+        if (trailN > 1) drawTrail(canvas, t)
+        // Under the key preview, so a burst never hides the letter you just pressed.
+        if (drawParticles(canvas, t)) postInvalidateOnAnimation()
 
         if (previewOn) {
             fill.color = t.popup
@@ -223,4 +396,8 @@ class PopupOverlay(context: Context) : View(context) {
     }
 
     private fun centerBaseline(cy: Float) = cy - (text.descent() + text.ascent()) / 2
+
+    private companion object {
+        const val MAX_PARTICLES = 48
+    }
 }

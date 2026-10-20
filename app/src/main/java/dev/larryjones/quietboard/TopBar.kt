@@ -88,6 +88,9 @@ class TopBar(context: Context) : View(context) {
 
     val showingSuggestions get() = items.any { it != null }
 
+    /** What the strip shows now (tests). */
+    internal fun itemsForTest(): List<SuggestionItem?> = items
+
     fun setSuggestions(list: List<SuggestionItem?>?) {
         val new = list ?: emptyList()
         if (new == items) return // called on every keystroke: skip redraws and accessibility events
@@ -203,9 +206,17 @@ class TopBar(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         val t = theme ?: return
-        canvas.drawColor(t.background)
+        // Fun themes: the window behind paints the gradient and scene.
+        if (!t.hasBackdrop) canvas.drawColor(t.background)
         textPaint.typeface = t.fonts.regular
         boldPaint.typeface = t.fonts.bold
+        if (t.glow != 0) {
+            textPaint.setShadowLayer(3f * dp, 0f, 0f, t.glow)
+            boldPaint.setShadowLayer(3f * dp, 0f, 0f, t.glow)
+        } else {
+            textPaint.clearShadowLayer()
+            boldPaint.clearShadowLayer()
+        }
         chipText.typeface = t.fonts.regular
         if (showingSuggestions) drawSuggestions(canvas, t) else drawToolbar(canvas, t)
     }

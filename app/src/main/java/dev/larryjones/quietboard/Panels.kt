@@ -221,7 +221,7 @@ class EmojiPanel(context: Context, private val listener: Listener) : LinearLayou
 
     fun applyTheme(t: KbTheme) {
         theme = t
-        setBackgroundColor(t.background)
+        setBackgroundColor(if (t.hasBackdrop) 0 else t.background) // fun themes: the scene shows through
         title.setTextColor(t.hint)
         title.typeface = t.fonts.medium
         abc.setTextColor(t.text)
@@ -322,7 +322,7 @@ class ClipboardPanel(context: Context, private val listener: Listener) : LinearL
 
     fun applyTheme(t: KbTheme) {
         theme = t
-        setBackgroundColor(t.background)
+        setBackgroundColor(if (t.hasBackdrop) 0 else t.background) // fun themes: the scene shows through
         title.setTextColor(t.text)
         abc.setTextColor(t.text)
         clear.setTextColor(t.accent)
@@ -559,7 +559,7 @@ class EditPanel(context: Context, private val listener: Listener) : LinearLayout
     }
 
     fun applyTheme(t: KbTheme) {
-        setBackgroundColor(t.background)
+        setBackgroundColor(if (t.hasBackdrop) 0 else t.background) // fun themes: the scene shows through
         for (k in keys) k.theme = t
     }
 }

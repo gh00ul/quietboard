@@ -11,7 +11,10 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.shadows.ShadowSystemClock
 import java.io.File
+import java.time.Duration
+import java.util.Calendar
 
 /**
  * Draws the actual keyboard views (same onDraw code that runs on the phone) into PNGs.
@@ -46,6 +49,8 @@ class ScreenshotTest {
 
         val bmp = Bitmap.createBitmap(w, total, Bitmap.Config.ARGB_8888)
         val c = Canvas(bmp)
+        // What the keyboard window paints behind the strip and keys (a fun theme's scene).
+        ThemeBackdrop(theme, tb.measuredHeight.toFloat(), ctx.resources.displayMetrics.density, false).apply { setBounds(0, 0, w, total) }.draw(c)
         tb.draw(c)
         c.save(); c.translate(0f, tb.measuredHeight.toFloat()); c.clipRect(0, 0, w, kv.measuredHeight); kv.draw(c); c.restore()
         overlay.draw(c)
@@ -59,7 +64,7 @@ class ScreenshotTest {
         prefs.sp.edit().putString(Prefs.THEME, themeName).putBoolean(Prefs.DYNAMIC_COLOR, dynamic).commit()
         val theme = KbTheme.resolve(ctx, prefs)
         val root = InputRoot(ctx)
-        root.setBackgroundColor(theme.background)
+        root.background = ThemeBackdrop(theme, root.topBar.barHeight.toFloat(), ctx.resources.displayMetrics.density, false)
         root.keyboard.theme = theme; root.topBar.theme = theme; root.overlay.theme = theme
         root.keyboard.setLayout(Layouts.build(LayoutId.ALPHA, LayoutOptions(false, false, FieldKind.TEXT)))
         setup(root, theme, ctx)
@@ -72,6 +77,32 @@ class ScreenshotTest {
         root.draw(Canvas(bmp))
         File("build/screens").mkdirs()
         File("build/screens/$file").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
+
+    /** The theme picker's miniature keyboards, one per choice, as Settings shows them in October. */
+    private fun swatches() {
+        val ctx = RuntimeEnvironment.getApplication()
+        val prefs = Prefs(ctx)
+        prefs.sp.edit().putBoolean(Prefs.DYNAMIC_COLOR, false).commit()
+        val d = ctx.resources.displayMetrics.density
+        val sw = (96 * d).toInt()
+        val sh = (96 * ThemeSwatch.ASPECT * d).toInt()
+        val pad = (12 * d).toInt()
+        val rowH = sh + pad
+        val bmp = Bitmap.createBitmap((300 * d).toInt(), pad + rowH * KbTheme.CHOICES.size, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        c.drawColor(0xFFF6F7F9.toInt())
+        val label = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { textSize = 15 * d; color = 0xFF202124.toInt() }
+        for ((i, choice) in KbTheme.CHOICES.withIndex()) {
+            val v = ThemeSwatch(ctx, KbTheme.forChoice(ctx, prefs, choice.id, Calendar.OCTOBER))
+            v.measure(View.MeasureSpec.makeMeasureSpec(sw, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(sh, View.MeasureSpec.EXACTLY))
+            v.layout(0, 0, sw, sh)
+            val y = pad + i * rowH
+            c.save(); c.translate(pad.toFloat(), y.toFloat()); v.draw(c); c.restore()
+            c.drawText(choice.label, (pad * 2 + sw).toFloat(), y + sh / 2f + 5 * d, label)
+        }
+        File("build/screens").mkdirs()
+        File("build/screens/swatches.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 
     private fun keyRect(kv: KeyboardView, ch: String, dy: Int): RectF {
@@ -113,6 +144,40 @@ class ScreenshotTest {
             xs += pts.last().centerX(); ys += pts.last().centerY()
             ov.setTrail(xs.toFloatArray(), ys.toFloatArray(), xs.size, 0f, 0f)
         }
+        fun trail(kv: KeyboardView, ov: PopupOverlay, dy: Int, word: String) {
+            val pts = word.map { keyRect(kv, it.toString(), dy) }
+            val xs = ArrayList<Float>(); val ys = ArrayList<Float>()
+            for (i in 0 until pts.size - 1) for (st in 0 until 20) {
+                val t = st / 20f
+                xs += pts[i].centerX() + (pts[i + 1].centerX() - pts[i].centerX()) * t
+                ys += pts[i].centerY() + (pts[i + 1].centerY() - pts[i].centerY()) * t +
+                    (kotlin.math.sin(t * Math.PI) * 12).toFloat()
+            }
+            xs += pts.last().centerX(); ys += pts.last().centerY()
+            ov.setTrail(xs.toFloatArray(), ys.toFloatArray(), xs.size, 0f, 0f)
+        }
+        // Fun themes: a glide in progress with its trail, the live preview, and a tap burst.
+        val funGlide: (TopBar, KeyboardView, PopupOverlay, Int) -> Unit = { tb, kv, ov, dy ->
+            kv.enterIcon = Icon.SEND
+            tb.setSuggestions(listOf(SuggestionItem("hell"), SuggestionItem("hello", bold = true), SuggestionItem("help")))
+            trail(kv, ov, dy, "hello")
+            val q = keyRect(kv, "q", dy)
+            ov.burst(q.centerX(), q.top + q.height() * 0.3f)
+            ShadowSystemClock.advanceBy(Duration.ofMillis(170))
+        }
+        // ...and the toolbar, where nothing covers the scenery.
+        val funToolbar: (TopBar, KeyboardView, PopupOverlay, Int) -> Unit = { _, kv, ov, dy ->
+            kv.enterIcon = Icon.ENTER
+            ov.showPreview(keyRect(kv, "g", dy), "g")
+            val p = keyRect(kv, "p", dy)
+            ov.burst(p.centerX(), p.top + p.height() * 0.3f)
+            ShadowSystemClock.advanceBy(Duration.ofMillis(220))
+        }
+        for (id in listOf("halloween", "christmas", "neon", "sakura", "ocean", "retro")) {
+            render(id, "fun_$id.png", setup = funGlide)
+            render(id, "fun_${id}_bar.png", setup = funToolbar)
+        }
+        swatches()
         val emojiTyping: (TopBar, KeyboardView, PopupOverlay, Int) -> Unit = { tb, kv, _, _ ->
             tb.setSuggestions(listOf(SuggestionItem("pizzas"), SuggestionItem("pizza"), SuggestionItem("\uD83C\uDF55", emoji = true)))
             kv.enterIcon = Icon.SEND
@@ -134,7 +199,7 @@ class ScreenshotTest {
             root.keyboard.visibility = View.INVISIBLE
             root.topBar.activeTool = TopBar.Tool.EDIT
         }
-        renderRoot("light", "md_clip.png", dynamic = true) { root, t, ctx ->
+        val clipPanel: (InputRoot, KbTheme, android.content.Context) -> Unit = { root, t, ctx ->
             val cp = ClipboardPanel(ctx, object : ClipboardPanel.Listener {
                 override fun onClipPaste(text: String) {}
                 override fun onClipPin(item: ClipboardHistory.Item) {}
@@ -155,6 +220,8 @@ class ScreenshotTest {
             root.keyboard.visibility = View.INVISIBLE
             root.topBar.activeTool = TopBar.Tool.CLIPBOARD
         }
+        renderRoot("light", "md_clip.png", dynamic = true, setup = clipPanel)
+        renderRoot("christmas", "fun_clip.png", dynamic = false, setup = clipPanel)
         val preview: (TopBar, KeyboardView, PopupOverlay, Int) -> Unit = { tb, kv, ov, dy ->
             tb.setSuggestions(listOf(SuggestionItem("then"), SuggestionItem("the", bold = true), SuggestionItem("they")))
             ov.showPreview(keyRect(kv, "g", dy), "g")
@@ -162,7 +229,7 @@ class ScreenshotTest {
         render("light", "preview.png", setup = preview)
         render("dark", "md_preview.png", dynamic = true, setup = preview)
         render("black", "black.png", setup = typing)
-        renderRoot("dark", "md_emojipanel.png", dynamic = true) { root, t, ctx ->
+        val emojiPanel: (InputRoot, KbTheme, android.content.Context) -> Unit = { root, t, ctx ->
             val ep = EmojiPanel(ctx, object : EmojiPanel.Listener {
                 override fun onEmoji(emoji: String) {}
                 override fun onPanelDelete() {}
@@ -173,6 +240,8 @@ class ScreenshotTest {
             root.keyboard.visibility = View.INVISIBLE
             root.topBar.activeTool = TopBar.Tool.EMOJI
         }
+        renderRoot("dark", "md_emojipanel.png", dynamic = true, setup = emojiPanel)
+        renderRoot("halloween", "fun_emojipanel.png", dynamic = false, setup = emojiPanel)
         render("dark", "dark.png", setup = typing)
         render("dark", "glide.png", setup = glide)
         render("light", "light.png", setup = toolbar)

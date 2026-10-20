@@ -1,7 +1,11 @@
 package dev.larryjones.quietboard
 
 import android.app.KeyguardManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Looper
+import android.os.SystemClock
+import android.view.MotionEvent
 import android.text.InputType
 import android.view.View
 import android.view.inputmethod.BaseInputConnection
@@ -201,6 +205,53 @@ class ImeTest {
             shadowOf(Looper.getMainLooper()).idle()
         }
         assertEquals("hello world", text)
+    }
+
+    @Test fun glideShowsTheWordWhileSwiping() {
+        waitForEngine()
+        val (xs, ys) = swipe("hello")
+        ime.onGestureStart()
+        // Most of the path so far: the decoder runs off the UI thread, the strip updates when it's done.
+        val part = (xs.size * 0.8).toInt()
+        ime.onGestureProgress(xs.copyOf(part), ys.copyOf(part), part)
+        // The strip shows next-word predictions until the preview replaces them.
+        var tries = 0
+        while (root.topBar.itemsForTest().getOrNull(1)?.bold != true && tries++ < 100) {
+            Thread.sleep(20)
+            shadowOf(Looper.getMainLooper()).idle()
+        }
+        val preview = root.topBar.itemsForTest().getOrNull(1)
+        assertTrue("a bold preview word in the middle of the strip", preview != null && preview.bold)
+        assertEquals("nothing is typed until the finger lifts", "", text)
+        ime.onGesture(xs, ys, xs.size)
+        ime.onSpace()
+        assertEquals("hello ", text)
+    }
+
+    @Test fun funThemeTypesAndDraws() {
+        waitForEngine()
+        Prefs(RuntimeEnvironment.getApplication()).sp.edit().putString(Prefs.THEME, "christmas").commit()
+        start(fieldId = 30)
+        assertEquals(Decor.CHRISTMAS, root.keyboard.theme?.decor)
+        assertTrue("the window paints the scene", root.background is ThemeBackdrop)
+        val kv = root.keyboard
+        val keys = kv.layout!!.rows.flatMap { it.keys }
+        val t0 = SystemClock.uptimeMillis()
+        for ((n, ch) in "hi".withIndex()) {
+            val k = keys.first { it.text == ch.toString() }
+            val t = t0 + n * 300L
+            kv.dispatchTouchEvent(MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, k.touch.centerX(), k.touch.centerY(), 0))
+            kv.dispatchTouchEvent(MotionEvent.obtain(t, t + 60, MotionEvent.ACTION_UP, k.touch.centerX(), k.touch.centerY(), 0))
+        }
+        // Scene, snow caps, tap bursts: the whole window draws.
+        val bmp = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
+        root.draw(Canvas(bmp))
+        ime.onSpace()
+        assertEquals("hi ", text)
+        val (xs, ys) = swipe("hello")
+        ime.onGesture(xs, ys, xs.size)
+        ime.onSpace()
+        assertEquals("hi hello ", text)
     }
 
     @Test fun glideAfterPeriodIsCapitalized() {

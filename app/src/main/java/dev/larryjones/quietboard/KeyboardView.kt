@@ -40,6 +40,12 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         fun onDeleteSwipeUpdate(words: Int)
         fun onDeleteSwipeEnd(commit: Boolean)
         fun onGesture(xs: FloatArray, ys: FloatArray, count: Int)
+        /** A glide began (the finger slid far enough). */
+        fun onGestureStart() {}
+        /** The glide so far, a few times a second, for a live preview of the word. */
+        fun onGestureProgress(xs: FloatArray, ys: FloatArray, count: Int) {}
+        /** A glide ended without a word (it was a sloppy tap, or the touch was cancelled). */
+        fun onGestureCancel() {}
         fun onOneHandedSwap()
         fun onOneHandedExit()
     }
@@ -60,6 +66,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
     var obscureKeys = false
 
     var showPreview = true
+    /** Fun themes: a little burst of snow, embers, petals... from each key you tap. */
+    var effects = true
     var gestureTyping = true
     var gestureTrail = true
     var spaceCursor = true
@@ -116,6 +124,17 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         releasedAt.remove(k)
     }
 
+    private fun burstFrom(k: Key) {
+        val t = theme ?: return
+        if (!effects || t.decor == Decor.NONE) return
+        val r = toOverlay(k.visual)
+        overlay.burst(r.centerX(), r.top + r.height() * 0.3f)
+    }
+
+    /** "> English_" on the retro terminal's space bar, built once per label. */
+    private var retroSpace = ""
+    private var retroSpaceFor: String? = null
+
     private fun release(k: Key, by: Ptr? = null) {
         // Another finger still on the same key ("ll" with two thumbs) keeps it highlighted.
         if (ptrs.values.any { it !== by && it.key === k && !it.consumed && it.mode == Mode.NORMAL }) return
@@ -155,6 +174,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
 
     /** When the last plain key tap ended; a touch right after typing is a tap, never a glide. */
     private var lastTapUp = 0L
+    private var lastProgressAt = 0L
 
     private val longPressRunnable = Runnable { longPressPtr?.let { onLongPress(it) } }
     private val clearTrailRunnable = Runnable { overlay.clearTrail() }
@@ -262,10 +282,20 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
     override fun onDraw(canvas: Canvas) {
         val t = theme ?: return
         val l = layout ?: return
-        canvas.drawColor(t.background)
+        // Fun themes: the window behind paints the gradient and scene; the gaps show it.
+        if (!t.hasBackdrop) canvas.drawColor(t.background)
         labelPaint.typeface = t.fonts.regular
         funcPaint.typeface = t.fonts.medium
         hintPaint.typeface = t.fonts.medium
+        if (t.glow != 0) {
+            labelPaint.setShadowLayer(3.5f * dp, 0f, 0f, t.glow)
+            funcPaint.setShadowLayer(3.5f * dp, 0f, 0f, t.glow)
+        } else {
+            labelPaint.clearShadowLayer()
+            funcPaint.clearShadowLayer()
+        }
+        val extras = t.decor != Decor.NONE || t.keyStroke != 0
+        var seed = 0
         val letterSize = minOf(rowHeight * 0.43f, keyWidth * 0.62f)
         labelPaint.textSize = letterSize
         funcPaint.textSize = rowHeight * 0.26f
@@ -295,6 +325,15 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             }
             keyPaint.color = bg
             canvas.drawRoundRect(k.visual, radius, radius, keyPaint)
+            seed++
+            if (extras) {
+                val look = when {
+                    accentKey -> KeyLook.ACCENT
+                    k.functional -> KeyLook.SPECIAL
+                    else -> KeyLook.LETTER
+                }
+                Scenery.keyExtra(canvas, t, k.visual, radius, look, k.hint != null && k.type == KeyType.CHAR, seed, dp)
+            }
 
             val cx = k.visual.centerX()
             val cy = k.visual.centerY()
@@ -335,7 +374,12 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                     hintPaint.textAlign = Paint.Align.CENTER
                     val size = hintPaint.textSize
                     hintPaint.textSize = rowHeight * 0.22f
-                    canvas.drawText(spaceLabel, cx, baseline(hintPaint, cy), hintPaint)
+                    val label = if (t.decor == Decor.RETRO) {
+                        if (retroSpaceFor != spaceLabel) { retroSpace = "> ${spaceLabel}_"; retroSpaceFor = spaceLabel }
+                        retroSpace
+                    } else spaceLabel
+                    canvas.drawText(label, cx, baseline(hintPaint, cy), hintPaint)
+                    if (t.decor != Decor.NONE) Scenery.spaceArt(canvas, t, k.visual, hintPaint.measureText(label) / 2, dp)
                     hintPaint.textSize = size
                     hintPaint.textAlign = Paint.Align.RIGHT
                 }
@@ -454,6 +498,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         val p = Ptr(id, key, x, y)
         ptrs[id] = p
         press(key)
+        burstFrom(key)
         listener?.onKeyFeedback(key)
         when (key.type) {
             KeyType.SHIFT -> listener?.onShiftPress()
@@ -588,6 +633,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                 val end = keyAt(x, y)
                 val toOtherLetter = end != null && end !== p.key && end.isLetter && len >= keyWidth * 0.8f
                 if (len < keyWidth * 1.1f && !toOtherLetter) {
+                    listener?.onGestureCancel()
                     overlay.clearTrail()
                     emitText(shifted(p.key.text))
                     lastTapUp = SystemClock.uptimeMillis()
@@ -617,7 +663,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             Mode.POPUP -> overlay.hidePopup()
             Mode.SPACE_SWIPE -> listener?.onCursorMoveEnd()
             Mode.DELETE_SWIPE -> listener?.onDeleteSwipeEnd(false)
-            Mode.GESTURE -> { gn = 0; overlay.clearTrail() }
+            Mode.GESTURE -> { gn = 0; overlay.clearTrail(); listener?.onGestureCancel() }
         }
         hidePreviewIfIdle()
         invalidate()
@@ -676,6 +722,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         gn = 0
         addGesturePoint(p.downX, p.downY)
         addGesturePoint(x, y)
+        lastProgressAt = SystemClock.uptimeMillis()
+        listener?.onGestureStart()
         invalidate()
     }
 
@@ -685,6 +733,12 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             gx = gx.copyOf(gn * 2); gy = gy.copyOf(gn * 2)
         }
         gx[gn] = x; gy[gn] = y; gn++
+        // Live preview: hand the path so far to the decoder ~10 times a second.
+        val now = SystemClock.uptimeMillis()
+        if (gn >= 3 && now - lastProgressAt >= PROGRESS_MS && ptrs.values.any { it.mode == Mode.GESTURE }) {
+            lastProgressAt = now
+            listener?.onGestureProgress(gx.copyOf(gn), gy.copyOf(gn), gn)
+        }
         if (gestureTrail) {
             updateOffsets()
             overlay.setTrail(gx, gy, gn, (offset[0] - overlayOffset[0]).toFloat(), (offset[1] - overlayOffset[1]).toFloat())
@@ -723,6 +777,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             when {
                 p.mode == Mode.DELETE_SWIPE -> listener?.onDeleteSwipeEnd(false)
                 p.mode == Mode.SPACE_SWIPE -> listener?.onCursorMoveEnd()
+                p.mode == Mode.GESTURE -> listener?.onGestureCancel()
                 p.key.type == KeyType.SHIFT && p.mode == Mode.NORMAL -> listener?.onShiftRelease(p.chorded)
             }
         }
@@ -847,6 +902,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
 
     private companion object {
         const val RELEASE_FADE_MS = 160f
+        const val PROGRESS_MS = 90L
         const val ALT_ACTION_BASE = 0x7E000000
         const val SIDE_SWAP = 10_000
         const val SIDE_EXPAND = 10_001

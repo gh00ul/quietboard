@@ -14,13 +14,47 @@ import kotlin.math.sqrt
  *    lost "when" because the closest point to "h" lies on the later e→n stretch),
  *  - point-to-point distance to the ideal key path, endpoint distance, path-length ratio,
  *  - a language prior that favours common words over oddities ("Passat", "Beresford's").
- * Stage 2 re-ranks the best 40 with dynamic time warping, which tolerates uneven swipe speed.
+ * Stage 2 re-ranks the best [Weights.top] with dynamic time warping, which tolerates uneven swipe
+ * speed, a penalty for sharp turns in the swipe that none of the word's letters explain, and the
+ * previous word ("I like" vs "I line"; see [decode]'s context).
+ *
+ * Words you've typed at least twice but that aren't in the dictionary (names, slang) are glideable too.
  *
  * Not thread-safe (shared scratch arrays): call [decode] from one thread at a time. The keyboard runs
- * it on a background thread; the dictionary is read-only and [UserHistory] reads are concurrent-safe.
+ * it on a background thread; the dictionary is read-only and [UserHistory.forEachKnown] is
+ * concurrent-safe.
  */
 class GestureDecoder(private val dict: Dictionary, private val history: UserHistory) {
     var blockOffensive = false
+
+    /** Scoring weights. The defaults are tuned on GlideBenchmark; tests may swap in others. */
+    internal data class Weights(
+        val radius: Float = 1.7f,
+        val maxEnds: Int = 6,
+        val hard: Float = 1.5f,
+        val slack: Float = 0.9f,
+        val a: Float = 6.0f,
+        val bp: Float = 2.0f,
+        val ce: Float = 0.8f,
+        val fq: Float = 5.0f,
+        val cap: Float = 0.6f,
+        val slang: Float = 0.4f,
+        val len: Float = 1.0f,
+        val dtwMix: Float = 0.8f,
+        val top: Int = 40,
+        /** Bonus for a likely next word after the previous one (context entries are 0..1). */
+        val ctx: Float = 1.0f,
+        /** Frequency a learned non-dictionary word counts as (0..255 scale). */
+        val userFreq: Float = 110f,
+        /** Penalty per key of distance between a sharp turn in the swipe and the word's nearest letter. */
+        val corner: Float = 1.0f,
+        /** How far (in keys) a turn may land from its letter for free: thumbs cut corners. */
+        val cornerSlack: Float = 0.7f,
+        /** A turn sharper than this (cosine of the angle between the strokes) counts as a corner. */
+        val cornerCos: Float = 0.8f,
+    )
+
+    internal var weights = Weights()
 
     private val n = 48
     private val ux = FloatArray(n)
@@ -32,16 +66,28 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
     private val align = FloatArray(n)
     private val dist = FloatArray(n)
     private val dtwRow = FloatArray((n + 1) * (n + 1))
+    private val cornerX = FloatArray(n)
+    private val cornerY = FloatArray(n)
+
+    /** Gesture letter sequence of learned words, or "" for ones the dictionary covers / can't glide. */
+    private val userSeqs = HashMap<String, String>()
 
     private class Cand(
-        val idx: Int, val pre: Float, val pen: Float, val ends: Float,
+        val word: String, val seq: String, val pre: Float, val pen: Float, val ends: Float,
         val lenPen: Float, val loc: Float, val letters: Int, val prior: Float,
     )
 
+    /**
+     * Decodes a swipe into up to [limit] words, best first. [context] maps lowercase words to how
+     * likely they are after the previous word (0..1; built from the built-in follow-on list and your
+     * learned pairs); empty means no context.
+     */
     fun decode(
         xs: FloatArray, ys: FloatArray, count: Int,
         centersX: FloatArray, centersY: FloatArray, kw: Float, kh: Float, limit: Int,
+        context: Map<String, Float> = emptyMap(),
     ): List<String> {
+        val w = weights
         if (count < 2 || kw <= 0f || kh <= 0f) return emptyList()
         val px = FloatArray(count) { xs[it] / kw }
         val py = FloatArray(count) { ys[it] / kh }
@@ -49,6 +95,8 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
         if (userLen < 0.6f) return emptyList()
         val cx = FloatArray(26) { centersX[it] / kw }
         val cy = FloatArray(26) { centersY[it] / kh }
+
+        val corners = if (w.corner > 0f) findCorners(w.cornerCos) else 0
 
         val starts = nearKeys(ux[0], uy[0], cx, cy)
         val ends = nearKeys(ux[n - 1], uy[n - 1], cx, cy)
@@ -61,89 +109,159 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
                 // Rare all-caps acronyms ("DSM", "BRG") are noise as glide results.
                 if (word.length > 1 && dict.freqs[idx] < 120 && word.all { it.isUpperCase() }) continue
                 val seq = dict.gestureSeq[idx] ?: continue
-                val m = seq.length
-                if (m > Dictionary.MAX_LEN) continue
-
-                var ideal = 0f
-                for (k in 0 until m) {
-                    val c = seq[k] - 'a'
-                    wx[k] = cx[c]; wy[k] = cy[c]
-                    if (k > 0) ideal += hypot(wx[k] - wx[k - 1], wy[k] - wy[k - 1])
-                }
-                if (userLen < ideal * 0.35f - 0.3f || userLen > ideal * 2.5f + 1.5f) continue
-
-                // Optimal in-order alignment of middle letters; hard-reject letters never approached.
-                var ok = true
-                align.fill(0f)
-                for (k in 1 until m - 1) {
-                    var best = Float.MAX_VALUE
-                    for (i in 0 until n) {
-                        val d = hypot(ux[i] - wx[k], uy[i] - wy[k])
-                        dist[i] = d
-                        if (d < best) best = d
-                    }
-                    if (best > HARD) { ok = false; break }
-                    var run = Float.MAX_VALUE
-                    for (i in 0 until n) {
-                        if (align[i] < run) run = align[i]
-                        align[i] = maxOf(0f, dist[i] - 0.45f) + run
-                    }
-                }
-                if (!ok) continue
-                var pen = 0f
-                if (m > 2) { pen = Float.MAX_VALUE; for (i in 0 until n) if (align[i] < pen) pen = align[i] }
-
-                resample(wx, wy, m, tx, ty)
-                var loc = 0f
-                for (i in 0 until n) loc += hypot(ux[i] - tx[i], uy[i] - ty[i])
-                loc /= n
-                val endD = hypot(ux[0] - tx[0], uy[0] - ty[0]) + hypot(ux[n - 1] - tx[n - 1], uy[n - 1] - ty[n - 1])
-                val lenPen = abs(ln(maxOf(userLen, 0.3f) / maxOf(ideal, 0.3f)))
-                val prior = prior(idx, word)
-                val pre = -(A * loc + BP * pen / maxOf(1, m - 2) + CE * endD) - LEN * lenPen + prior
-                cands += Cand(idx, pre, pen, endD, lenPen, loc, m, prior)
+                evaluate(word, seq, dictPrior(idx, word), userLen, cx, cy)?.let { cands += it }
             }
+        }
+        // Your own words that the dictionary doesn't have.
+        val startSet = starts.toHashSet()
+        val endSet = ends.toHashSet()
+        history.forEachKnown { word, c ->
+            val seq = userSeqs.getOrPut(word.lowercase(Locale.US)) { userSeq(word) }
+            if (seq.isEmpty() || (seq[0] - 'a') !in startSet || (seq[seq.length - 1] - 'a') !in endSet) return@forEachKnown
+            if (blockOffensive && dict.offensive.getOrElse(dict.exactIndex(word.lowercase(Locale.US))) { false }) return@forEachKnown
+            val prior = w.fq * w.userFreq / 255f + 0.3f + 0.05f * min(c, 10)
+            evaluate(word, seq, prior, userLen, cx, cy)?.let { cands += it }
         }
         if (cands.isEmpty()) return emptyList()
         cands.sortByDescending { it.pre }
 
         val scored = ArrayList<Pair<String, Float>>()
-        for (c in cands.subList(0, min(TOP, cands.size))) {
-            val seq = dict.gestureSeq[c.idx]!!
+        for (c in cands.subList(0, min(w.top, cands.size))) {
+            val seq = c.seq
             for (k in seq.indices) { wx[k] = cx[seq[k] - 'a']; wy[k] = cy[seq[k] - 'a'] }
             resample(wx, wy, seq.length, tx, ty)
             val d = dtw()
-            val sc = -LEN * c.lenPen - (A * (0.5f * d + 0.5f * c.loc) + BP * c.pen / maxOf(1, c.letters - 2) + CE * c.ends) + c.prior
-            scored += dict.words[c.idx] to sc
+            var sc = -w.len * c.lenPen - (w.a * (w.dtwMix * d + (1 - w.dtwMix) * c.loc) +
+                w.bp * c.pen / maxOf(1, c.letters - 2) + w.ce * c.ends) + c.prior
+            if (context.isNotEmpty()) sc += w.ctx * (context[c.word.lowercase(Locale.US)] ?: 0f)
+            // Every sharp turn should be at one of the word's letters ("hello" turns at the l).
+            if (corners > 0) {
+                var miss = 0f
+                for (q in 0 until corners) {
+                    var best = Float.MAX_VALUE
+                    for (ch in seq) {
+                        val d = hypot(cornerX[q] - cx[ch - 'a'], cornerY[q] - cy[ch - 'a'])
+                        if (d < best) best = d
+                    }
+                    miss += maxOf(0f, best - w.cornerSlack)
+                }
+                sc -= w.corner * miss
+            }
+            scored += c.word to sc
         }
         scored.sortByDescending { it.second }
         val seen = HashSet<String>()
         val out = ArrayList<String>()
-        for ((w, _) in scored) {
-            if (seen.add(w.lowercase(Locale.US))) out += w
+        for ((word, _) in scored) {
+            if (seen.add(word.lowercase(Locale.US))) out += word
             if (out.size >= limit) break
         }
         return out
     }
 
+    /** Stage-1 score of one word against the resampled swipe, or null if it can't be this swipe. */
+    private fun evaluate(word: String, seq: String, prior: Float, userLen: Float, cx: FloatArray, cy: FloatArray): Cand? {
+        val w = weights
+        val m = seq.length
+        if (m > Dictionary.MAX_LEN) return null
+        var ideal = 0f
+        for (k in 0 until m) {
+            val c = seq[k] - 'a'
+            if (cx[c].isNaN()) return null
+            wx[k] = cx[c]; wy[k] = cy[c]
+            if (k > 0) ideal += hypot(wx[k] - wx[k - 1], wy[k] - wy[k - 1])
+        }
+        if (userLen < ideal * 0.35f - 0.3f || userLen > ideal * 2.5f + 1.5f) return null
+
+        // Optimal in-order alignment of middle letters; hard-reject letters never approached.
+        align.fill(0f)
+        for (k in 1 until m - 1) {
+            var best = Float.MAX_VALUE
+            for (i in 0 until n) {
+                val d = hypot(ux[i] - wx[k], uy[i] - wy[k])
+                dist[i] = d
+                if (d < best) best = d
+            }
+            if (best > w.hard) return null
+            var run = Float.MAX_VALUE
+            for (i in 0 until n) {
+                if (align[i] < run) run = align[i]
+                align[i] = maxOf(0f, dist[i] - w.slack) + run
+            }
+        }
+        var pen = 0f
+        if (m > 2) { pen = Float.MAX_VALUE; for (i in 0 until n) if (align[i] < pen) pen = align[i] }
+
+        resample(wx, wy, m, tx, ty)
+        var loc = 0f
+        for (i in 0 until n) loc += hypot(ux[i] - tx[i], uy[i] - ty[i])
+        loc /= n
+        val endD = hypot(ux[0] - tx[0], uy[0] - ty[0]) + hypot(ux[n - 1] - tx[n - 1], uy[n - 1] - ty[n - 1])
+        val lenPen = abs(ln(maxOf(userLen, 0.3f) / maxOf(ideal, 0.3f)))
+        val pre = -(w.a * loc + w.bp * pen / maxOf(1, m - 2) + w.ce * endD) - w.len * lenPen + prior
+        return Cand(word, seq, pre, pen, endD, lenPen, loc, m, prior)
+    }
+
+    /** Letters-only, repeat-free sequence of a learned word, or "" if the dictionary already has it. */
+    private fun userSeq(word: String): String {
+        if (dict.exactIndex(word.lowercase(Locale.US)) >= 0) return ""
+        val sb = StringBuilder()
+        for (ch in word.lowercase(Locale.US)) {
+            if (ch == '\'') continue
+            if (ch !in 'a'..'z') return ""
+            if (sb.isEmpty() || sb[sb.length - 1] != ch) sb.append(ch)
+        }
+        return if (sb.length >= 2) sb.toString() else ""
+    }
+
     /** Language prior: frequency, your own usage, and a nudge away from names/possessives/acronyms. */
-    private fun prior(idx: Int, word: String): Float {
-        var p = FQ * dict.freqs[idx] / 255f
+    private fun dictPrior(idx: Int, word: String): Float {
+        val w = weights
+        var p = w.fq * dict.freqs[idx] / 255f
         // Names, possessives and acronyms are unlikely glides, but contractions aren't ("it's", "I'd").
         val contraction = word.startsWith("I'") || word in CONTRACTIONS
         val odd = !contraction && ((word[0].isUpperCase() && word != "I") || word.endsWith("'s") ||
             (word.length > 1 && word.all { it.isUpperCase() }))
-        if (odd) p -= CAP
-        if (dict.slang[idx]) p -= SLANG
+        if (odd) p -= w.cap
+        if (dict.slang[idx]) p -= w.slang
         val c = history.count(dict.keys[idx])
         if (c > 0) p += 0.3f + 0.05f * min(c, 10)
         return p
     }
 
     private fun nearKeys(x: Float, y: Float, cx: FloatArray, cy: FloatArray): List<Int> {
+        val w = weights
         val d = (0 until 26).filter { !cx[it].isNaN() }.map { it to hypot(x - cx[it], y - cy[it]) }.sortedBy { it.second }
-        val out = d.filter { it.second < RADIUS }.take(MAX_ENDS).map { it.first }
+        val out = d.filter { it.second < w.radius }.take(w.maxEnds).map { it.first }
         return out.ifEmpty { d.take(1).map { it.first } }
+    }
+
+    /**
+     * Finds the sharp turns in the resampled swipe (ux,uy) and stores the sharpest point of each in
+     * cornerX/cornerY. A turn is where the stroke before and after a point meet at more than the
+     * angle whose cosine is [cos]. Returns how many.
+     */
+    private fun findCorners(cos: Float): Int {
+        var count = 0
+        var bestI = -1
+        var bestCos = 2f
+        for (i in CORNER_SPAN until n - CORNER_SPAN) {
+            val ax = ux[i] - ux[i - CORNER_SPAN]
+            val ay = uy[i] - uy[i - CORNER_SPAN]
+            val bx = ux[i + CORNER_SPAN] - ux[i]
+            val by = uy[i + CORNER_SPAN] - uy[i]
+            val la = hypot(ax, ay)
+            val lb = hypot(bx, by)
+            val c = if (la > 0.08f && lb > 0.08f) (ax * bx + ay * by) / (la * lb) else 1f
+            if (c < cos) {
+                if (c < bestCos) { bestCos = c; bestI = i }
+            } else if (bestI >= 0) {
+                cornerX[count] = ux[bestI]; cornerY[count] = uy[bestI]; count++
+                bestI = -1; bestCos = 2f
+            }
+        }
+        if (bestI >= 0) { cornerX[count] = ux[bestI]; cornerY[count] = uy[bestI]; count++ }
+        return count
     }
 
     /** Banded dynamic time warping between the user path (ux,uy) and ideal path (tx,ty). */
@@ -205,19 +323,9 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
     }
 
     companion object {
-        // Tuned on a sloppy-swipe simulator: 98% top-1 at typical sloppiness, 92% when very sloppy.
-        private const val RADIUS = 1.45f
-        private const val MAX_ENDS = 5
-        private const val HARD = 1.5f
-        private const val A = 4.0f
-        private const val BP = 4.0f
-        private const val CE = 0.8f
-        private const val FQ = 5.0f
-        private const val CAP = 0.6f
-        private const val SLANG = 0.4f
-        private const val LEN = 3.0f
-        private const val TOP = 40
         private const val BAND = 10
+        /** Resampled points on each side of a point when measuring how sharply the swipe turns there. */
+        private const val CORNER_SPAN = 3
         private val CONTRACTIONS = setOf(
             "it's", "let's", "he's", "she's", "that's", "what's", "there's", "here's", "who's", "where's", "how's",
         )

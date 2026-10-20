@@ -25,10 +25,12 @@ class Prefs(context: Context) {
     val clipboardHistory get() = b(CLIPBOARD_HISTORY, true)
     val sound get() = b(SOUND, false)
     val dynamicColor get() = b(DYNAMIC_COLOR, true)
+    /** Fun themes: tap bursts and twinkling lights. */
+    val themeEffects get() = b(THEME_EFFECTS, true)
 
     /** [Feedback.OFF], [Feedback.LIGHT], [Feedback.MEDIUM], [Feedback.STRONG] or [Feedback.SYSTEM] */
     val vibration get() = sp.getInt(VIBRATION, 1)
-    /** "system", "light", "dark", "black" */
+    /** "system", "light", "dark", "black", "seasonal" or a fun theme ([KbTheme.CHOICES]) */
     val theme: String get() = sp.getString(THEME, "system") ?: "system"
     val emojiSuggestions get() = b(EMOJI_SUGGESTIONS, true)
     val blockOffensive get() = b(BLOCK_OFFENSIVE, false)
@@ -79,6 +81,7 @@ class Prefs(context: Context) {
         const val CLIPBOARD_HISTORY = "clipboard_history"
         const val SOUND = "sound"
         const val DYNAMIC_COLOR = "dynamic_color"
+        const val THEME_EFFECTS = "theme_effects"
         const val VIBRATION = "vibration"
         const val THEME = "theme"
         const val HEIGHT = "height"
