@@ -1,0 +1,11 @@
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+# Signing material stays out of the repo (CI gets it from secrets, see README).
+keystore.properties
+*.jks
+*.keystore
+# Word-list build inputs (large, re-downloadable; see tools/build_words.py).
+tools/.*.cache

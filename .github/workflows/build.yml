@@ -1,0 +1,39 @@
+name: Build APK
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - name: Test
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon testDebugUnitTest
+      - name: Build release APK
+        env:
+          QB_KEYSTORE_BASE64: ${{ secrets.QB_KEYSTORE_BASE64 }}
+          QB_KEYSTORE_PASSWORD: ${{ secrets.QB_KEYSTORE_PASSWORD }}
+          QB_KEY_ALIAS: ${{ secrets.QB_KEY_ALIAS }}
+          QB_KEY_PASSWORD: ${{ secrets.QB_KEY_PASSWORD }}
+        run: |
+          if [ -n "$QB_KEYSTORE_BASE64" ]; then
+            echo "$QB_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/quietboard.jks"
+            export QB_KEYSTORE_FILE="$RUNNER_TEMP/quietboard.jks"
+          else
+            echo "::warning::QB_KEYSTORE_BASE64 secret is not set, so the release APK is unsigned and can't be installed."
+          fi
+          ./gradlew --no-daemon assembleRelease
+          rm -f "$RUNNER_TEMP/quietboard.jks"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quietboard-apk
+          path: app/build/outputs/apk/release/*.apk
