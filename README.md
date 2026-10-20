@@ -8,10 +8,16 @@ its private storage on your phone.
 - Gboard layout and look, Material You colors (or light/dark), optional number row
 - Suggestions + autocorrect from a bundled 104k-word list (incl. modern words and brands); backspace
   undoes a correction. Measured: 93.5% of common-word typos fixed (`DictionaryBenchmark`)
-- Next-word predictions from day one (common phrases), then from your own typing
+- A built-in phrase model (which words follow the one or two before, counted from ~940 million words
+  of film and TV dialogue) drives next-word predictions, completions, autocorrect and glide typing,
+  blended with your own habits. On everyday sentences it never saw, the next word is in the strip
+  before you type a letter 29.5% of the time (12.4% in 1.8.1), 59.8% of letters never need typing
+  (44.8%), and typos are fixed 96.2% of the time with 3.6% wrong fixes (92.9% / 6.8%;
+  `PredictionBenchmark`)
 - Glide typing with a live preview of the word while you swipe, tuned on simulated sloppy swipes of
   the 1,500 most common words (79.4% exactly right on words it was not tuned on, 92% in the strip;
-  `GlideBenchmark`), using the previous word to settle ties and gliding words you've taught it
+  `GlideBenchmark`), using the words before to settle ties (88.7% exactly right on words in everyday
+  sentences, 82.3% in 1.8.1) and gliding words you've taught it
 - Space-bar cursor control, swipe-left-on-backspace to delete words
 - Long-press accents/digits/symbols, emoji panel with recents, 1-hour local clipboard history
 - Crisp per-key haptics (lighter for repeats and cursor steps, firmer for space/enter), or the phone's
@@ -59,4 +65,8 @@ Install the APK → open Quietboard → step 1 (enable) → step 2 (switch).
 - Word list: AOSP LatinIME dictionary (Apache-2.0) blended with FrequencyWords / OpenSubtitles 2018
   frequencies (CC BY-SA 4.0); see `tools/build_words.py`. The bundled `words_en.txt` is a derived work
   under CC BY-SA 4.0.
+- Phrase model: counts of word pairs and triples from OpenSubtitles 2018 (opensubtitles.org, via OPUS:
+  P. Lison and J. Tiedemann, 2016); see `tools/BuildPhrases.java`. Only counts ship in the app, never
+  sentences.
+- Benchmark sentences: Tatoeba (tatoeba.org), CC BY 2.0 FR (`app/src/test/resources/sentences_en.txt`).
 - Font: Google Sans (SIL Open Font License 1.1, `app/src/main/assets/fonts/OFL-GoogleSans.txt`).

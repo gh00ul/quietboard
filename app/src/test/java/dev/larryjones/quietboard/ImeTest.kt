@@ -371,6 +371,28 @@ class ImeTest {
         assertEquals(null, root.topBar.pasteChip)
     }
 
+    private fun stripWords() = root.topBar.itemsForTest().mapNotNull { it?.word }
+
+    @Test fun predictionsComeFromTheWordsBefore() {
+        waitForEngine()
+        type("I'm going ")
+        assertEquals("to", root.topBar.itemsForTest().getOrNull(1)?.word)
+        type("to ")
+        assertTrue("after \"going to\": ${stripWords()}", "be" in stripWords())
+        type("the beach. How are ")
+        assertEquals("you", root.topBar.itemsForTest().getOrNull(1)?.word)
+        type("you, ")
+        assertTrue("predictions after a comma too", stripWords().isNotEmpty())
+    }
+
+    @Test fun typingUsesTheWordsBefore() {
+        waitForEngine()
+        type("I'm going t")
+        assertTrue("\"to\" is offered for \"t\": ${stripWords()}", "to" in stripWords())
+        type("o the stor")
+        assertTrue("completions too: ${stripWords()}", "store" in stripWords())
+    }
+
     @Test fun glideAfterPeriodIsCapitalized() {
         waitForEngine()
         edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES

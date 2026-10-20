@@ -16,7 +16,7 @@ import kotlin.math.sqrt
  *  - a language prior that favours common words over oddities ("Passat", "Beresford's").
  * Stage 2 re-ranks the best [Weights.top] with dynamic time warping, which tolerates uneven swipe
  * speed, a penalty for sharp turns in the swipe that none of the word's letters explain, and the
- * previous word ("I like" vs "I line"; see [decode]'s context).
+ * words before ("I like" vs "I line", "going to" vs "going too"; see [GlideContext]).
  *
  * Words you've typed at least twice but that aren't in the dictionary (names, slang) are glideable too.
  *
@@ -24,6 +24,16 @@ import kotlin.math.sqrt
  * it on a background thread; the dictionary is read-only and [UserHistory.forEachKnown] is
  * concurrent-safe.
  */
+/**
+ * What the glide decoder knows about the words before a swipe: the phrase model's view of them, and
+ * what you've typed after the last one (lowercase word -> 0..1). Immutable, so it can cross threads.
+ */
+class GlideContext(val phrase: PhraseModel.Context?, val learned: Map<String, Float>) {
+    companion object {
+        val NONE = GlideContext(null, emptyMap())
+    }
+}
+
 class GestureDecoder(private val dict: Dictionary, private val history: UserHistory) {
     var blockOffensive = false
 
@@ -42,8 +52,15 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
         val len: Float = 1.0f,
         val dtwMix: Float = 0.8f,
         val top: Int = 40,
-        /** Bonus for a likely next word after the previous one (context entries are 0..1). */
+        /** Bonus for a word you often type after the previous one (learned entries are 0..1). */
         val ctx: Float = 1.0f,
+        /**
+         * Weight per nat of the phrase model's boost, and the boost's limits. Tuned on words in everyday
+         * sentences (top-1 81% without context; 85.6% at 0.1, 87.4% at 0.2, 88.2% at 0.3, 87.5% at 0.45).
+         */
+        val lm: Float = 0.3f,
+        val lmMin: Float = -4f,
+        val lmMax: Float = 8f,
         /** Frequency a learned non-dictionary word counts as (0..255 scale). */
         val userFreq: Float = 110f,
         /** Penalty per key of distance between a sharp turn in the swipe and the word's nearest letter. */
@@ -73,19 +90,17 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
     private val userSeqs = HashMap<String, String>()
 
     private class Cand(
-        val word: String, val seq: String, val pre: Float, val pen: Float, val ends: Float,
+        val word: String, val idx: Int, val seq: String, val pre: Float, val pen: Float, val ends: Float,
         val lenPen: Float, val loc: Float, val letters: Int, val prior: Float,
     )
 
     /**
-     * Decodes a swipe into up to [limit] words, best first. [context] maps lowercase words to how
-     * likely they are after the previous word (0..1; built from the built-in follow-on list and your
-     * learned pairs); empty means no context.
+     * Decodes a swipe into up to [limit] words, best first, given what comes before it ([context]).
      */
     fun decode(
         xs: FloatArray, ys: FloatArray, count: Int,
         centersX: FloatArray, centersY: FloatArray, kw: Float, kh: Float, limit: Int,
-        context: Map<String, Float> = emptyMap(),
+        context: GlideContext = GlideContext.NONE,
         learned: Boolean = true,
     ): List<String> {
         val w = weights
@@ -110,7 +125,7 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
                 // Rare all-caps acronyms ("DSM", "BRG") are noise as glide results.
                 if (word.length > 1 && dict.freqs[idx] < 120 && word.all { it.isUpperCase() }) continue
                 val seq = dict.gestureSeq[idx] ?: continue
-                evaluate(word, seq, dictPrior(idx, word, learned), userLen, cx, cy)?.let { cands += it }
+                evaluate(word, idx, seq, dictPrior(idx, word, learned), userLen, cx, cy)?.let { cands += it }
             }
         }
         // Your own words that the dictionary doesn't have.
@@ -122,7 +137,7 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
             if (seq.isEmpty() || (seq[0] - 'a') !in startSet || (seq[seq.length - 1] - 'a') !in endSet) return@forEachKnown
             if (blockOffensive && dict.offensive.getOrElse(dict.exactIndex(word.lowercase(Locale.US))) { false }) return@forEachKnown
             val prior = w.fq * w.userFreq / 255f + 0.3f + 0.05f * min(c, 10)
-            evaluate(word, seq, prior, userLen, cx, cy)?.let { cands += it }
+            evaluate(word, dict.exactIndex(word.lowercase(Locale.US)), seq, prior, userLen, cx, cy)?.let { cands += it }
         }
         if (cands.isEmpty()) return emptyList()
         cands.sortByDescending { it.pre }
@@ -135,7 +150,8 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
             val d = dtw()
             var sc = -w.len * c.lenPen - (w.a * (w.dtwMix * d + (1 - w.dtwMix) * c.loc) +
                 w.bp * c.pen / maxOf(1, c.letters - 2) + w.ce * c.ends) + c.prior
-            if (context.isNotEmpty()) sc += w.ctx * (context[c.word.lowercase(Locale.US)] ?: 0f)
+            if (context.learned.isNotEmpty()) sc += w.ctx * (context.learned[c.word.lowercase(Locale.US)] ?: 0f)
+            context.phrase?.let { sc += w.lm * it.boost(c.idx).coerceIn(w.lmMin, w.lmMax) }
             // Every sharp turn should be at one of the word's letters ("hello" turns at the l).
             if (corners > 0) {
                 var miss = 0f
@@ -162,7 +178,7 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
     }
 
     /** Stage-1 score of one word against the resampled swipe, or null if it can't be this swipe. */
-    private fun evaluate(word: String, seq: String, prior: Float, userLen: Float, cx: FloatArray, cy: FloatArray): Cand? {
+    private fun evaluate(word: String, idx: Int, seq: String, prior: Float, userLen: Float, cx: FloatArray, cy: FloatArray): Cand? {
         val w = weights
         val m = seq.length
         if (m > Dictionary.MAX_LEN) return null
@@ -201,7 +217,7 @@ class GestureDecoder(private val dict: Dictionary, private val history: UserHist
         val endD = hypot(ux[0] - tx[0], uy[0] - ty[0]) + hypot(ux[n - 1] - tx[n - 1], uy[n - 1] - ty[n - 1])
         val lenPen = abs(ln(maxOf(userLen, 0.3f) / maxOf(ideal, 0.3f)))
         val pre = -(w.a * loc + w.bp * pen / maxOf(1, m - 2) + w.ce * endD) - w.len * lenPen + prior
-        return Cand(word, seq, pre, pen, endD, lenPen, loc, m, prior)
+        return Cand(word, idx, seq, pre, pen, endD, lenPen, loc, m, prior)
     }
 
     /** Letters-only, repeat-free sequence of a learned word, or "" if the dictionary already has it. */

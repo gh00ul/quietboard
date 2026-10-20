@@ -1,6 +1,7 @@
 package dev.larryjones.quietboard
 
 import java.util.Locale
+import kotlin.math.exp
 
 data class SuggestionItem(
     val word: String,
@@ -21,14 +22,17 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
     var emojiKeywords: Map<String, String> = emptyMap()
     var emojiEnabled = true
     var blockOffensive = false
-    /** Built-in next words: previous word (lowercase, or [SENTENCE_START]) -> likely next words. */
-    var nextWords: Map<String, List<String>> = emptyMap()
+    /** Built-in phrase model (null until loaded): what usually comes after the words before. */
+    var phrases: PhraseModel? = null
     /**
-     * Frequency points for a candidate that commonly follows the previous word. Tuned on typos after
-     * real word pairs: 20 fixes 97.4% of them (94.5% with none) and costs 0.2 points when the word
-     * you meant is not a usual follow-on; bigger values help the first case and hurt the second.
+     * Frequency points per nat of phrase-model boost, and the boost's limits (see [PhraseModel.Context.boost]).
+     * Word frequencies run ~13 points per e-fold, so 13 trusts the model fully. Tuned on typos in everyday
+     * sentences (PredictionBenchmark's tuning half): fixed 93.2% / wrong 6.6% without context, 95.7% / 4.1%
+     * at 8 points, 96.2% / 3.6% at 13 with these limits; keystroke savings peak there too.
      */
-    internal var contextPoints = 20f
+    internal var contextPoints = CONTEXT_POINTS
+    internal var boostMin = BOOST_MIN
+    internal var boostMax = BOOST_MAX
 
     /** Never offered: offensive words when blocking is on, and words that are only "known" (slurs etc.). */
     private fun hidden(i: Int) = dict.never[i] || (blockOffensive && dict.offensive[i])
@@ -66,11 +70,19 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         return listOf(strip[0], strip[1], SuggestionItem(e, emoji = true))
     }
 
+    /** The context for [prev] alone, when the caller doesn't know more ([before] is null). */
+    private fun contextOf(before: TextContext?, prev: String?, sentenceStart: Boolean = false): TextContext =
+        before ?: TextContext(null, prev?.lowercase(Locale.US)?.replace('\u2019', '\'') ?: if (sentenceStart) TextContext.START else null)
+
     /**
-     * Suggestions for [typed]. Without [learned] (lock screen, incognito fields) nothing you've taught
-     * the keyboard shows or counts: no learned words, completions or word-pair habits.
+     * Suggestions for [typed], after [prev] (the word before) or, better, [before] (the two tokens
+     * before). Without [learned] (lock screen, incognito fields) nothing you've taught the keyboard
+     * shows or counts: no learned words, completions or word-pair habits.
      */
-    fun suggest(typed: String, prev: String?, allowAutoCorrect: Boolean, rejected: Set<String>, learned: Boolean = true): SuggestionResult {
+    fun suggest(
+        typed: String, prev: String?, allowAutoCorrect: Boolean, rejected: Set<String>, learned: Boolean = true,
+        before: TextContext? = null,
+    ): SuggestionResult {
         // A typographic apostrophe (don’t) looks words up like a plain one.
         val lower = typed.lowercase(Locale.US).replace('’', '\'')
         if (typed.any { it.isDigit() }) {
@@ -97,9 +109,9 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
             (dict.exactIndex(lower.dropLast(1)) >= 0 || (learned && history.isKnown(lower.dropLast(1))))
         val known = (exactIdx >= 0 && !rareCapsOnly) || userKnown || shortcut != null || quoted
 
-        // Words that commonly follow the previous one ("I" + "wold" -> would, not wild).
-        val follows = prevLower?.let { nextWords[it.replace('\u2019', '\'')] }?.mapTo(HashSet()) { it.lowercase(Locale.US) }
-        fun ctx(w: String) = if (follows != null && w.lowercase(Locale.US) in follows) contextPoints else 0f
+        // What fits after the words before ("I" + "wold" -> would, not wild; "going t" -> to).
+        val here = phrases?.context(contextOf(before, prev))?.takeIf { it.known }
+        fun ctx(i: Int) = if (here == null) 0f else contextPoints * here.boost(i).coerceIn(boostMin, boostMax)
 
         // Keyed by lowercase so "Haven"/"haven" or a learned "Thanks" never show up twice.
         val scores = HashMap<String, Float>()
@@ -117,7 +129,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         dict.forEachWithPrefix(lower) { i ->
             if (dict.keys[i] != lower && !hidden(i)) {
                 val w = dict.words[i]
-                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(w) - (dict.keys[i].length - lower.length) * 1.5f
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(i) - (dict.keys[i].length - lower.length) * 1.5f
                 top.add(i, s)
             }
         }
@@ -145,7 +157,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
                 if (typed == lower && w.length > 1 && dict.freqs[i] < 120 && w.all { !it.isLetter() || it.isUpperCase() }) {
                     return@corrections
                 }
-                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(w) - d * EDIT_COST
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(i) - d * EDIT_COST
                 offer(w, s - 5f)
                 if (s > bestFixScore && dict.freqs[i] >= 40) { bestFixScore = s; bestFix = w }
             }
@@ -205,18 +217,42 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
     }
 
     /**
-     * Next-word predictions: what you usually type after [prev] (if [learned] is allowed here), then
-     * common English follow-ons, so suggestions work from the first day. At a sentence start
-     * ([prev] null, [sentenceStart] true) the common first words.
+     * Next-word predictions after [prev] (or, better, the two tokens [before]): what usually comes next
+     * in everyday English, blended with what you type there (if [learned] is allowed here) so your
+     * habits win once you've shown them. At a sentence start ([sentenceStart]) the common first words.
      */
-    fun predict(prev: String?, capitalize: Boolean, learned: Boolean = true, sentenceStart: Boolean = false): List<SuggestionItem?> {
-        val key = prev?.lowercase(Locale.US)?.replace('\u2019', '\'') ?: if (sentenceStart) SENTENCE_START else return emptyList()
-        val mine = if (learned && prev != null) history.predict(key, 6) else emptyList()
-        val p = (mine + nextWords[key].orEmpty())
-            .map { canonical(it) }
-            .filter { !blocked(it) }
-            .distinctBy { it.lowercase(Locale.US) }
-            .take(3)
+    fun predict(
+        prev: String?, capitalize: Boolean, learned: Boolean = true, sentenceStart: Boolean = false,
+        before: TextContext? = null,
+    ): List<SuggestionItem?> {
+        val ctx = contextOf(before, prev, sentenceStart)
+        val key = ctx.prev1 ?: return emptyList()
+        val model = phrases?.context(ctx)
+        // Your followers of this word: lowercase -> (as typed, count).
+        val mine = HashMap<String, Pair<String, Int>>()
+        var total = 0
+        if (learned && key.first().isLetter()) history.followers(key) { w, c ->
+            total += c
+            val k = w.lowercase(Locale.US)
+            if (c >= 2 && (mine[k]?.second ?: 0) < c) mine[k] = w to c
+        }
+        // How much your own counts weigh against the built-in model: half once you've typed 2 words here.
+        val mu = total / (total + PERSONAL_PRIOR)
+        val scores = HashMap<String, Float>()
+        val display = HashMap<String, String>()
+        model?.top(MODEL_CANDIDATES) { i -> predictable(i) }?.forEach { (i, lp) ->
+            val k = dict.keys[i]
+            scores[k] = (1 - mu) * exp(lp) + mu * (mine[k]?.second ?: 0) / maxOf(total, 1)
+            display[k] = dict.words[i]
+        }
+        for ((k, wc) in mine) {
+            if (k in scores || blocked(wc.first)) continue
+            val id = dict.exactIndex(k).let { if (it >= 0) phrases?.idOf(it) ?: -1 else -1 }
+            val pm = if (model != null && id >= PhraseModel.FIRST_WORD) exp(model.logProb(id)) else 0f
+            scores[k] = (1 - mu) * pm + mu * wc.second / total
+            display[k] = canonical(wc.first)
+        }
+        val p = scores.entries.sortedByDescending { it.value }.take(3).map { display.getValue(it.key) }
         if (p.isEmpty()) return emptyList()
         fun c(w: String) = if (capitalize) w.replaceFirstChar { it.titlecase(Locale.US) } else w
         return listOf(
@@ -227,21 +263,31 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
     }
 
     /**
-     * How likely each word is right after [prev], 0..1 (lowercase keys): the built-in follow-ons (earlier
-     * = likelier) and, if [learned], what you've typed after it. Built on the main thread and handed to
-     * the glide decoder.
+     * Whether the built-in model may offer dictionary entry [i] unasked: not hidden, never profanity
+     * (you can still type it, and once you have it's yours to predict), and not a name.
      */
-    fun contextFor(prev: String?, sentenceStart: Boolean, learned: Boolean = true): Map<String, Float> {
-        val key = prev?.lowercase(Locale.US)?.replace('’', '\'') ?: if (sentenceStart) SENTENCE_START else return emptyMap()
+    private fun predictable(i: Int): Boolean {
+        if (hidden(i) || dict.offensive[i]) return false
+        val w = dict.words[i]
+        return w == "I" || w.startsWith("I'") || !w[0].isUpperCase() || dict.freqs[i] >= NAME_FREQ
+    }
+
+    /**
+     * What the glide decoder should expect after [prev] (or the two tokens [before]): the phrase
+     * model's view and, if [learned], what you've typed after that word. Built on the main thread and
+     * handed to the decoder's.
+     */
+    fun contextFor(prev: String?, sentenceStart: Boolean, learned: Boolean = true, before: TextContext? = null): GlideContext {
+        val ctx = contextOf(before, prev, sentenceStart)
         val out = HashMap<String, Float>()
-        nextWords[key]?.forEachIndexed { i, w -> out[w.lowercase(Locale.US)] = maxOf(0.4f, 1f - i * 0.06f) }
-        if (learned && prev != null) history.followers(key) { w, c ->
+        val key = ctx.prev1
+        if (learned && key != null && key.first().isLetter()) history.followers(key) { w, c ->
             if (c >= 2) {
                 val k = w.lowercase(Locale.US)
                 out[k] = maxOf(out[k] ?: 0f, minOf(1f, 0.4f + 0.15f * c))
             }
         }
-        return out
+        return GlideContext(phrases?.context(ctx)?.takeIf { it.known }, out)
     }
 
     /** "i" -> "I", "monday" -> "Monday" when only the capitalised form is a word. */
@@ -269,17 +315,14 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
     }
 
     companion object {
-        const val SENTENCE_START = "<s>"
-
-        /** Parses nextwords_en.txt: "prev<TAB>next<TAB>next...". */
-        fun parseNextWords(lines: Sequence<String>): Map<String, List<String>> {
-            val out = HashMap<String, List<String>>()
-            for (line in lines) {
-                val parts = line.split('\t').filter { it.isNotBlank() }
-                if (parts.size >= 2) out[parts[0].lowercase(Locale.US)] = parts.drop(1)
-            }
-            return out
-        }
+        const val CONTEXT_POINTS = 13f
+        const val BOOST_MIN = -3f
+        const val BOOST_MAX = 8f
+        /** Your counts after a word weigh as much as the built-in model once they add up to this. */
+        private const val PERSONAL_PRIOR = 2f
+        private const val MODEL_CANDIDATES = 8
+        /** Capitalised words this common are everyday words ("God", "English"), not someone's name. */
+        private const val NAME_FREQ = 150
 
         private val STRETCHED = Regex("(\\p{L})\\1\\1")
         /** Frequency points one edit costs (frequencies are ~13 points per e-fold of usage). */

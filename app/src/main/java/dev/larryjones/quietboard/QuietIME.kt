@@ -60,7 +60,7 @@ class QuietIME : InputMethodService(),
     private var pendingGestureId = 0
     // Live glide preview: what the previous word makes likely (captured when the glide starts), which
     // glide is on screen, and whether a preview decode is already running (never queue them up).
-    private var glideContext: Map<String, Float> = emptyMap()
+    private var glideContext = GlideContext.NONE
     private var glideId = 0
     private var glidePreviewing = false
     private var previewBusy = false
@@ -118,6 +118,8 @@ class QuietIME : InputMethodService(),
     private var lastShiftTap = Long.MIN_VALUE / 2
     private val composing = StringBuilder()
     private var composingPrev: String? = null
+    /** The two tokens before the word being typed, for the phrase model. */
+    private var composingBefore = TextContext.NONE
     private var composingFromGesture = false
     /**
      * The word being typed is stuck to the text before it ("x@aol", "site.org", "4th"): part of an
@@ -223,6 +225,7 @@ class QuietIME : InputMethodService(),
         prefs.sp.getString(KEY_RECENTS, null)?.split(SEP)?.filter { it.isNotEmpty() }?.let { emojiRecents.addAll(it) }
         Thread({
             val d = runCatching { EngineCache.dictionary(this) }.getOrNull()
+            val phrases = d?.let { EngineCache.phrases(this, it) }
             val kw = EngineCache.emojiKeywords(this)
             runCatching { EmojiData.get(this) } // warm the (glyph-filtered) emoji grid off the UI thread
             if (prefs.font != "system") runCatching { KbFonts.bundled(this) } // decode fonts off the UI thread
@@ -232,7 +235,7 @@ class QuietIME : InputMethodService(),
                 if (d != null) {
                     suggest = Suggest(d, history)
                     decoder = GestureDecoder(d, history)
-                    suggest?.nextWords = EngineCache.nextWords(this)
+                    suggest?.phrases = phrases
                     configureSuggest()
                     refreshSuggestions()
                 }
@@ -506,6 +509,7 @@ class QuietIME : InputMethodService(),
     private fun resetState(info: EditorInfo) {
         composing.setLength(0)
         composingPrev = null
+        composingBefore = TextContext.NONE
         composingFromGesture = false
         composingGlued = false
         composingSuspect = false
@@ -631,7 +635,9 @@ class QuietIME : InputMethodService(),
         ic.endBatchEdit()
         composing.setLength(0)
         composing.append(word)
-        composingPrev = lastWord(before.subSequence(0, before.length - word.length))
+        val rest = before.subSequence(0, before.length - word.length)
+        composingPrev = lastWord(rest)
+        composingBefore = TextContext.of(rest)
         composingFromGesture = false
         composingGlued = gluedAt(before, word.length)
         resumedWord = word
@@ -722,6 +728,7 @@ class QuietIME : InputMethodService(),
                         recompose(ic, before, tail)
                     } else {
                         composingPrev = lastWord(before)
+                        composingBefore = TextContext.of(before)
                         composingGlued = gluedAt(before, 0)
                     }
                 }
@@ -1179,15 +1186,17 @@ class QuietIME : InputMethodService(),
         refreshSuggestions()
     }
 
-    /** What's likely next after the word before the cursor (or the glided word still showing). */
-    private fun currentGlideContext(): Map<String, Float> {
-        val s = suggest ?: return emptyMap()
+    /** What's likely next after the words before the cursor (or the word still being typed). */
+    private fun currentGlideContext(): GlideContext {
+        val s = suggest ?: return GlideContext.NONE
         val learned = !noLearning
-        if (composing.isNotEmpty()) return s.contextFor(composing.toString(), false, learned)
+        if (composing.isNotEmpty()) {
+            val word = composing.toString()
+            val lower = word.lowercase(Locale.US).replace('\u2019', '\'')
+            return s.contextFor(word, false, learned, TextContext(composingBefore.prev1, lower))
+        }
         val before = conn?.getTextBeforeCursor(64, 0)
-        val trimmed = before?.trimEnd()
-        val sentenceStart = trimmed.isNullOrEmpty() || trimmed.last() in ".!?\n"
-        return s.contextFor(lastWord(before), sentenceStart, learned)
+        return s.contextFor(lastWord(before), false, learned, TextContext.of(before))
     }
 
     override fun onGesture(xs: FloatArray, ys: FloatArray, count: Int) {
@@ -1260,7 +1269,9 @@ class QuietIME : InputMethodService(),
         // The space just added can start a sentence ("end.|" -> "end. |"): re-check auto-caps
         // unless the user set shift themselves.
         if (!shiftManual && !shiftHeld && shift != ShiftState.LOCKED) updateShift()
-        composingPrev = lastWord(ic.getTextBeforeCursor(64, 0))
+        val beforeGlide = ic.getTextBeforeCursor(64, 0)
+        composingPrev = lastWord(beforeGlide)
+        composingBefore = TextContext.of(beforeGlide)
         val words = results.map { gestureCase(it) }
         if (suggestionsOn) {
             composing.append(words[0])
@@ -1341,7 +1352,8 @@ class QuietIME : InputMethodService(),
                     )
                 )
             } else {
-                val r = s.suggest(composing.toString(), composingPrev, autocorrectOn && !composingGlued, rejected, learned = !noLearning)
+                val r = s.suggest(composing.toString(), composingPrev, autocorrectOn && !composingGlued, rejected, learned = !noLearning,
+                    before = composingBefore)
                 pendingAutocorrect = r.autoCorrect
                 tb.setSuggestions(r.strip)
             }
@@ -1354,11 +1366,9 @@ class QuietIME : InputMethodService(),
             val toolbarFirst = before.isNullOrEmpty() ||
                 (panel == Panel.KEYS && !isPassword && !onLockScreen && clipboard.freshClip() != null)
             val preds = if (prefs.nextWord && !toolbarFirst) {
-                // Only at a real sentence start (after . ! ? or a new line), not after a comma.
-                val trimmed = before?.trimEnd()
-                val sentenceStart = trimmed.isNullOrEmpty() || trimmed.last() in ".!?\n"
-                // Your own habits stay out of incognito fields and the lock screen; built-in ones don't.
-                s.predict(lastWord(before), shift != ShiftState.OFF, learned = !noLearning, sentenceStart = sentenceStart)
+                // From the two words before (or a sentence start, comma or number). Your own habits stay
+                // out of incognito fields and the lock screen; built-in ones don't.
+                s.predict(lastWord(before), shift != ShiftState.OFF, learned = !noLearning, before = TextContext.of(before))
             } else emptyList()
             tb.setSuggestions(preds.ifEmpty { null })
         }
@@ -1771,12 +1781,10 @@ private object EngineCache {
     @Synchronized
     fun emojiKeywords(ctx: Context): Map<String, String> = keywords ?: loadKeywords(ctx).also { keywords = it }
 
-    private var next: Map<String, List<String>>? = null
+    private var phrases: PhraseModel? = null
 
     @Synchronized
-    fun nextWords(ctx: Context): Map<String, List<String>> = next ?: runCatching {
-        ctx.assets.open("nextwords_en.txt").bufferedReader().useLines { Suggest.parseNextWords(it) }
-    }.getOrDefault(emptyMap()).also { next = it }
+    fun phrases(ctx: Context, dict: Dictionary): PhraseModel? = phrases ?: PhraseModel.load(ctx, dict).also { phrases = it }
 
     private fun loadKeywords(ctx: Context): Map<String, String> {
         val kw = HashMap<String, String>()

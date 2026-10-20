@@ -35,7 +35,7 @@ class DictionaryBenchmark {
             val off = listOf(0f, 0.5f, 1.5f)
             rows.forEachIndexed { r, s -> s.forEachIndexed { i, c -> this[c] = (i + off[r]) to r.toFloat() } }
         }
-        private val neighbours: Map<Char, List<Char>> = pos.keys.associateWith { c ->
+        internal val neighbours: Map<Char, List<Char>> = pos.keys.associateWith { c ->
             val (x, y) = pos.getValue(c)
             pos.filter { (d, p) ->
                 d != c && kotlin.math.abs(p.second - y) <= 1f && kotlin.math.abs(p.first - x) <= 1.01f &&
@@ -47,44 +47,6 @@ class DictionaryBenchmark {
     internal class Case(val kind: String, val typo: String, val target: String)
 
     internal fun casesForTuning() = cases()
-
-    /** (previous word, typo, intended) from real pairs in the built-in follow-on list. */
-    internal fun contextCases(): List<Triple<String, String, String>> {
-        val next = File("src/main/assets/nextwords_en.txt").useLines { Suggest.parseNextWords(it) }
-        val rnd = Random(9)
-        val out = ArrayList<Triple<String, String, String>>()
-        for ((prev, words) in next) {
-            if (prev == Suggest.SENTENCE_START) continue
-            for (w0 in words) {
-                val w = w0.lowercase(Locale.US)
-                if (w.length < 3 || dict.exactIndex(w) < 0 || !w.all { it in 'a'..'z' }) continue
-                repeat(3) {
-                    val i = 1 + rnd.nextInt(w.length - 1)
-                    val t = when (rnd.nextInt(3)) {
-                        0 -> neighbours[w[i]]?.random(rnd)?.let { n -> w.substring(0, i) + n + w.substring(i + 1) }
-                        1 -> if (w.length >= 4) w.removeRange(i, i + 1) else null
-                        else -> if (i < w.length - 1 && w[i] != w[i + 1]) w.substring(0, i) + w[i + 1] + w[i] + w.substring(i + 2) else null
-                    }
-                    if (t != null && t != w && dict.exactIndex(t) < 0) out += Triple(prev, t, w)
-                }
-            }
-        }
-        return out
-    }
-
-    internal fun contextFixedRate(cases: List<Triple<String, String, String>>, withPrev: Boolean): Double =
-        cases.count { (prev, typo, target) ->
-            suggest.suggest(typo, if (withPrev) prev else null, true, emptySet()).autoCorrect?.lowercase(Locale.US) == target
-        }.toDouble() / cases.size
-
-    @Test fun contextHelpsAutocorrect() {
-        suggest.nextWords = File("src/main/assets/nextwords_en.txt").useLines { Suggest.parseNextWords(it) }
-        val cs = contextCases()
-        val without = contextFixedRate(cs, false)
-        val with = contextFixedRate(cs, true)
-        println("autocorrect context: ${cs.size} typos after a common previous word: fixed %.1f%% without, %.1f%% with".format(100 * without, 100 * with))
-        assertTrue("context made autocorrect worse", with >= without)
-    }
 
     private fun cases(): List<Case> {
         val rnd = Random(7)

@@ -1,0 +1,4001 @@
+# 4000 English sentences from Tatoeba (https://tatoeba.org), CC BY 2.0 FR, for the prediction benchmarks.
+From the back you look like your mother.
+I was always good at English.
+I denied I did that.
+I parted from him on the street.
+Is that a new car?
+The salt water rusts cars and kills greenery.
+I'd have helped you if you'd asked.
+The higher you climb, the lower the temperature gets.
+You have something I want.
+Spanish, French, Italian and Romanian are Romance languages.
+He lived in Algeria on his own.
+They started talking on the phone.
+The sun should come.
+My plan is still better than yours.
+He would like to make reservations for a trip to Australia.
+We all consider it wrong to cheat on exams.
+The internet has changed the way we learn foreign languages.
+Everybody knew she was being pushy.
+He did not show anything to me.
+That's the building where my father works.
+You accepted those gifts.
+The oldest son succeeded in multiplying his inheritance.
+He called a taxi for her.
+They tried to help the old lady.
+Are you feeling any better this morning?
+I glued it together myself.
+Is it freshly fallen snow?
+If I were you, I'd go to Algiers.
+What is he going to make?
+I want to see your mother.
+I did it, through much hard work, though it took but little thought.
+I'm tired of eating sausages.
+My father is a teacher of English.
+I'm going to miss our lunches together.
+I have a green car.
+Not much is actually known about sleepwalking.
+Psychoanalysis is more a passion than a science.
+I could teach you how to do that if you want me to.
+Each time he escaped, he returned to this region.
+Write it all down.
+Our teacher lives at the end of the street.
+That girl is pretty!
+You're hard to fool.
+I want to know how long we're going to be here.
+A new prosecutor took over the case from the previous one.
+You look somewhat stressed out.
+He needs to get his hair cut.
+Say this three times, with your eyes shut and you will see what you will see.
+He sells towels on his site.
+The horses eat grass.
+Death is not the answer.
+I'm self-studying Japanese.
+How does the knight move?
+I deal with depression in the colder months.
+They didn't finish their dinner.
+I was surprised that I didn't have to do the same things you had to do.
+It's more than a hundred years old.
+If it happens to rain tomorrow I'll stay at home.
+This afternoon's meeting has been postponed to tomorrow.
+I ate so much at noon that my stomach still hurts.
+He'll be playing football tomorrow.
+I bumped into an old friend at the airport.
+Is VAT included in the price?
+Don't you dare utter a word about what you saw here!
+Robert was the one who betrayed Sandra.
+He has always emphasized this.
+They did not let themselves go.
+Doctors suggest drugs to fight diseases.
+I'd like to offer a proposal.
+How much I've suffered!
+Can I have a word with you in private?
+When did Algiers become the capital of Algeria?
+It's good to stay home.
+Did you download it?
+Are they worried about their grades?
+I'll buy him some chips.
+His theories were put into effect.
+I can't help feeling that we shouldn't be doing this.
+He cannot leave home he has got asthma.
+Do they prioritize employee satisfaction?
+Don't ask me to help.
+He'll return on the twenty-fifth of January.
+She read a poem aloud to him.
+She has broken with him.
+Could you get me a cold drink, please?
+Did you think we were joking?
+Why are you so keen to hide that letter?
+Many atrocities were committed during the war.
+Am I not strong enough?
+My elder brother worked as a waiter for a year when he was in college.
+I was in Boston on Christmas Day.
+You are suitable for the job.
+Stay here until we get back.
+Do not bring politics into play.
+She already regrets what she did.
+At night you sleep.
+That's all I can give you right now.
+I really like my job.
+That's statistically unlikely, but not impossible.
+I'll have to do that this afternoon.
+There's work to do.
+She jumped into his arms.
+She had been very shy till she graduated.
+The cactus was covered in stiff bristles that could pierce the skin.
+I haven't had much sleep lately.
+Did you remember to thank him?
+One of those people may be her.
+I feel we did a great job.
+They like this cat.
+That's between you and your conscience.
+What's a covalent bond?
+Most trees lose their leaves in the winter.
+I didn't have permission.
+We wear old and torn clothes.
+Have you been feeling all right?
+I had no trouble falling asleep.
+Can somebody please give me a ride? I'm in a bit of a hurry.
+You don't know him, but I do.
+Some people think that French is a difficult language.
+Michael has already missed Mom.
+This is for you, from me and mom.
+They were on the team.
+It all comes down to a question of time.
+His head broke the surface.
+It's a magic potion.
+Everyone needs to be here tomorrow.
+My brain isn't working.
+Daniel played for the same old crowd.
+Tell me, how often do you come to Rome?
+It's cold enough to freeze the balls off a brass monkey!
+Nobody wants to be around us.
+Those apples are small.
+We have to get to work.
+Karl won the game.
+We pumped up the air mattress.
+Are you joking, or are you serious?
+I am not excited any more than you are.
+My father asked me who had visited him the day before.
+How about we hang out together on the weekend? What do you say?
+He said that's what he wants to do.
+A cheating scandal threatens to blemish the university's reputation for excellence.
+Go to bed if you're tired.
+It was very nice of you to help me with my homework.
+I cannot be without you.
+Didn't you read the Quran?
+This place is really windy.
+This is a stick-up! Stay calm and nothing will happen to you!
+Don't you think that you'd like to live in Australia?
+We're going to Ibiza.
+Are you comfortable lying on a beach towel?
+I don't mind using someone's preferred pronouns.
+Don't go away mad.
+She used pigeons in her experiments.
+Beowulf was fatally wounded in the battle.
+Were you able to salvage anything from the ship?
+I loathe mosquitoes with a passion.
+My father has a car.
+I have no idea how to use this thing.
+Of all the countries that you've visited, which was your favorite?
+I was told not to come here.
+I'm sorry I ruined your wedding.
+It's just not possible for me to do that.
+There are loads of people there at weekends.
+His escape attempt was successful.
+I want you to know that I'll always be here for you.
+Tennis can't be played on days when the wind is strong.
+Do you know anybody there?
+We'll never forget what we heard.
+Who was it who ate all the candy?
+I will introduce you to my parents.
+Algeria has massive semi-arid areas.
+Respect other people's opinions, even if you disagree.
+I disagree with them.
+I'm of French descent, but I don't actually speak French.
+That strategy paid off.
+I can't sleep on a plane.
+We don't have sugar.
+Yes, but they are a lot of work.
+Humans are interesting creatures.
+This student is in senior year.
+You can do that better than I can, I think.
+I strongly suggest you follow her advice.
+Some of the people who volunteered to help didn't show up.
+The more you listen, the more you speak.
+I wonder if we're safe.
+He went to the mosque that night.
+They said that they felt a bit nervous.
+I'm considering studying Persian.
+He couldn't control his son.
+Don't gnaw your nails!
+I was on that plane, too.
+His bold plan gave rise to much controversy.
+My eyes must be tricking me.
+They profit from this situation.
+I like your city.
+It isn't unusual to see bears around here.
+Ask him when he will come back.
+You're just being diplomatic.
+I don't remember having said that.
+Now I want you more than ever.
+He wanted a lawyer.
+You're blinded by your arrogance.
+That matter was settled at our last meeting.
+How much do substitute teachers make?
+Mum is bathing at the well.
+Everybody knows you went to Australia.
+They marched quickly toward the capital.
+Success in life calls for constant efforts.
+I'm afraid of what the teacher will say.
+His mask has fallen. Now we really know who he is.
+He's an Algerian farm manager.
+It'll take about three days to do that.
+They held their breaths and waited.
+We'll be getting on the train soon.
+Michael was quietly packing up his gear.
+What magnification should I look for in binoculars for birdwatching?
+We've learned our lesson.
+Don't forget to turn off all the lights before going to bed.
+Where can I obtain a live tiger?
+We're grateful to our teachers.
+Does she really believe what she says?
+Michael called the PD that initially responded.
+A robust discussion ensued.
+Are you delaying publication of the information on purpose?
+Do ants sting, or do they bite?
+She told me she'd do that.
+Do you need a book?
+Algeria is part of the developing world.
+The prime minister does not know English.
+They use modern tools.
+Are there any book stores around here?
+This town is dangerous, so please don't leave your hotel at night.
+She says she isn't planning on going.
+I saw a ship on the horizon.
+Medical staff have been using garbage bags as protective gowns.
+Dan felt like his mother no longer wanted him.
+Pietro saw Melissa's smiling face looking up at him.
+Keep your fingers crossed.
+No... I mean, yes.
+Those who tell the truth are rare.
+Islam is a religion.
+I'll never get in trouble again.
+This city is cursed.
+Then, of course, we're both sports fans!
+I love you the way no one has ever loved before.
+I'm not the one who ate all the ice cream.
+He bought a gun.
+Tell me who you haunt, I'll tell you who you are.
+We won't go back there again.
+She fell and hurt herself.
+My father's a hunter.
+They cracked their knuckles.
+Experts have been warning of a catastrophe.
+Little did I imagine that my plan would go wrong.
+They stand tall, unshaken by fear.
+Ottawa is the capital of Canada.
+Vladimir was locking the doors.
+The cause of death seems to be a gunshot wound.
+I'll vouch for them.
+His work has taken over his life.
+I'm really scared now.
+The bird sung on the branch.
+She shouted, but nobody heard her.
+I will come if I can.
+I can't get through to anyone.
+I'm on the verge of tears.
+She's quite an active person.
+I feel lonely when you're not around.
+Did I have them confused with somebody else?
+Her death was a great loss for our country.
+But who would like to buy such a bad snuff?
+We wish you a happy Christmas and a happy New Year.
+We'll cross that bridge if we come to it.
+I could get fined if I did that.
+I take my hat off to him for his hard work.
+It comes natural to him to speak French.
+The earthquake caused a tsunami of immense size.
+I can only do so much.
+You have thirty seconds to clear the area.
+The world champions were the Swedes.
+Many people my age have grandchildren.
+Paul heard a noise outside the house.
+I love the fringe on your coat.
+Please tell me where I should go.
+Nick hurried to catch the bus.
+All this could lead to something good and transformative.
+A rowboat tows a mooring line, which in turn is tied to a hawser.
+Do you want me to leave you alone?
+They cannot have gone out, because the light is on.
+I wish you all a relaxing Thursday!
+He eats at a soup kitchen.
+Is the right one for me out there somewhere?
+You need to keep things organized.
+Why don't you sit in the back today?
+Nancy never fails to write to me once a month.
+He must be crazy to behave like that.
+Let me know if there's anything I can do for you.
+Have you been to France?
+Dan loaded the cars onto a train.
+There are people who have a talent for robbing other people's time.
+Clean up after you have finished using the bathroom.
+Do I dare disturb the universe?
+He said that I must go there.
+Where was he when the fire broke out?
+They just had dinner.
+Strip down to your waist.
+Who just came in?
+She wasn't able to find her shoes.
+If you need anything, you can call, alright?
+My neighbors are strange.
+I said something weird, didn't I?
+No, you cannot use my car!
+She claimed she was innocent.
+My thoughts and prayers are with you.
+He said he felt very sleepy.
+What's happening in there?
+We enjoyed beef burritos.
+I still have three more.
+How much will it cost and who will pay for it?
+Does Algeria encourage foreign investment?
+Doing that was a lot harder than I thought it would be.
+I'll introduce you to a nice girl.
+Forget what I've just told you.
+I'm married to a French teacher.
+Are you going home?
+Why are you trying to please them?
+I believe I'm in love.
+You have to eat everything!
+Some of the students were late for school.
+My father's a farmer. His family doesn't have money, and his life is very difficult.
+My father never hits me on the head.
+I wonder whether we'll be early.
+He laughed at your expense.
+I don't want to bring trouble upon myself.
+I don't know who that youngster is.
+This isn't very good.
+The impossible cannot have happened, therefore the impossible must be possible in spite of appearances.
+Amanda ran to the locker room and there, she burst into tears.
+Boris instructed Melissa to stay put.
+I always place the spoon to the right of the plate.
+At the end of March we'll marry.
+They left their umbrellas behind.
+Someone told me you died.
+Why are you glad that's going to happen?
+The engine purrs like a kitten.
+I don't know the truth.
+He has to go back to the police station in January.
+She has gone through many difficulties.
+He had scientific attainments, but he didn't even know it.
+I arrived home last Monday.
+I'm sick of your lies.
+The wolf ate the child.
+A wise leader knows when to follow.
+Why does that matter anyhow?
+He told me he plans to go.
+Let's keep our design dark for a short time.
+She was beyond rich.
+I don't want to read anything today.
+Just talk to him.
+I wish I were there.
+I didn't want to tell you over the phone.
+He didn't mean to make a scene.
+I know that Munich is the largest city in Bavaria.
+This Sunday let's take a joy ride and see where we end up.
+The structure of the text has value in analysis.
+Pomelo can interact with medications just as grapefruit can.
+He resigned on the spot.
+My cat thinks it's a dog.
+Check the thickness of your brake discs.
+I have someone here who'd like to speak with you.
+Please tell us more.
+Do you think it's hard to give orders?
+She committed suicide by poison to avoid beheading.
+I didn't know that you cooked.
+I really like long songs like Bohemian Rhapsody.
+He asked me a strange question.
+You've got absolutely no reason to get so upset.
+He was really in serious trouble.
+How can I buy tickets?
+The cat is a wild animal that inhabits the homes of humans.
+She knows she has to speak French.
+Dan claimed that it was an accident.
+I've already managed to do it.
+Are you seriously thinking about selling this online?
+Do you have the key to this door?
+We're going by train.
+We'd better just call it a day.
+A friend invited us to her home for dinner.
+Because of the heat, I slept with a window open.
+One day even this sentence might be useful to someone.
+Do you want jewelry?
+He is engrossed in his work.
+Wait until after I come back.
+His sons do as they please.
+If she stays too long in one place she begins to get itchy feet.
+He wanted to speak with her.
+Michael would be a moron for not loving Linda back.
+Everybody rejoiced when Jesus was present.
+Why does it matter who knows?
+She's living alone, isn't she?
+The penis is one of the masculine sexual organs.
+Something's not quite right here, though I can't put my finger on it.
+I think you know what has to be done.
+He couldn't decide what he should buy for her.
+He shows her the stars.
+Adolescents want to be given orders so that they can disobey them.
+Don't worry. You can confide in me.
+Who was seducing who?
+She bought a chicken.
+I don't teach French here anymore.
+Jonas was very old-fashioned.
+They're gonna go crazy for us.
+You only knew German.
+They passed the final.
+It's just not safe.
+I'd like a single room with shower.
+What can I change?
+Lorenzo was alone in his tent.
+Terrified, Gunter's eyes darted around the office.
+Those who fear hell invented religion.
+She's well, isn't she?
+The cat was pretty goofy and its energy never let up for a moment.
+It probably won't be up today.
+I prefer my coffee black with no sugar.
+They pined with grief and felt a longing which they could not describe.
+Is this the direct way to the Prado?
+I'll guarantee that you'll enjoy this movie.
+I didn't know this song.
+I haven't understood it yet.
+I don't always feel as connected to my boyfriend as I would like to.
+I keep telling you I don't want your help.
+I put my hand on his forehead while he was throwing up.
+I have something very special planned for your birthday.
+Why is everyone clapping?
+I'm gonna make lemonade.
+I'll buy her a stairway gate.
+Oleg has a stigma against witches.
+How old is Laurie?
+You'll have time for that later.
+How much does the insurance sector generate of Algeria's GDP?
+It's chilly outside now.
+Claudio's German Shepherd looked at him.
+An apple fell on my head.
+Change is never immediate.
+Aren't you glad I got a job?
+Do you have some bread? I'm going to feed the pigeons.
+How much do quality control specialists make?
+Why don't we talk in my office where it's quiet?
+The fire destroyed three houses.
+His knowledge of Chinese enables us to carry out our plan smoothly.
+It's strange that our friends are not here.
+Use a dictionary to find the meanings of the phrases below.
+I like cats a lot.
+Hiking with pack robots is stupid.
+I had a terrible dream last night.
+He walked round to the back door.
+He called me a joker.
+I'm at the restaurant.
+There is nothing to negotiate with terrorists.
+That almost happened to me, too.
+This has caused a huge uproar in the city.
+Please let me know how you are going to solve it.
+In fact, he even loved her.
+Watch out! There's a big bull behind you.
+I paid and left.
+Did I actually tell you this?
+You can use whichever pen I'm not using.
+I haven't seen this spooky enemy before!
+Put that where it was.
+The mayor's murder sent shock waves through the community.
+I'm sorry for reproaching you.
+There isn't anything wrong with the product.
+There's no way out of here.
+Dad, I want to be an astronaut!
+The father wants to write.
+She was truly desperate.
+Wash regularly to prevent unpleasant smells.
+I thought that maybe this could help.
+Intelligence is the ability to adjust to changes.
+The injured man cried for help.
+We should get back to work.
+He said he'd take care of her.
+Did you clean the house windows inside and out?
+It'd be a shame to let all of this food go to waste.
+What makes you think you can do that?
+I don't find the Russian alphabet to be all that difficult.
+Education consists mainly in what we have unlearned.
+I only had thirty dollars.
+I'll call her back later.
+You can't trust anyone, not even yourself. Me you can trust.
+Self-driving cars are the future.
+Eccles and Bluebottle were the funniest characters on The Goon Show radio program.
+I need to talk to them now.
+Igor stopped to catch his breath.
+Didn't you know anything about this?
+I feel your weakness.
+I want it with every fiber of my being.
+This is the best thing to tell to someone who tries to learn something.
+Do you have lice?
+Come on, let me help.
+She can do that herself.
+When life ends, we're no longer here.
+It's not difficult. It's just a matter of knowing how to do it.
+I agree that the feelings are indeed superfluous.
+I'll stay until you fall asleep again.
+As far as I know, that never happened.
+I'm only trying to save some time.
+I recognized you right away.
+The question now is where should we do that.
+I read about All Ball.
+Did you prepare for this?
+I was born to put forward my difference among other most people around me.
+He's going to have problems.
+That word isn't in the dictionary.
+I'd rather stay home and knit.
+Occasionally a dog will back up, but usually dogs operate in a forward gear.
+I was told never to do that again.
+He called me a coward.
+Is there anyone here who can explain what's going on?
+Would you like some more mashed potato?
+Leave me alone and go back to your wife.
+There was a fire in this city last night.
+He handed the picture back to her.
+My other grandma didn't know or didn't care how to cook.
+A few months later, Israel invaded Egypt.
+An ion is an atom or molecule with a net electric charge.
+He said that he wasn't single.
+I didn't read everything as carefully as I should've.
+She hasn't been married long.
+He says he'd like to study French.
+They couldn't get the book they wanted.
+She went with him to the movies.
+I complained about that, but it didn't help.
+The alarm went off and a red light started flashing.
+Judging from the look of the sky, we may have snow tomorrow.
+You just need to know where to look.
+There's no comparing them!
+I was worn out because I had to take care of so many children.
+No one wants any.
+Where does all that confidence come from?
+Why's it so quiet in here?
+He'll be her French teacher next year.
+Have you ever had a dream about me?
+What did the Quran really say?
+I'll figure out a way to fix this.
+The water the cow drank was cool and fresh.
+The second is the unit of time.
+It's her first time.
+Oh, I'm terribly sorry.
+By the time I arrived, everybody had already gone.
+It's time to turn the page.
+Now I know how to fight you.
+Do all black cats have yellow eyes?
+Which folder should I open?
+Make sure that the doors are locked.
+Let my people go.
+Many of our desires and acquisitions are meaningless.
+I have pepper spray with me.
+How can I tell if somebody likes me?
+There is no other way to do it.
+She was pleased with the gift.
+I know the village very well.
+I just got them to sleep.
+Words cut more than swords.
+Let's go to Boston again.
+No one was waiting for me when I arrived.
+I stood still, my whole attention fixed on the movements of her fingers.
+To learn a foreign language well, it is essential not to be afraid of making mistakes.
+He wants to go back to the countryside.
+The US looks at the rest of the world as its colony.
+Why do you only have two cars?
+Harmony in the family leads to success in everything.
+She promised him that she wouldn't try to kiss him.
+Alberto says he supports transgender people.
+I'm kind of angry, too.
+The snow hasn't thawed yet.
+The Anglican Church isn't a fully Protestant Church.
+What does the man look like?
+Let me talk to them first.
+Donald noticed Jessica reaching for the fire alarm.
+What's Algeria's growth goal?
+How long will our train stop at this station?
+He indulges all her whims.
+She isn't coming back, is she?
+They were very pretty.
+That was very easy.
+The government spokesperson denied this.
+That's nothing to write home about.
+I like crossword puzzles.
+There's a lot of traffic on the roads around this time of the day.
+I advise you not to keep company with him.
+I don't have the patience to read books, but I do enjoy stories.
+Yuri kept pounding on the car window.
+I guess I'd better hurry.
+He's through doing that, isn't he?
+I'm trying to spare your feelings.
+I am suspicious that this is an illegal taxi.
+This key isn't from here.
+Who's coming to see me?
+Look! The book is burning.
+They say they did just fine.
+I didn't know about his plan.
+Yes, I've been there a couple of times.
+His teacher is Muslim.
+I usually walk to work.
+He seems to be a nice guy.
+Boris had to leave the campsite right away.
+She's not coming on the trip because her parents won't let her.
+Jessica was cleaning at Donald's house.
+They said they didn't feel well.
+How many surfers did you see?
+There is no wedding without treats.
+Living in Algiers is cheaper than living in London.
+We'll get to the bottom of it.
+It's really cloudy here.
+My mother was a tailor.
+You could have died.
+He hated staying after school.
+Let's sing the English song.
+He chose to spend New Year's Eve with her rather than with his family.
+It looks like you're skeptical.
+What are the rules of this group?
+The pain has gotten a lot worse.
+What is your favorite vowel?
+His job is to promote sales.
+Well, let's start our work.
+Robert won the contest.
+I don't think I'm very funny.
+This ain't half-bad.
+And when I've gone, don't tell him I'm dead.
+I went and hid in the barn.
+We finally decided to hand him over to the cops.
+The figure withdrew when Janos noticed it.
+You'd better hurry, otherwise you'll be late for your appointment.
+We don't have any business being here.
+You should always knock before entering someone's room.
+I'm sorry if my being here embarrasses you.
+I'm a huge fan of trains.
+I don't like the dark.
+I was a rebel.
+The lift is made of glass, everyone can see us.
+This is the truth, believe me!
+Paul was talking to relatives.
+Please turn up the gas.
+He carries peace in his gaze.
+Remember I will always be at your back.
+Take an umbrella with you in case it begins to rain.
+Does this city have Uber?
+I need to talk to you right now.
+I ate your candy.
+India is the largest democracy in the world.
+I don't know nothing!
+The clock is ticking.
+I asked you not to do that anymore.
+No one deserves my vote.
+He wanted to go to Algiers for himself.
+Berber is now official in both Algeria and Morocco.
+Women's clothes are on the third floor.
+I admit that I've done that.
+Life is an eternal fight.
+Just what exactly is a marquess?
+They're both from Algeria.
+Many people like chocolate.
+If that happened, it wouldn't surprise me.
+Nancy studied until it hurt.
+Good medicine tastes bitter.
+That man is the richest whose pleasures are the cheapest.
+I met them earlier this morning.
+He said he had to leave early.
+Why don't we go out for a short walk?
+I can recommend a good restaurant.
+The house just crumbled into a heap of stones.
+You don't have to raise your voice.
+It's my duty to go serve on that jury.
+He didn't remember anything.
+Didn't you read the book?
+Can I leave my bag here?
+She contacted the local tax office to clarify her tax obligations.
+I'm sorry that you're sick.
+It is a joy to welcome overseas visitors to our home.
+They revealed the secret.
+Sometimes we need to be guided by reason, and sometimes by intuition.
+I didn't think I was going to win.
+Did you shoot them?
+Putin made the pivotal error of trying to take the whole enchilada.
+The ewe is in the pen.
+I never say anything, even though it gets on my nerves.
+Lukas was lying on the floor in a bloody mess.
+The hotel has accommodation for one hundred.
+Friends are like flowers in the garden of life.
+How much time did you spend doing that?
+I did everything you asked.
+Let's play tennis together sometime.
+San Marino is the capital of San Marino.
+Do you want to make some brownies?
+We may have to go to Boston the week after next.
+You need to read this book.
+We went to see him the next day.
+I felt the house shake a little. Didn't you?
+Is there no alternative?
+God must love the rich or he wouldn't divide so much among so few of them.
+I give sensational massages.
+I may not be busy next Monday.
+They recorded the entire session.
+He finally kicked the bad habit.
+Aren't you a chemistry student?
+Why didn't she go there?
+My savings will run out soon.
+She is proud of being beautiful.
+Abs are made in the kitchen.
+James didn't question Amanda's seriousness.
+My sister is a genius!
+The performer relied on hype and headlines to stoke up interest in her music.
+He had no sooner gone out of the room than all of them burst out laughing.
+I see a cross.
+I'll let you know as soon as we've decided what to do.
+At that time we were suffering.
+My brain went to work.
+This company owes its success to him.
+It is impossible to substitute machines for people.
+If I'm feeling better tomorrow, let's do that together.
+We've got molehills all over the lawn again.
+The faster you do that, the better.
+You aren't a soldier anymore.
+The catastrophe also claimed victims' lives.
+The study of biology requires a deep understanding of the natural world.
+How did your exam go?
+What does it take?
+Does Algeria have a plan to curb inflation?
+I think you're safe.
+Rows and rows of narrow streets of terrace houses surround the factory.
+You'll always be alone.
+This lady can't help us, she's gone mad.
+The weather's too nice to stay in the city.
+We asked if we might smoke during the break.
+Who will my opponent be?
+Someone killed the neighbor's dog.
+Don't eat so much!
+That was not my best moment.
+A sick giraffe is more likely to be taken by lions.
+Doing a good job takes time.
+I have to dry my hair.
+Come on, the bus is here.
+I have a bruise here.
+Windows is a widely-used tracker.
+She also writes about loss and trauma.
+They told us how they did that.
+Rain formed pools in the hollow spaces on the rocks.
+He came back from hajj.
+You want to do that work.
+Wise people are not always highly-educated, and highly-educated people are not always wise.
+I'm a bit confused.
+The girl smiled at him, but he did not smile back.
+Turn to the right at the corner, and you will find it on your left.
+I saw Santa Claus kissing Mommy.
+They called to tell me they'd be late.
+Can you close the window, please?
+The blind leading the blind.
+I knew I could rely on you!
+You must go now.
+It's worth a trip.
+Let's eat hot dogs.
+She lives right down the street from me.
+What I'm holding in my hands is a fossilized shell.
+Lorenzo's broken dishwasher sounded very loud.
+Yesterday I washed my hair. Today I'll cut it.
+Needless to say, getting up early is important.
+I've never even been to Australia.
+I was stretching myself on my toes.
+Don't criticize what you can't understand.
+You have no chance with her.
+Bob stored his internet banking details in a plain text file on his desktop.
+I'll try to talk him round.
+I've looked everywhere, but I can't find my book.
+She knows many folk dances.
+Will you look after my dog while I'm gone?
+Although it's a good car, I want something more recent.
+I just thought of a great idea.
+I think he'll go out.
+I'm trying my level best.
+I'm dying to see you again.
+I went to the beach with her.
+Today is a wonderful day for jogging on the beach.
+Does the wind carry your hopes away?
+He gave her a considerable sum of money.
+Is it true that you're ill?
+I will be free tomorrow afternoon.
+What do you like being complimented on?
+Adriano walked down the street holding hands with his girlfriend.
+He ought to have arrived by now.
+Hunger compelled the boy to steal money from the cash register.
+We did the things good.
+I ordered a pizza by phone.
+The doctor advised me to exercise more.
+You look as though you're in a good mood.
+I've never had a traffic accident.
+I don't plan to leave anytime soon.
+I really want to go to the beach this summer.
+You can write to me in Hebrew.
+I promise I won't make that mistake again.
+He rescued her from being raped by the soldiers.
+I am a Syrian citizen.
+I must've caught a cold last night.
+I'll order this dish.
+Hurry up or you'll miss your plane.
+I'm not the one that needs to do that.
+I've never ever seen anything like this before.
+Those aren't my rules.
+She has the same idea.
+She arrested the man because he robbed the bank.
+Yerevan is the capital of Armenia.
+He didn't tell anyone else, did he?
+He embezzled the money from his office.
+Life is good here.
+It isn't safe in here.
+Just this once, I'll make an exception.
+I've always loved the idea of not being what people expect me to be.
+Humans are very intolerant.
+I'm feeling really close to you.
+Because of the long business trips I am already used to it.
+How and where are decisions going to be made?
+She stood fumbling for change.
+You sure you wanna do this?
+Do not put your books on the table.
+My husband speaks Mexican Spanish.
+We stayed at home last night.
+I don't really like doing this.
+Tobacco smoke contains hydrogen cyanide, a poisonous gas.
+I am considering changing my job.
+There's no future here for me.
+The race wasn't fair because the winner had a ten-second head start.
+The formula works like magic.
+She was a bit hasty in answering me.
+Santiago is currently babysitting his younger siblings.
+Learn and you will know.
+He told me he's afraid to do that.
+Schools don't teach the right things.
+May it only depend on that!
+We have an audience.
+In his father's house, every prince is great.
+Do you want to do that tomorrow?
+She said she felt sorry for him.
+My father-in-law is coming over tomorrow.
+The band takes a ten-minute break between sets.
+Gold is going higher.
+I'm sick, so I can't taste anything.
+The revolt was led by Gunter.
+Leonid left his kids unattended.
+I really love this tune.
+She makes her father proud.
+We're going for a wander round town.
+It happened three hours ago.
+The lifeguard is ever ready to help others.
+Your help prevented me from being ruined.
+We met at a friend's wedding.
+We went spearfishing last night.
+They aren't teachers anymore, are they?
+William is a talented designer with a keen eye for detail.
+She's jealous whenever she hears about his achievements.
+How many pairs of socks do you have?
+She was next to a friend when I saw her.
+He personally prepared the couscous.
+Tobias's location has not been turned off.
+A complicated job like that can't be done in the blink of an eye.
+The fans want to get their autographs.
+The June bug made a buzzing sound as it flew around Anna's room.
+It'll be hard to stay here much longer.
+If you need me to do that, I will.
+Some people need a lifetime to understand this.
+I'll go and get you a cup of coffee.
+We have no reason to be ashamed.
+That was not a good recommendation.
+I would like to have a woman examine me.
+Take the lift to the fourth floor.
+Does it contain peanuts?
+Are we that bad?
+Why don't we explain it to the jury?
+She's a top-level executive.
+There's a small mountain tarn, surrounded by alpine meadows.
+This food is crunchy.
+They only sell women's shoes here.
+Paul yelled out again.
+I untied the knot.
+Let's make it so money isn't important anymore.
+Avalanches are a danger to climbers.
+He is responsible for the accident.
+She says something different in every interview.
+I broke both of my legs.
+Would you like to go to Boston with us?
+Everybody has their own projects on, so after all you are the only suitable candidate.
+I heard it was nice.
+Their marriage was a happy one.
+What is the poorest country in the European Union?
+The girls fought over a boy.
+To the Hilton Hotel, please.
+He has done that again, hasn't he?
+I like English better.
+He's dying of hunger.
+My parents are still young.
+Sorry, I hit the send button by accident.
+I've finished my work.
+They didn't knew you would say no.
+She went to school every day.
+Can we talk to her?
+This spider has huge fangs.
+Pick up a bag of oranges at the supermarket.
+Tell me a little about him.
+She is just as shy as me.
+You'll have no problem.
+The audience applauded the performer.
+I don't care if she agrees or not.
+She says she won't ever do that.
+When are you going to the hairdresser's?
+He didn't recognize that bird.
+I'll certainly talk to her.
+If you'd asked someone the way, we would've been there by now.
+My mobile phone isn't working.
+It's not much fun to walk through sleet without even a warm jacket.
+I'd like to go to the zoo.
+When the time is right, I'll tell you.
+She was without hope.
+I was out of the room.
+This area is a good place to bring up kids.
+They didn't show up.
+Please send this form to your insurance company.
+Don't you think this is interesting?
+French is the language I want to learn.
+She'll do what he tells her to do.
+She looked like she was warm.
+We really fooled them.
+He walks with the confidence of the wise.
+If you're to do well in school, you must study hard.
+Well, I didn't know.
+That wasn't the reason.
+The US is losing its dominant position in the world.
+Did you face any problems?
+Being spontaneous brings me luck.
+I believe you believe that.
+His madness is genius and his genius is madness.
+Keep the pond clean.
+Your passport has been printed.
+Claudio shot Isabella a few texts.
+Rodrigo escaped to the roof.
+If we don't change our ways, we won't last long.
+My name is Eva.
+Sunny spells will develop in the afternoon.
+He turned off the lights.
+He won the trophy.
+They promised that they won't do that here.
+In other words, she lied.
+And oat production has fallen by almost ninety-five percent.
+I will read many sentences in Esperanto.
+The submarine dived beneath the waves.
+Is it true that private schools are better than public schools?
+He was supposed to be here.
+All of us aim at success.
+Did you think Marseilles was the capital city of France?
+By night, polar bears use stars as their compass.
+What's the issue if I carry them all?
+There's a survival kit in that closet.
+I endured a painful experience of rape in my youth.
+He has few or no books.
+I don't think that'll be a problem.
+I already looked in the back.
+Gunter's phone went off in his pocket.
+I think that's a really stupid idea.
+Were you doing that yesterday?
+Are you trying to bribe me?
+When did the accident take place?
+I know him by sight.
+She'll be safe with me.
+The earthquake caused many houses to collapse.
+Coping with the vagaries of the weather is part and parcel of being a farmer.
+According to Islamic principles, you should show respect to your parents.
+We give you peace.
+Carlos is a curious person who enjoys exploring the intricacies of different cultures and traditions.
+The train goes to Riga Station.
+It's over to stay silent and obey these tyrants, we need to take action now!
+My job is easy and I have a lot of free time.
+My rota is very full this week.
+His speech did not accord with his feelings.
+When was the last time you saw that cat?
+I've never done that before.
+He shared inspiring quotes from famous figures.
+He devoted the last years of his life to writing his autobiography.
+He tried to talk, but he couldn't.
+The meeting's set for tomorrow afternoon.
+Soak walnuts in water to reduce the bitterness.
+She went back to her bedroom.
+Will you please come to my party?
+I made him go.
+Let's meet in front of the main gate at half two.
+Tonight, you all have to win!
+I want you to babysit my children.
+Your father seems to be well-disposed towards gays.
+Algeria is about the size of France, Germany, Italy and the Netherlands all combined together.
+You need a lot of money to go to this school.
+He reached down to pet his dog.
+I'm a restaurant manager.
+Maybe you'd like to do that.
+He's the only one who sets the rules here.
+He taught me a lot of things about the Quran.
+Mark quickly came to open the door.
+I decided to finally come home.
+Pro baseball is interesting these days.
+Bro, what's your last name again?
+It ended up being canceled, but it gave us a chance to learn each other's feelings.
+There are just five more things on my list.
+We walked round the pond.
+Can you still ride a horse?
+I'll be impressed if you can do that.
+I may take some smaller trip before then.
+Many Esperanto speakers live in Hungary.
+Algeria is facing challenges that threaten its prosperity.
+The last time I went to Boston, it took me three hours to get there.
+They tapped their feet nervously.
+Come to the front seat.
+I've made peace with my maker. I'm ready to die.
+They said it didn't bother them.
+She twisted her ankle while she was doing exercise.
+Leave it to me. I'll take care of everything.
+I doubt a native speaker would say it like that.
+What's it going to be?
+We were picking plums.
+I grieve with you.
+I could feel the hairs on my arms start to pick up.
+It was an act of love.
+He took off his wig.
+I don't see how that can be fair.
+The population of the world is increasing very fast.
+You'll all get used to the cold climate in no time.
+I wanted to continue partying.
+I've finished cleaning the house.
+She doesn't speak English.
+I'm like a stone in your shoe.
+They love to climb mountains.
+We need to get things better organized.
+I was just coming to see you.
+This decision was taken in the public interest.
+He is addicted to cocaine.
+I have a lot of respect for you.
+Love your enemies, for they point out your mistakes.
+Let's break the pattern.
+I'm happy with that color.
+He had not been employed by the company three years before he become a director.
+If you want, we can talk later.
+Can you please speak more slowly?
+Reflection on literature has value in reading.
+Everything I say is true.
+She likes Russian pop.
+I have lost the case after all.
+We look on her as a loose woman.
+As I wasn't invited, I'll stay at home.
+At most, there'll be thirty people there.
+Tell me to wait for you and I will.
+Just give me the gun.
+She made a few extra bucks writing the fortunes in fortune cookies.
+Can we at least sit down?
+That's the response to my question!
+Yes, I want to have a baby, but now I'm going to write some more sentences.
+I was tired, too tired to do anything.
+What time is it on the Moon?
+Life is a marathon, not a sprint.
+The election was unanimous.
+He gave me his old car.
+You are a beacon of calm amidst the chaos.
+He couldn't bear the shame.
+You have only to put them together.
+May this never happen to you.
+The view is amazing.
+My teacher wrote a recommendation for me.
+Leonid was choking to death.
+My brother that lives in Boston is a teacher.
+Do you like fig jam?
+They're building it themselves...
+We don't need to do anything else.
+He's from a prominent Algerian family.
+These people are our guests.
+She said she didn't have a lawyer.
+Why are these people insulting caregivers?
+Paul talks a lot.
+Sailors spend weeks or months in the immense ocean.
+He tried to sell the house.
+I enjoy watching him sleep.
+A white sail appeared in the distance.
+I have a reservation for two nights.
+Murine models are used in drug development research.
+Will you have time later?
+I completely forgot about the meeting.
+I really need those diapers now.
+They can use our bicycles if they want.
+How far is the library from here?
+We went to Laramie together, but afterwards we parted.
+I'm going to ride him until he dehydrates through ejaculating.
+Don't forget to come at the agreed upon time.
+You can't always run away.
+How strong was the earthquake?
+They charged me with the important task.
+I was very surprised to see students cleaning their classroom after school.
+Claudio smelt a burning smell.
+Someone else took my suitcase.
+I wasn't expecting to hear from you.
+Don't you mind if I touch this?
+I want to learn Chinese next year.
+So what do you want with me?
+Come and get us.
+I don't have very many friends here in Boston.
+In a few minutes, I have a meeting with the director.
+Which toothpaste have you been using lately?
+Santiago went outside to smoke.
+He forfeited his health.
+You can't die if you're already dead.
+Be everything in your life.
+That's a question we get quite often.
+Did you remember to buy the candles?
+Will you accept the job?
+Check with your local recycling program about any food scraps they accept.
+My daughter loves music.
+Don't give up. You still have a chance.
+Am I doing everything right?
+I want to be a singer.
+I found him a job.
+We have a good rapport.
+If I were you, I'd follow his advice.
+She took her wedding ring off.
+I'd like to eat breakfast with you.
+The actor couldn't remember his lines.
+This liquor has a taste all of its own.
+I always read the label for them.
+She did her homework in a flash.
+Hard times are awaiting us.
+Who's the boy sitting in the corner?
+She was quite young, not more than eighteen.
+I don't think I like you.
+Is it the wrong thing to do?
+Some people are very selfish.
+I was in Australia most of last summer.
+He is leaving in three days' time.
+I like your version better.
+Dan is going to try it.
+I wouldn't accept that offer if I were you.
+Jonas's fiancee is black.
+The prisoner was set free yesterday.
+I cannot climb this mountain.
+Because he couldn't kill me, I killed him.
+Please don't touch those books.
+One forgives as long as one loves.
+Tell me why you married her.
+Two years ago, I studied English in England.
+She has convinced herself of his character.
+How many cigarettes do you smoke per day?
+The nightingale was on a branch.
+What do you like about him?
+Enough with the lies.
+And what if we went to a Japanese restaurant tonight?
+There is no limit.
+We have to stand up against racism.
+I'm still not impressed.
+He lost all interest in artificial languages.
+You look like you need a hug.
+What does the note say?
+Is it hard to speak French?
+The professors can make mistakes, too.
+That cloth is made from cotton.
+She advised him to take a rest, but he didn't follow her advice.
+Algeria needs to develop better infrastructure.
+What is logical and what is right do not always coincide.
+There were flames everywhere.
+If you behave well, I'll give you candy.
+I still haven't paid him.
+Take as many biscuits as you like.
+He burst into laughter.
+It's no use anymore.
+He was speaking about Islam.
+He's a big boy.
+You still have a chance.
+I want to go with her.
+The ship lowered its gangway after docking.
+She will have enough.
+I want to become a nurse.
+Let's go do it.
+It was thanks to his advice that I succeeded.
+One more step and you're dead!
+When are you climbing that mountain?
+I thought this was a wasp and that was a bee.
+You don't want to know what I think.
+I heard her singing a song.
+I know that you hate funerals.
+I was looking for some excitement so I decided to bring the handcuffs.
+Don't be so lazy, and get up and shower before your father gets here.
+Today we are going to make pancakes.
+Talk with your partners.
+Is there any possible solution to the Algerian political crisis?
+Diego doesn't know who that man was. He remains a mystery.
+Vladimir snatched the pear away.
+Asking questions is the best way to learn things.
+I've done that a number of times.
+It's too dark in here to read.
+They attacked from behind.
+I'm going to visit you tomorrow night.
+The president still did not welcome war.
+He went shopping at a department store.
+I don't have enough patience for that.
+My friend is walking with her dog.
+Gustavo hid away the body in the bushes.
+The piano keys include black ones.
+You have to try this.
+Some Algerians say that Algiers residents are arrogant.
+They say he will be back next month.
+Mom, when I see you wearing a miniskirt I feel embarrassed for you!
+How long ago were you in Boston?
+I suppose that's it.
+My cell phone is ringing.
+Exactly this is our role and not a notary's role.
+She's feeling OK now, isn't she?
+We wanted to talk about him.
+She is proud of having been beautiful.
+They refused to let the trains move.
+My upstairs neighbor flooded my apartment.
+He and his brother are similar in every aspect.
+He went for a walk before breakfast.
+I wish I hadn't had to do that by myself.
+Did you know about this?
+These trousers are too big for me.
+We really have to go.
+I still haven't voted.
+There must be a faster way to do this.
+What's in this closet?
+We've already talked about that topic.
+He taught me how to play chess.
+The introductions are being made.
+Santiago was empowered by the situation.
+Do you think we can do it?
+They were looking for a girl.
+Is she the lady who was dressed in blue?
+If you don't have what you like, you like what you have.
+I'll try to be more patient from now on.
+He is generous to his opponents.
+He took very good care of her.
+This surgery is producing a successful outcome.
+Luis has many Mexican friends.
+Bruno and his family built a new settlement.
+He's unpredictable, isn't he?
+Lukas made a lot of money that night.
+Karl was busy preparing the explosive.
+I'm not much of a singer.
+I really wanted to kiss you.
+I'll have to take her with me.
+I've been working on this problem all day.
+I don't plan on doing it.
+They told me that they'd wait and see.
+He's working in Boston, isn't he?
+Let's continue the game after lunch.
+He never stops to take a breath when he speaks.
+There's a lot more so help yourself.
+No one owes you anything.
+I'm in extreme pain.
+I have to work on Monday.
+All they found in the loft was old junk.
+We use shared facilities.
+There was a price to be paid.
+How's the work going?
+She was uncommonly witty and charming.
+It's coming up for Christmas.
+I am invited to this party.
+Mr. Sato speaks English well.
+She should fill out her marital status in the questionnaire.
+The little things can sometimes be of great importance.
+I'm more than grateful to you for your help.
+He sent me a funny text message.
+Are you going to make me the lead singer?
+What's the fastest way to learn Berber?
+Do you think I'm not trying my best?
+Was the new version easy to install?
+I often see them together.
+Do you have an answer?
+Will you please go now?
+He lay on his back with his eyes closed.
+She ran back into her apartment.
+It never stopped raining the entire day.
+We didn't know you were going to do that.
+The children are gone.
+There are no real visions.
+Dick plans to go by himself.
+We need to buy time.
+You make me want to tear my hair out.
+He slipped over on the ice.
+Do you know the difference between silver and tin?
+I had a crush on my French teacher when I was in high school.
+Grownups are funny sometimes.
+About how long does it take to fill the bathtub?
+How long should I wear compression stockings to improve my circulation?
+Her cousin is my wife.
+Let's have tea at three.
+I pay my bills.
+I bleed when I have bowel movements.
+I'm feeling much better now, thanks.
+Have you got a new kitchen?
+James knocked the gun out of Amanda's hand with a kick.
+What's your favorite color for shoes?
+I'll bear that in mind.
+Everything else is boring.
+She asked me a question about math.
+She's received a lot of letters from him.
+It's been snowing all morning.
+I eat a bowl of oatmeal every morning.
+It won't be much longer now.
+Let's take a moment to reflect.
+Well, well, well, what have we here?
+You can park anywhere you want.
+What do you want me to buy for you?
+Everybody at school hates me.
+Karl's dialect and mannerisms were very different from Amelia's.
+I gave a fountain pen to my father.
+We have reached an agreement.
+I never play the saxophone anymore.
+Yes, mom, I'm at my friend's. I'm coming back in one hour.
+Both girls plan to go to college.
+He wetted his towel with water.
+She was in the water.
+What he saw wasn't a ghost but just a figment of his imagination.
+She'll need to tell him sooner or later.
+There were towels laid out ready for use along with soap and shampoo.
+It stands behind me, doesn't it?
+The polio vaccine was first produced by an American scientist.
+This app will let you sync your photos and music between all your devices.
+They told me that they bought these for you.
+They said that they knew they wouldn't win.
+I don't see why we need to do this.
+My grandmother's cane is made of pinewood.
+He is a potential world champion.
+William and Sandra had feelings for each other.
+I don't actually live in Australia anymore.
+I saw your performance yesterday.
+He's coming over for a home-cooked meal.
+Go see who's at the door.
+You may have been right.
+He stopped to talk.
+I want to learn snowboarding.
+We ushered him out.
+What did your mom prepare for you?
+We held our breath.
+He abandoned himself to grief.
+There's nowhere else to go.
+He got his comeuppance.
+My little brother is watching TV.
+His cooking is of the classic French style that he studied in France.
+I should've told him sooner.
+Where is the nearest station?
+We all die one day or another.
+How would you describe the people in your country?
+It is not easy to write a letter.
+She did as she said.
+That offer is off the table now.
+His dream is over.
+I think you might have a drinking problem.
+Don't laugh at misfortune.
+When I was young, all this was a pasture.
+The decision has been made for us.
+You never thought you'd have to do that again, did you?
+Lilongwe is the capital of Malawi.
+You are on the wrong train.
+That depends entirely on the surroundings.
+I will certainly need a car.
+He complained that his back hurt.
+The question of how to establish the optimal formula is still open.
+What are your cats' names?
+Two soldiers kept guard at the gate.
+She did not keep my secret.
+What advice can you give them?
+I will never forgive you.
+I never slept that night.
+The capital of Mali is Bamako.
+He told me he'd try doing that.
+I grabbed the wrong bag by mistake.
+I feel like taking a trip.
+Did you see her often?
+They took a train to New York.
+It took me three years to write this book.
+I left home early, but I still missed my train.
+I don't buy the heart attack story. I'm sure Tony and his men did him in.
+Let's wait here until she comes back.
+The manager demands that we do our jobs as well as possible.
+What is he doing in his room?
+It's up to them now.
+These are the results we've been waiting for.
+Have you ever heard of this?
+She went to the supermarket.
+Our meeting was short and useful.
+Mike has two girl friends.
+Ancient Germanic tribes used medicinal herbs in their attempts to cure diseases.
+Just take my word for it.
+Why did you lock the door?
+You're the one who brought me here.
+Bruno got to his truck.
+I should give this to him.
+The newspaper began to lose readers when it dispensed with one of its most popular writers.
+You must answer the question.
+Keep me informed of your progress.
+In the past several years, the engine of world growth has been China.
+He needs a jacket.
+The trade deficit worries economists.
+Algeria needs more high-skilled labor.
+She told me that she did that.
+You're making absolutely no sense.
+The police told the demonstrators that they'd be arrested if they didn't move immediately.
+He said his parents are divorced.
+He got lost in the city.
+He racked his brains, trying to find a solution.
+They were afraid they might be evicted.
+There isn't a third option.
+I should've done it sooner.
+Loneliness is an unpleasant situation that most people experience from time to time.
+You can still see the scorch marks from last week's fire.
+It took three years to build this bridge.
+Without a feasibility study, it makes no sense to even think about beginning the project.
+I'm the only one who's working today!
+I stumbled upon an abandoned house.
+I had not a little difficulty in bringing the truth home to him.
+Claudio blocked the door with his arm.
+It started raining three hours ago.
+This garden is at its best in summer.
+Quick, come and help me.
+There weren't any kids in the park.
+The wall is freshly painted.
+Wow, it's pretty cold today.
+He moved heaven and earth to find his lost goat.
+Islam is a very good religion.
+What's that rifle on the table?
+The coarse sieve mocks the fine sieve, while the sheepskin rug smiles mischievously.
+They were so young in this video.
+The longer a man lives, the closer he comes to death.
+I'll take good care of Dad.
+The Treaty of Lisbon changes the composition of the European Council.
+She wanted me to do that, didn't she?
+Dan paid off his gambling debts.
+Deviled eggs taste horrible.
+You don't really want to do this.
+You don't want to get lost, so take your mother's hand.
+I like honey better than sugar.
+My bedroom is dirty. Your bedroom is clean.
+Your goodwill sank into my heart.
+He who is present, is the vizier.
+Please tell us about your son.
+Let's throw this away.
+He laughs at his own jokes.
+Please excuse me, I must go now.
+The autumn wind is whispering in the trees.
+This is what you said.
+Oleg took witchcraft classes.
+I was one of the suspects.
+He's been looking for you.
+You shaped the clay into a vase.
+Did you arrest anybody?
+Many people everywhere in the world want peace.
+We've recorded a pared-down version of the song.
+It feels fresh outside after the rain.
+My sisters were with your mother today.
+Daniel put up the list on the wall.
+When are you going to start studying French?
+No smoking in the restaurant.
+It isn't so far-fetched.
+You're the only one I think about.
+We sometimes lack patience with old people.
+The excited crowd poured out of the stadium.
+The job never ends.
+I don't eat meat. I eat only vegetables.
+How many other people know about this?
+He said that he'd do that if I did.
+I didn't feel anything.
+How vulnerable are we to terrorist attacks?
+I don't have time now.
+It was romantic to walk in the moonlight.
+Pass the dough over the beaten eggs before frying.
+We need to ask for more time.
+I wonder if I'm hallucinating.
+It would be good if you could come with us.
+Are there any other possibilities?
+I've already signed the contract.
+I think French is the most beautiful language.
+I never quite knew what was going on.
+The train was so packed that I had to stand up during the whole trip.
+The elf put a hat on to cover his ears.
+He saw the light.
+Corn on the cob is a summer delight.
+I heard you got here early today.
+I've always trusted them.
+I can save it.
+English is the third most spoken language in the world, after Mandarin and Spanish.
+This train has seven cars.
+It looks like you're as tempted to do that as I am.
+Wake me up at six, please.
+He had to commute to work at his first job.
+They did not escape from prison.
+We're out of our minds.
+I was deeply impressed with his courage.
+I need that tape.
+You seem to avoid forming connections.
+The train started to pull slowly away from the station.
+You like to do that, don't you?
+Are you sure that you want to do this?
+Their project hopes to revitalize a moribund language.
+Ask her once more.
+They repaired their bicycles.
+She told me about her trip.
+For aesthetic reasons, a lot of young people bike without a helmet.
+In the long term, Algeria has a bright future.
+I can't tell you any particulars. I am bound to secrecy.
+I challenged him to a game.
+What the fuck were you thinking?
+You're impatient, aren't you?
+Donald covered himself with a veil.
+The meeting has been postponed.
+We had to open our suitcases.
+My biggest goal is to share with people the best parts of my life.
+My family means more to me than my life does.
+Never mind what I just said.
+Have you seen anything unusual lately?
+It would be best if you gave up.
+We should leave right after breakfast.
+I wish I'd been able to be there.
+All of my books are digital.
+Is his house big?
+She spoke in a gentle voice.
+They were forced to resign.
+What Marie said was nothing but lies.
+Without dung beetles, there would be a lot more dung in nature.
+A man who drinks water is always healthy.
+There is no greatest positive integer.
+Last winter was very hard.
+We talked about many different things.
+We believe we're seeing signs of incipient fascism.
+Rodrigo became a danger to Melissa.
+She smiled a charming smile.
+You are neither alive nor dead.
+Igor took out his compass.
+Algeria has a very strong historical relationship with India.
+Your room is at the end of the hall.
+He did all the legwork.
+That would be the best.
+There's a chance we'll be late.
+He was extreme right-wing.
+The woman doesn't work.
+Seriously, stay in touch.
+With the way my luck has been running, it'll probably rain tomorrow.
+Dan always carried a gun.
+Our only option was to fight.
+I don't have any friends who are willing to help me do that.
+What a great party!
+The walls of the small intestine are like a sieve.
+Maybe you should find another job.
+What do you do when you're cursed?
+Do you know how to cook fish?
+You can't make a rope out of sand.
+She disguised herself as him.
+Dave plays the fiddle in a klezmer band.
+He doesn't know what else to film.
+They say that they're not thirsty.
+My mother wrote to me and asked after my health.
+I wouldn't want you to think I was crazy.
+I believe that place is teeming with vermin.
+I thought that we had a good team.
+You did everything you could.
+I don't buy it.
+The barge floats on the river.
+I didn't like this museum.
+The lesson has ended and the children have gone out to play.
+Did you get any sleep at all last night?
+Even a child can answer it.
+Look and listen to me.
+The lake is deepest around here.
+I don't recommend watching this movie.
+Can you print it out for me?
+Please give us a chance.
+That's what they named her.
+There's so much I hate about this place.
+What is the difference between these stoves?
+I didn't buy the book.
+What was it like sleeping outside?
+You are German, right?
+It's less common for a home in the US to have a landline nowadays.
+Clean all the pots.
+She bobbed at him.
+She said she hopes you'll do that.
+I have no idea who you're talking about.
+Last month I spent a fortune on the telephone bill.
+The light outside is slowly fading.
+What do you say to a bus tour next Saturday?
+The Mayor already has a few ideas for next year!
+Why don't you try it again from the beginning?
+Leon wasn't documented and no one knew who he was.
+I think he's intelligent.
+I am angry today.
+Someone drank from my glass again.
+I'm not a dictator.
+She went to Paris to see her aunt.
+Do you have the address?
+I'm waiting for the arrival of a friend.
+Figs are grown commercially in Algeria.
+This history book was written by secondary students.
+Sophie was so hungry that she ate everything that she could get her hands on.
+Do you really want to risk that?
+How do men flirt?
+I broke the stove.
+They told me they could fix it.
+Uncertainty is also a part of science.
+I don't think that you'll have much fun doing that.
+I happen to like the president.
+I was about to leave when the phone rang.
+The train stopped suddenly and I spilled my coffee.
+I thought that it might be fun to go to Boston this weekend.
+Somebody ate my Easter egg.
+Move your car, please.
+The seasoning is just right.
+How long does it take to learn a foreign language well?
+It has been a while.
+Don't say a word.
+Would you please hold on a second?
+I want to do it, too.
+They have nothing in common with her.
+Give me one good reason why I should help you do that.
+Children and fools tell the truth.
+I went to the library.
+Gunter pulled the car onto the side of the highway.
+Did you know any of that?
+I'm not sure how to approach him.
+Was there an issue that forced you to come back home unexpectedly?
+Will you wash up?
+Inuit languages spoken by the Native Alaskan people are in danger of dying out.
+Can you recommend a good place to study French?
+Water boils at one hundred degrees.
+We watched the game while holding our breath.
+My aunt has been dead for two years.
+It'll open your eyes.
+Nothing you can say will change my mind.
+He'll take the kids home.
+She came across to speak to me.
+I'm looking for a double room.
+That store doesn't close till seven.
+He made his will last year.
+It couldn't have been done by itself.
+If you study Japanese every day, you'll get better at it.
+Hold your tongue and listen to me.
+Whatever happened to him?
+Are they far away?
+He often finds faults in things.
+I'm almost five eleven.
+He has not written to them for a long time.
+His success encouraged me very much.
+It is impossible to overemphasize its importance.
+Do you play sports?
+It's been three years since my younger sister got married.
+Why didn't you ever tell me that you'd been in prison?
+It's absolutely incomprehensible how this hotel has four stars.
+I'd like to borrow your notes for a bit.
+Wait here for me.
+What sunglasses are pink?
+That was a pretty stupid thing to do.
+He may have cheated on her.
+I'm quite good at tennis.
+They always wake up early, even on Sundays.
+They knew they were going to be OK.
+I tried to get here on time.
+That's gratitude for you.
+That young man is exceptionally good-looking.
+He likes going for walks.
+Being alone is above all just a kind of mental plaster cast, in which something heals.
+I have almost nothing to do.
+No formal agreement was ever reached.
+The sky in the east is clouded.
+You didn't tell them what I wrote in that letter.
+We didn't want to change it.
+They strive for continuous improvement.
+Why does everyone think I'm stupid?
+This is her favorite flower.
+Can I tell you that you're a beautiful girl?
+Universal values are available in Islam.
+Unfortunately, this isn't my area of expertise.
+I'm dying for a beer.
+He trembles with fear.
+Do you want to go to the concert with us?
+Thanks to you, I am going to understand everything.
+Personally, I disagree with those ideas.
+I only want to help the team win.
+I'm going to stop smoking.
+She dances well, but she has to move more.
+Twins often are very similar.
+You're in the countryside.
+I got off at the wrong bus stop.
+Don't forget to go see him tomorrow.
+We have nothing more to teach you.
+It's funny how things turned out.
+His mistake caused a big problem.
+He meditated on his past life of suffering.
+The compact edition is a lower price.
+Those gifts all came from Boris.
+You helped him, didn't you?
+Her dogs are barking.
+I leave for London tomorrow morning.
+Do I really have to give a lecture?
+I don't like stubborn people.
+His limbs were stretched until the pulled out of their sockets.
+I don't think that I'd mind eating Chinese food every day.
+Continuing to play the victim helps no one, especially not yourself.
+We all want to find love!
+Trolleybuses used to run here.
+They knew that they wouldn't be arrested.
+Give me your cell phone.
+We have only three days.
+The army is in charge now.
+I didn't want to cross the picket line.
+She was in the hospital for six weeks because she was sick.
+A helicopter buzzed around overhead.
+She took a flowerpot in.
+She gave me a jab in the ribs to wake me up.
+The difficulty has intensified.
+Your prompt reply is urgently required.
+This is just outrageous.
+I forgot to open the shutter.
+What will you do back in Boston?
+It was very weird.
+These clothes don't fit me.
+This castle is more beautiful than that.
+Please send this by sea mail.
+I wasn't interested in the job.
+Why should I learn Berber?
+When candles are out, all cats are grey.
+My dad was an actor.
+Is it all necessary?
+You can't read a story if you don't understand.
+Are you going to a movie?
+I want you to come over.
+You carry the calm of the night within you.
+You have to take off your shoes before entering a traditional Japanese house.
+It's hard to handle crying babies.
+How long's it been?
+Sorry, I'm in a hurry. I don't have time to explain this in detail.
+She's your friend, isn't she?
+Oh, I'm sorry. I guess I have the wrong number.
+I wasn't the worst player in our team.
+This is my favorite soap opera.
+Fry four cloves of garlic.
+That store sells textbooks.
+Who doesn't like fruit?
+Courage is a love affair with the unknown.
+It's a lovely day today.
+The server is lagging again.
+He was disfiguring himself.
+All the passengers aboard were killed in the crash.
+There is some bread on the table.
+Let's go back to the camp.
+Wow, what a pretty ring!
+Everyone came to look.
+This cuisine is seasoned to evoke the esprit of Paris.
+China will launch an amphibious attack to invade Taiwan.
+I'll sit on the couch.
+I couldn't hear what was happening in the next room.
+Everyone knew that he was a bookworm.
+I know you're looking at me.
+I was also on that plane.
+She has begun to play tennis not so much out of curiosity as out of vanity.
+My room has a large closet.
+His first novel caused a sensation all over the world.
+I don't understand a single word of what she says.
+We have all contracted Covid.
+He let us know he needs to do that.
+You're not nearly as funny as you seem to think.
+I'm running out of steam.
+Our children are in trouble.
+Jessica got mad and refused to go on a date with Mark.
+My sister is three years younger than I am.
+I'm open to everything.
+Soldiers barred the way to the city.
+My neighbors are peaceful people of good will.
+There weren't any children on the bus.
+I don't have much time for reading these days.
+They're all by themselves, aren't they?
+You'll probably need a flashlight.
+I promise I'll make more videos soon.
+I need somebody to believe in me.
+I got better after taking that medicine.
+These pants are loose.
+How did you know about this place?
+I trusted him, and he stabbed me in the back.
+The house is old.
+I didn't think I would have to do that anymore.
+You've got to help me! Every night I have the same horrible dream.
+We can't leave Boston until we finish this job.
+Isn't the table dirty?
+Chaos isn't a pit, but a ladder.
+Not everyone does that.
+I think that I was taken for a ride.
+He finally slept with her.
+I'm going to wear a shirt.
+I know what both of you are thinking.
+I intend to ask my husband the moment he comes back.
+I can't understand what you like about him.
+We have to change our plans.
+Why is it so warm here?
+I couldn't understand him at all. What about you?
+The FIFA peace prize committee must be so embarrassed right now.
+They haven't woken up yet.
+Someone should look into this.
+It's my turn to drive today.
+He said the explosion woke him up.
+It seems to me that things would be better this way.
+This lighter won't catch.
+I think fashion models today are too thin.
+I don't think a rapprochement between us is the best thing.
+Everything changed in Algeria.
+I intend to do that by tomorrow.
+We can have a drink before we go to the restaurant.
+I haven't been informed yet.
+Every ideology is basically like a religion. Every religion is also an ideology.
+There's someone with them.
+Instead of working on Christmas Day, you should be home with your children.
+I perceive myself as my own god.
+We stayed at the Hilton.
+We need an air force.
+He had the cheek to ask me to help him.
+It isn't a good idea.
+I don't want to be a lawyer.
+The birds are whistling.
+They splashed water over me.
+They hope they won't be demoted.
+We all have to pay taxes.
+Give me one good reason.
+Which do you want to hear first, the good news or the bad news?
+The Industrial Revolution began in England.
+The miner likes to mine.
+Don't be so egotistic.
+They know that they should study French.
+Gabor no longer wanted to hang out with Olivia.
+I alerted the authorities.
+I don't know for sure whether I can do that or not.
+His intelligence is widely recognized.
+You've done a lot for us already.
+The hallway is slippery, so watch your step.
+Has anyone ever loved you as much as I do?
+You always say you'll take the rubbish out, but you never do.
+I have to tell them.
+I can easily read French.
+It's a new book.
+I saw many patients at the hospital, some of whom were badly injured.
+We never got the chance to do that.
+We were in a sweat.
+I don't think that I've ever seen anyone try doing that before.
+They were hanging up the laundry.
+I'm fairly certain that that isn't going to happen.
+He read a book written in English.
+I'm not working tomorrow.
+Carlos wanted to take back control of his life.
+Not everyone can have noble blood.
+I'm sure there's a connection.
+This is a stick-up! Hand over all ya' got or you're fuckin' dead!
+This isn't my hat.
+The National Liberation Front was Algeria's independence movement.
+You're not scared anymore, are you?
+This is an unsolvable problem.
+We went to Rome, where we stayed a week.
+I didn't think that you'd buy that.
+Sorry. I made a mistake.
+They failed to take into account the special needs of old people.
+Don't do that anymore.
+You turned out to be right.
+That tall man is Mr Smith.
+Twenty people were detained by the Federal Police.
+Since it rained, I did not go.
+She brought me many novels in German.
+I'm going to shop.
+On whole, the plan seems good to me.
+Unfortunately, I have to go.
+Busy as she was, she came to see me.
+He told everybody he was thirsty.
+I have one more demand.
+We're a lot bigger than you are.
+The rest is history.
+You really have a severe myopia.
+You've been in an accident, but you're going to be all right.
+Abraham then immediately returned to his servants and so they went home with heavenly blessing.
+I sure hope that this is a dream.
+We went back to Boston where we stayed for three weeks.
+What you say may be true...
+Our experiences left us with everlasting scars in our souls.
+What the hell did you do?
+She seemed absolutely sure of herself.
+Politicians are not more than cockroaches, especially when they think they are dictators.
+I thought that it over and decided not to go.
+He still lives in Algiers.
+Adriano didn't quit after that.
+Homosexuality is a taboo subject in Algeria.
+Browsers are very useful.
+Our roof was blown off in the typhoon.
+I can't believe you were the smartest kid in your class.
+No one has ever told me that before.
+You need to learn how to change light bulbs and switches.
+What a wonderful night!
+They built a foundation based on trust.
+You've been warned about this.
+The reform of the Chinese healthcare system is an acknowledgement of its failure.
+I was forced to lie.
+She never knew spring.
+Never promise what you can't deliver.
+Let's have some fun, shall we?
+I always get an A in math.
+She told him that he was wasting his time.
+Let me go instead of you.
+Why can't you fulfill my request?
+Sometimes, I am angry at everything.
+This is the most I can take.
+He'd become sucked into a criminal life.
+You are going to have a little sister.
+A little nudge might help.
+I knew that nobody cared about me.
+He came through the accident without harm.
+Do you happen to know Professor Brown?
+What do you think to having our tea outside this evening?
+I have never met a more sinful person.
+I can't believe that really happened.
+I don't want to learn English.
+The movie tells the story of a cow who fell out of the sky.
+This is a serious song!
+Dan parked the rental car near the police station.
+There's a cat living in that shop.
+I haven't called the police.
+I don't think it affects us.
+I hope to see her tomorrow.
+Today's paper gives further details of the accident.
+The sun is already half sunk in the water.
+That's a terrific idea.
+Do you actually know how to do this?
+The July which immediately succeeded my marriage was made memorable by three cases of interest.
+Do you think about adopting a pet?
+These are our customized color palettes.
+Are you going to eat your roll?
+Do you mind if I leave for a few minutes?
+Why do these things happen to me?
+Did you guys grow up together?
+Lock the window before going to bed.
+His voice still rings in my ears.
+Thank you, but I'm afraid I can't.
+That isn't for you.
+The whole thing weighs seven kilos.
+I must have this.
+You might like Chuck's Diner.
+The roses are ours.
+He washes his car every morning.
+There is only one book on the desk.
+Obama came to Japan offering reassurances that the Japanese leadership has been wanting to hear.
+I gave a speech about Boston.
+I heard about it in school.
+A princess doesn't wash herself.
+Leon uses the device too often.
+I know I did the wrong thing.
+We should've stayed in Australia for a few more weeks.
+I'll help you do that after I've finished doing this.
+I have a small favor to ask of you.
+Someone's shouted my name.
+These cookies aren't expensive, but they taste good.
+Some of the pupils were late for school.
+I try to keep business and pleasure separate.
+I haven't read any of his novels.
+Where can I take a tour of the city?
+It is forbidden to smoke.
+I don't think that there's any correlation.
+Could you turn the lights on?
+There are more girls than boys at our school.
+I'm really mad at him.
+Carlos agreed to do so.
+Ann can't find a job.
+Is it okay if I call you sometime?
+Can we get closer?
+The intruder didn't take anything important.
+I was there to learn Berber.
+You won't get a chance to do that.
+My mind is a blank.
+The orchard is surrounded by a fence.
+Mark didn't recognize Jessica right away.
+I had a pretty good day.
+I'm taking the afternoon off.
+He listened to his teacher, made the revisions, and improved his grade.
+Michael smiled and took his sunglasses off.
+I don't know why I'm so tired.
+It doesn't look to me like the situation has improved.
+An unconditional love is love without coercion.
+We started to make some things for him.
+Please do that by tomorrow.
+I need to find her now!
+Angela has to go get the money.
+We can't trust rumors.
+Did you want to go to Australia with us?
+Today we have a lot of things to do.
+I'd like to apply for citizenship.
+The words 'beautiful' and 'ugly' are relative terms.
+Is Sao Paulo a good place to live?
+Dan was only six years old when he was abducted.
+He was hesitant at first, but eventually he warmed up to the idea.
+I had all the money stolen and was in trouble.
+Don't dismiss any possibility.
+For God's sake Bob, lighten up.
+It was clearly a foul.
+She sacked the chambermaid.
+Many Berber speakers are bilingual in Arabic.
+It isn't really that expensive.
+What do they hope for?
+I found a good deal online.
+He's younger than most of us, but he's shown himself as a competent specialist.
+How many liters of water did you use to dilute the acid in the test tube?
+He ran a great risk in the jungle.
+You have to hurry if you want to go with them.
+This is just as hard for me as it is for you.
+They told me where they parked their cars.
+I know you're not doing that right now.
+The cow would have given her milk had the time been right.
+She's an active citizen.
+Do you reckon humans will cause their own extinction?
+You should listen to your mother.
+I want you to come at once.
+What do you think of my new dress?
+He is always messing about.
+Is this an observation or an inference?
+There's something to wash in the room.
+Corporate governance and accountability are being strengthened.
+He was sick yesterday, so he didn't come to school.
+I can't do anything.
+I've decided to shave my head.
+I'll go to the toilet.
+How did you get to the hospital?
+When did they register the names of the members?
+Thanks for helping me!
+Don't let that dog come near me!
+I reflect on what it means to exist.
+What is this mush?
+Elliptical bicycles are a good option for exercising indoors.
+The subscription is only worth it if you travel a lot.
+I feel a little bad today.
+A dog jumped onto the chair and lay motionless for five minutes.
+She never goes by car.
+All the charges have been dropped.
+You broke the window.
+I'm forever in your debt.
+We got ourselves into a messy situation.
+All the shutters were down.
+He lives in the castle.
+Jonas crossed the river.
+We've been through it before.
+Everyone does what he wants.
+I don't want to stay here a minute longer than I have to.
+I have to come.
+She's not afraid of anything.
+We're going to community college.
+Just ask the old folks!
+It would have been safe to do that.
+Mr Smith is in charge of the class.
+You lied to her!
+Stay overnight with us.
+He promised me forty thousand dinars.
+There are only females left.
+I've never traveled abroad.
+We were just joking around.
+Let me ask it another way.
+William's grandmother's house always filled him with nostalgia for his childhood.
+I'm a little tired, that's all.
+We've got to get back.
+Leon doesn't know if the head was real or not.
+The scientist hypothesizes that global warming may cause increased rainfall.
+You ought to throw it out.
+It's just round the corner.
+You have already seen his father.
+This singer is an idol of the youth.
+It is dangerous to cross the street here.
+This one is full.
+Take everything out of the mailbox.
+Michael begged his mom to send him to Algiers.
+She came into the dining room to find it empty.
+Lemongrass is an essential ingredient in Thai cooking.
+How about this red hat?
+This place is cool.
+I guess that's possible.
+Gunter played on his computer and watched Netflix.
+There is nothing to him.
+The garbage collector comes three times a week.
+If you open the window, you need to remember to close it.
+I eat a lot whenever I am nervous.
+When does the book go to press?
+I'll understand if you want to wait.
+That's a good question. I wish I knew the answer.
+I'm guessing you already know the answer to that.
+That's where the shoe pinches.
+Do you want some cheesecake?
+You'd regret doing that.
+Is it true that cockroaches don't have wings?
+It was bound to happen sooner or later.
+I cannot speak German.
+I ask myself what could make people do things like this.
+Michael is giving Linda a wrong idea by accepting that present.
+He gave his son a drum set.
+Latvian girls are among the best girls in the world!
+His car ran into a tree.
+Hiragana represent sounds, but kanji represent ideas and concepts.
+Unfortunately, this is all there is.
+She took the ring off her finger.
+He has much economic knowledge.
+How many people did you see waiting at the bus stop?
+She threw on a coat and set off.
+I am very happy to see you.
+I saw the dog.
+Mornings are never good.
+Come on in. Don't be shy.
+You needn't have written your name.
+The teacher gave me detention with him during his lunch.
+The contest ended in a draw.
+There is some milk left.
+The teacher showed us how to use a computer.
+I really need to do that.
+Sire, I had no need of that hypothesis.
+This time, you won't escape punishment.
+Why is it important to learn languages?
+You own a pistol, don't you?
+Father is proud of his car.
+I know that I can do that.
+We took plenty of photos to capture the moment.
+It is you who needs me, and not the other way round.
+I'm surprised there wasn't more damage.
+We met for the last time.
+We were all at a Halloween party.
+The back roads are very windy.
+The room gradually got darker.
+Her name was spelled wrong.
+Do you really think that we have a chance to win?
+The troops landed in Greece.
+Thomas is a French student.
+Spices and condiments should be arranged in an orderly manner.
+It's simply out of control.
+I heard about it too late.
+They do nothing but complain.
+We're like kids in a candy store.
+They couldn't believe their luck.
+Why are you sitting on the steps?
+I want you to be my partner.
+The raucous crowd electrified the atmosphere.
+That can't not disconcert me.
+Robert doesn't need a mask.
+Elijah explored the forest trails.
+Are you sure there's nothing else I can do to help?
+He made a mistake.
+The decision's already been made.
+I can't remember what I ate last night.
+Dan didn't even protest.
+My pain is excruciating.
+He never talks about his kids.
+I'd be depressed if they asked me to quit the team.
+Oleg saw something moving in the dark.
+In this case, that doesn't really apply.
+He heard a person say his name.
+You bought some bread.
+They are considered the greatest rock band in history.
+I'll always carry you in my heart.
+He's a hopeless case.
+Is Germany as beautiful as the Netherlands?
+He said he wanted to do this.
+I'm sorry that I went to Boston.
+I don't know where I left my umbrella.
+Oil is more precious than human life to you, right?
+If it turns out that I can't come, I'll ring you beforehand.
+He contracted a hernia from carrying heavy loads.
+I knew I had to stop.
+I don't think you should quit your job without a backup plan.
+She sat down on the couch next to him.
+After another minute, he took the hot dog out of the pan.
+The commissar interrogated him.
+The cat is hungry.
+With enough effort, anyone can beat the odds to become a winner.
+They don't have this kind of money.
+There used to live a scary monster.
+I'd never let you starve.
+She pretty much spoiled the whole movie.
+She's a second grader.
+How much do all of these cost?
+I'm losing visual contact with you.
+I saw her get in a car.
+How come you know him so well?
+Both of these are Song Dynasty block-printed editions.
+She was unable to restrain herself.
+In old age, even the devil would enter the monkhood.
+The population of the city dropped by a third.
+He wanted to die.
+She was absent from school without notice.
+You are very trying to me sometimes.
+I can afford to be generous.
+I've got only a week left before school starts.
+They gave me a line of credit.
+Cherry blossoms are very beautiful.
+Their business came to a standstill for want of money.
+Giraffes are so iconic.
+If I gave you three hundred dollars, what would you buy?
+They build strong relationships through collaboration.
+I can't pay all my bills this month.
+These towels absorb a little bit better.
+There must be an explanation for it.
+We want out of here.
+Berbers are an incredibly diverse group of people.
+We want to book a trip to Serbia.
+The West wants to govern the globe and steal its resources.
+He likes being cool.
+I deserved to go to prison.
+I don't like people who stare at me.
+Would you mind my opening the door?
+Does anybody have a problem with this?
+It was like a scene out of a movie.
+The skilled use of foreshadowing in a story can keep the audience hooked in anticipation.
+That sounds like a smart idea.
+We'll eat lunch on the bus.
+I sell this to you.
+You should spend more time with your dog.
+He sent me his picture.
+This is the drawer where he keeps his belly button rings.
+You're late, aren't you?
+I think I've waited long enough.
+What time does class start for you tomorrow?
+He's a fast walker.
+I have a love-hate relationship with that trite yet colorful book.
+I didn't buy everything I needed.
+How long have you been at this?
+I need a pan.
+Life is great right now.
+You have been supporting me since I started singing.
+Even if I admit that, I cannot agree with you.
+Here's my second German sentence.
+Exactly what's the accusation here?
+He suddenly fell ill.
+Working hard is my personal fuel engine to keep my mental health sane.
+All of us climbed aboard quickly.
+I'm also dating someone from the office.
+Toronto isn't in the United States.
+I hope that our troubles are over.
+There's someone up there.
+I like skiing, but I'm not a very good skier.
+He embraced his son.
+Next month is October, isn't it?
+Building up too much stress has a detrimental effect on your health.
+Algeria is so large.
+The House has already approved the measure.
+I think I was in love with her.
+I see a woman.
+I had a fight with my girlfriend.
+Now that I'm married, I don't have to work at the hospital.
+His eyes showed a profound sadness.
+Did you like your gifts?
+Have you seen any movies lately?
+A national army still doesn't exist in Libya.
+In Appalachia, no ecosystem is better at capturing carbon dioxide than red spruce forests.
+His gaze wandered aimlessly.
+From the outside, her house doesn't seem big.
+It was stupid of me to believe it.
+Is this all we can do?
+I need to be alone to think.
+Vladimir put his socks on the table.
+My little brother did it, not me.
+There is a soccer match tomorrow.
+You may have as much as you want.
+She didn't have to go to Boston by herself.
+In footnotes, book titles and journal names are written in italics.
+There are many good people in this world.
+He could understand her.
+I don't like multitasking.
+We knew she wouldn't be able to come.
+We were very proud of our son.
+Why are you still working?
+Their job is to call clients.
+Can such a thing happen again?
+I didn't think we could do that by ourselves.
+Do you want to get fat?
+This house isn't so big.
+How many animals have been culled?
+Is there any movie that you could watch over and over again?
+They said that they were grateful.
+I hope you've never done that.
+Why don't you try this bra on?
+Do you have any idea when those pictures might've been taken?
+What do you suggest that we do now?
+The threats to this strategy are numerous.
+I really should leave.
+I used to be a teacher.
+Tobias's door slammed shut.
+What do we want? Justice.
+Michael was clearly on drugs or at least on something.
+I've always trusted you.
+She unburdened herself of her terrible secret.
+What auxiliary materials or machines can presenters use when making a presentation?
+The enemy gave in without further resistance.
+I don't think that they're safe.
+This can't be happening.
+Each time you learn something new you must readjust the whole framework of your knowledge.
+Portuguese, Spanish, French and Italian are Romance languages.
+Where did I park my car?
+Intellectuals used to be able to debate in the streets.
+I think this belongs to me.
+No one is here.
+I am coating the wall with lime.
+I did something I regret doing.
+Isn't there anyone you know?
+It's too cold to go swimming today.
+Unsolicited advice is often ignored.
+It was a mistake to come here tonight.
+She ate and drank.
+We've endured for long enough.
+Do you mind if I stay here?
+It isn't true that you're infallible.
+There are many places to visit in Boston.
+I'm sorry, but we don't have much time.
+There was empathy in his eyes.
+How many brothers have you got? How many sisters have you got?
+I'm sick and tired of hamburgers.
+Can you help me understand better?
+No one criticizes him and lives.
+This rule will obviously remain in place until the politicians win people's trust.
+I knew you'd find them.
+I don't think that it will rain, but I'll take an umbrella in case.
+I want that fruit.
+The cat plays by itself.
+Let's forget it for now.
+I arrived too late to hear his speech.
+This is a list of things I have to do.
+What is digital infinity?
+This is an exploiting system.
+When it comes to fishing, he's an expert.
+My big sister is two years older than me.
+They could retire if they wanted to.
+He always relies on other people.
+When was the last time you called your parents?
+Is there anything you would like to ask me?
+Ali's grandpa was a lathe operator.
+He says that if he were there he would be happy.
+He yelled for help.
+I've become a man.
+I'm sending a parcel.
+They decided to grab some pizza.
+My wife is a teacher.
+I saw you following them.
+There are no five-euro coins.
+Dear Santa, I want a girlfriend for Christmas.
+I can't answer your question with any certainty.
+I'm not on call tomorrow.
+Kneading dough requires skill.
+Back then, they plowed the fields with horses and mules.
+I like your idea.
+I'm learning Spanish, English and Japanese, and I love to help others learning them too.
+Yes, my name's Anna.
+Michael was acting strange yesterday in the car.
+Are you talking about jail?
+I thought you said you didn't know how to speak French.
+Algeria has lots of natural resources.
+Not all of the museum's items are on display.
+Your eyes are black.
+A weird noise came from that creature.
+Nobody will buy such a hovel.
+How many months will it take to do that?
+He's good at mental math.
+He got up and left in the middle of the discussion.
+I think we need to take a little break.
+That seemed to scare them off.
+There are some stores that will discount the price.
+He didn't want his picture taken.
+May I eat that apple?
+I'm not the type to impose myself on others.
+I don't understand your mind.
+They sold their cars three weeks ago.
+They were from Boston.
+I hope he gets promoted.
+Has he got a stomach ache?
+I'm not OK with this change.
+They're searching for the body.
+I wanted to do that again.
+I won't let you pay.
+Zebra shadows don't have stripes.
+It seems to be about noon right now.
+The ache in my body is a reminder of the fun I had.
+He hid behind a garbage dumpster.
+It was unbearably hot.
+He explained the literal meaning of the sentences.
+I like the fish.
+Have you ever consoled a friend?
+When I look in his eyes, I see my life in pink.
+I was angry with myself for making so many mistakes.
+No, take your time.
+She's forgotten what she was going to say.
+They don't want to leave Mom alone.
+The street was transformed into an outdoor art gallery.
+I want to borrow your car.
+Is this a real diamond?
+Elias can't control himself.
+You'll have to do that by yourself.
+She looked like she was happy.
+I've seen how you look at her with your puppy eyes.
+We know that doing that will require a lot of money.
+The shop raised all of its prices.
+Memories of our conversations feel like echoes.
+Many of us preferred to drink wine.
+I promise to write you email every day.
+It was a pretty little house, strong and well-built.
+It is essential that some kind of compromise be reached between Pyongyang and Washington.
+I'm not a ghost.
+I laughed, but no one else did.
+I found something better than that.
+You are a woman, she is a girl.
+It really doesn't seem fair.
+He scalded his arm.
+He said he's quit drinking.
+The space journey tested their skills and endurance.
+I ought to have made a hotel reservation earlier.
+My parents think that I'm still too young to go downtown by myself.
+I grabbed my gun and ran outside.
+We skinned the gazelle.
+You're the best sister in the whole world.
+Did you listen to music last night?
+They claim they were misquoted.
+We saw a procession of giraffes.
+Before I couldn't tell the difference between marble and tile. Now that's all I can do.
+I have a medium-sized house.
+I didn't know that you were in here.
+He's two years older than I am.
+Does Algeria need to focus on the service sector?
+The problem before us today isn't a new one.
+What a great thought!
+Are you going to bed?
+We're feeling pretty good about it.
+You love me more than I love you.
+They forced us to do that.
+I've killed my sister.
+I prefer it to stay that way.
+I know I'm dying.
+She said she was unconvinced.
+My French teacher told me that I needed to rewrite my essay.
+I will have her call the patient.
+It is too quiet.
+Remember, don't touch the stereo with dirty hands.
+Has this thing appeared again tonight?
+He has gone to Hokkaido.
+Just look at his face, it'll tell you everything.
+The managers think that it isn't exciting to eat.
+I don't think that was intentional.
+He was somehow able to get me into my bed.
+They did not have time to search for it.
+Is anyone here willing to do that?
+This is so epic.
+How many times do I have to repeat that she isn't my friend?
+Sing me a love song.
+I want to improve my penmanship.
+He left the last page blank.
+My dream is to be fluent in French.
+The assault has left scars.
+What do I get?
+Algeria has a lot of overseas workers.
+Where do you want me to put all this stuff?
+Now I know Berber and understand it.
+He noticed how thin she was.
+He keeps all his savings in the bank.
+Maples turn red in fall.
+We're going to the country.
+Did you buy bananas?
+The explosion took place because of his carelessness.
+Why can't we be more like them?
+They're a motley crew.
+I slipped and fell on the crosswalk, just when the light turned red.
+Interest rates are going up.
+I'm sorry, but I'm not confident of her success.
+Have you ever had an operation?
+I can't wait for it!
+I think we have bought everything we need.
+Daniel challenged the principal to stop him from coming to prom.
+Do you want me to leave or to stay?
+You should focus on the road when you drive.
+Which day of the week is your French class?
+My dog is pregnant.
+She is a pleasant person.
+Excuse me. I believe that's my seat.
+He has time to take walks.
+Prostitution is legal in France.
+She said hello, but you weren't looking.
+To lose faith in God is to lose your guide.
+God is good, there is no devil but fear.
+He went to the game.
+I have plenty of time, so I can sleep for a while?
+You need to make a left here.
+China has changed and the US has to acknowledge that.
+If your parakeet looks sick, let me know immediately.
+My son is now as tall as I am.
+Among others things, a lied by Schubert was played.
+Can you fall in love the moment you see someone?
+I remember that episode.
+We translated a Japanese novel into English.
+Felix asked Sandra if she needed a ride.
+You don't do that very often, do you?
+She allegedly went to the store.
+You're talking just like your father.
+I just realized something.
+The tree is not ready yet.
+He never quarrels with his wife in public.
+But it's in the newspaper!
+You seem to be able to do what no one else can do.
+The toilet flushes automatically.
+I will send someone to help you.
+The heft of the titanium cube was unmatched.
+She likes strawberries and her sister apples.
+We don't know yet what will come of it.
+You should be celebrating!
+He's loaded, but he's not happy.
+It started right on schedule.
+He has a lovely little house.
+Paul hitting the brakes too hard.
+From shock, Elias turned to anger.
+Don't leave your smokes in the bathroom.
+This is one of the most beautiful coral reefs in this area.
+I saw people wearing jeans.
+I'm glad you're going to come.
+I'd like a room with a view of the sea.
+She said that she likes to ski, too.
+He values persistence over talent.
+The first will be the last.
+But that's not all.
+Governments borrow money by issuing bonds.
+The horse jumped over the wooden fence.
+He lives in a bungalow.
+I'd like to know how much the meal was because I'd like to pay my half.
+We're planning a beach trip for Saturday, but rain might throw a wrench in the works.
+You can't agree with everyone about everything.
+Stop arguing. All this leads to nothing good.
+Oh shit, here comes Anna. That's all I need!
+I'd like another cup of tea.
+You all know how I feel about that plan.
+Get the oranges out of the fridge.
+Stefan opened the door without thinking.
+Karl wants to finish what the law couldn't.
+That sounds like a good investment.
+Where will you eat this evening?
+We don't like our neighbors, and they don't like us, either.
+Panthers are wild animals.
+I don't know how to do that yet.
+Did you also notice that?
+I know this district.
+She bought another handbag.
+I know you're unlikely to ever forgive me.
+It's got to mean something.
+He only has one try.
+If nobody gives us a ride, we'll have to hoof it.
+The system here works really well.
+I understand you have a problem and want some help.
+Her friends respect her.
+I don't speak Berber very well.
+His theory was totally impractical.
+The government is encouraging Algerians to save for their future.
+I knew he would talk about me.
+The police want to talk to you.
+Why is the cat in the dog's kennel?
+You looked like you were offended.
+Emma likes relishing strawberries.
+It rained for three days on end.
+My friend lives in Quezon City.
+This will keep you in the game.
+You were about to tell me something.
+Both sides are threatening war.
+The country ceased to exist.
+I think you'd like that.
+You didn't show up.
+His symptoms have intensified.
+She stole something from him.
+The beans are then ground into a mash.
+The blow made me see stars.
+Do you want to go out to a movie with me on Friday night?
+Tell him to stay put for now.
+He's very efficient, isn't he?
+Janos put up a fence to keep his German Shepherds from getting out.
+Dan asked Linda how she became interested in archeology.
+I had neither kith nor kin in England.
+How many apples do you have?
+She has bright teeth.
+Pack only what's necessary.
+She forgot to tell him what she'd planned to tell him.
+There shouldn't be any commas in this sentence.
+Have you forgotten your obligations?
+I'm going to work with her.
+How do you know that he's already dead?
+Many prominent bourgeois philosophers in England are members of spiritualist and theosophical societies.
+School starts again soon.
+I really need to be alone right now.
+We're both attractive people.
+Am I the only who isn't having any fun?
+I need a new screen protector for my phone.
+The yelling turned to screams.
+Why do you hate the United States?
+Because my old ladder is broken.
+I'll pick him up later.
+He wants to know how he can lose weight safely.
+He looked like he was impressed.
+You'll have to teach me how to run this machine.
+Human beings are criminal by nature.
+My husband and I prefer to spend our time at home.
+Chemistry can be very complex.
+This method returns a string.
+Thank you for dealing with this problem on time.
+If you really want to know, all you have to do is ask.
+You could've done something.
+I think you can probably guess what happened next.
+Our website needs to be brought to life with eye-catching photos and videos.
+It would help if you did that.
+You should get into the habit of going to bed early.
+As soon as the new teacher entered the classroom, the students began to applaud.
+She must be kind-hearted to send you such a pretty doll.
+I don't want you to think I'm dissatisfied.
+I let him sleep until the afternoon.
+He couldn't stop staring at her.
+Elias ran after money and ended up marrying Sandra.
+In those days, ordinary folk couldn't afford real coffee, so they drank coffee substitute.
+My parents spoiled me a bit.
+I've got my confidence back now.
+When the dictator Francisco Franco was in power, he had many Basques and Catalans killed.
+From space, Earth seems relatively small.
+This is an unexpected opportunity.
+Maybe it really happens.
+A bottle of wine makes a great gift for Adriano.
+Please turn the car around.
+She wishes to be with her family.
+He shall receive a talent as reward.
+What does Islam mean for you?
+We have a long ways to go.
+I'm not waiting on anyone else.
+He says he can't hear anything.
+The candle grew shorter and shorter, until at last it went out.
+You look really pale. Are you all right?
+I've got to get to them.
+You're really overdoing it this time.
+Leon headed home to eat peanut butter.
+The motive for the attack is unknown.
+The cost of living in New York is very expensive.
+All of the books are mine.
+I know that you don't need to do that by yourself.
+She doesn't like onion soup.
+We're going to Mars.
+Let them know we're busy.
+What is it you want?
+I should have called first.
+You should've honored our deal.
+What's your alternative plan?
+I'm scared of making a mistake.
+Crying may temporarily lift a person's spirit.
+I always kept my word.
+I almost didn't have time to do that.
+Have you ever eaten sushi?
+It is certain that the price of gold will go up.
+I don't need to see any more.
+Null is zero and so is nil.
+That's a pretty big snake.
+Your children look healthy.
+The alien organism can still enter the station through the thrusters.
+That's no way to speak to your parents!
+I'll be there in about thirty minutes.
+I'll pick you up at five.
+Mark had to work.
+Besides, I do not know how to dance.
+A fierce wind blew the kid's hat off.
+Nobody told you it would be this way, did they?
+Please fill this water bottle.
+You know what happened.
+Igor rummaged through Anna's stuff.
+You broke up with me because of him, didn't you? You're gonna regret this.
+Maybe we just need to pay attention?
+This situation will take the shine off your reputation here.
+Lorenzo was making a lot of noise, making his presence known.
+I've been waiting here for a long time.
+I would be loved.
+Do you still need money?
+It is now December.
+I've been nosing around the office trying to find out the news.
+We have to be careful not to do that again.
+The smoggy air of Beijing makes me feel gloomy.
+You should've never said that.
+Could I get some temporary treatment because I'll be going back to Japan soon?
+She wrote the book about people she visited.
+I don't accept charity, even when the intentions are good.
+I wonder whether or not there'll be more snow this year than last year.
+It was very late at night.
+The lunar month is shorter than the calendar month.
+I thought you said you weren't going to do that.
+They aren't happy about this, are they?
+Count your blessings, not your flaws.
+Please turn down the music.
+Where are you traveling to?
+He agreed without hesitation.
+I've already been punished.
+What time would you like to eat?
+Please give me a chance.
+I'm going to kill someone.
+We read a comic book.
+That was a pretty slick move.
+You told me to come here.
+The cat is watching the mouse.
+Where goes man? Where his heart calls him to.
+We do not want to go to Morocco.
+I saw the film, which was not so good.
+You'll let us stay, won't you?
+I didn't notice my earphones were off.
+The National Liberation Front party is a major force in Algeria.
+Don't repeat those heinous words.
+There was nobody in the hall.
+It's a beautiful day outside right now.
+This is worth one million yen.
+Stick the gum in a wrapper before throwing it away.
+They swore that they'd never hit me again.
+That blue car over there is mine.
+He was wearing all black.
+There were flowers here.
+He's not afraid of death.
+I can be your angel one moment and your demon the next.
+They had to leave at once to catch the train.
+Explore your interests independently.
+They love studying music.
+Are you older than eighteen years old?
+How about a nice game of chess?
+Thank you for giving me hope.
+Leave the goblins alone and they'll usually leave you alone.
+These measures can prevent the disease from spreading.
+I think it looks great.
+There are a lot of birds in the forest.
+You're on the air.
+They did it themselves.
+I can speak a bit of French.
+I didn't arrive until the meeting was over.
+I promise not to look.
+If I met him now, I probably wouldn't recognize him.
+I think it's about time for us to leave.
+The car's price is very high.
+After we finish weeding the garden, let's go out for lunch.
+Lies abound and the truth is one.
+Are you in favor of the proposal?
+All of us want to do that.
+We go to Boston every year.
+I think they match.
+Factory waste has polluted the sea.
+I wrote a short story and won the competition prize.
+That is a high caliber rifle.
+English is the language of linguistic dictatorship.
+I don't think you really meant that.
+I'll see you again this afternoon.
+You all know what you have to do.
+Is this pen yours?
+A boy sleeping in bed seems to be an angel.
+The divorce was finalized this morning at the attorney's office.
+In Algeria, studying Berber online is becoming more and more popular.
+The water from this well is drinkable.
+He failed in business.
+I am an English citizen.
+It's no use telling me anything.
+Mike doesn't practice basketball on Monday.
+I found your pen under the table.
+It's cold, I must take a coat.
+What was that sound?
+I think you'll be a good dad.
+The door was partially open.
+What do you want to see in Boston?
+I can't keep up with him.
+The teacher made him stay after school.
+People seemed to be anxious about the future.
+He has his own business.
+I want a frank opinion.
+Can you spell that for me?
+I'll return the books to the library later.
+I'm busy now and can't play with you.
+I'm only a man.
+Within a couple of minutes, she had eaten up all the bread and cheese.
+I am going to speed up the video.
+I sold the cookies.
+You don't mean that, I'm sure.
+This is my first music lesson.
+Robert was driving Sandra nuts, but that was just the tip of the iceberg.
+I was very impressed by that.
+Maybe we should talk about this first.
+We will use the mean of all values as an average.
+I got lost driving back from town.
+He died of old age.
+Are you a camera? Because every time I look at you, I smile.
+He wasn't sure he had to do that.
+Can I borrow your shovel?
+You seem to have an asthma.
+There are a lot of animals in the park.
+Many trees were cut down.
+I intend to build an ice castle.
+Go on. You can do it.
+The fruit at the Garden of Eden was not an apple. It is a European bias.
+What's the scariest movie that you've ever seen?
+The whole population turned out in welcome.
+She finds the chair uncomfortable.
+She told me she wanted to die.
+That's an irksome thing.
+The museum had to close due to lack of finances.
+It's good you came.
+I'd rather eat out.
+You will ruin your youth there.
+Well, what about the economic price to be paid due to uncertainty?
+I'll boil the potatoes a little bit more.
+I met her in the winter three years ago.
+Aren't you going to open the envelope?
+Do you know how far Boston is from Chicago?
+Carlos left the restaurant.
+The plants were watered.
+I majored in history.
+I think I'm beginning to see the problem here.
+We'd better take up this issue immediately.
+Sophia has authority. She knows how to be obeyed.
+Our hotel faces the beach.
+You're a big family.
+We're very busy now.
+Can they do better?
+We have almost finished our work.
+I studied literature in Berber.
+The cold harms the roses.
+She is sitting on the bench.
+The monkey is in the cage.
+I'm sure it won't be hard to do that.
+I'm usually quite patient.
+I assume you wouldn't want to sing.
+In every problem hides a solution.
+He couldn't resist the temptation to kiss her.
+Corals can live for thousands of years.
+The fig jam is still warm.
+You don't keep your room very clean, do you?
+I saw a very interesting documentary yesterday.
+He looks pretty proud of himself.
+A tree has fallen over.
+First impressions are lasting.
+I'll be here this afternoon.
+I'm going to be out of town for a few weeks.
+I'm not really mad at you.
+Summers are very hot in Kyoto.
+She's cheating on her husband.
+We understand our own movements extremely well, and we can use them for reference.
+The blue flower is small.
+They say that they've lost their keys.
+After the last patient left, the doctor carefully washed her hands.
+Many parts of Africa were colonized by European countries.
+Since it is the wedding of my close friend I have to attend it.
+He looked like he was terrified.
+One can explore and explain only that which exists.
+How do we solve this problem?
+I will keep it in my bosom.
+There is no choice but to agree to his plan.
+I didn't vow to harm them.
+I'm glad this shop is close to us.
+A cup of coffee for me, please.
+Why don't you come outside and play?
+I don't understand what could've happened.
+The grass was growing so quickly, it had to be cut every week.
+The minister did not know that her colleague was still working at midnight.
+I thought that the food was too greasy.
+He is just an amateur.
+I enjoyed my trip to Europe.
+I want to eat steak.
+I made an honest mistake.
+Both of the boys looked tired.
+Up to now, we've always had luck with youth hostels.
+Don't be discouraged just because you're not all that talented.
+I bought everything you asked me to buy.
+Everyone believes something different, but there is only one truth.
+You aren't going to the party like that, are you?
+Felix started the truck, put it in drive, then floored it.
+That product is for sale.
+I don't know whether she likes her coffee black.
+Be merciful to me!
+Most good things about American culture come from non-Anglo immigrants and Black people.
+If possible, I'd like to receive new information about this case.
+Drink wet cement and get really stoned.
+It still hurt him to think of her.
+Nature endowed him with wit and beauty.
+He always persists in his errors.
+What would you like us to do with this?
+The lights within the quarantine zone went out.
+I'm not a barber.
+The original was written as a school textbook.
+It's happened to me many times.
+They're lucky that we helped them.
+She thinks it's true.
+They're both older than you.
+Antonio manipulated the system.
+How can you be sure that's going to happen?
+I can hardly wait for my next vacation.
+Are you teasing me?
+I'm confused about my feelings.
+She said she wanted a picture of me.
+His argument was based entirely on anecdotal evidence.
+It was easy for you to solve the problem, wasn't it?
+I watched the deer for a little bit.
+Baseball season hasn't started yet.
+We are opposed to war.
+How does he know?
+We are doing everything possible to prevent this from happening.
+We worked at the same printing works.
+She wants us to find him.
+Our dog lies down under the tree the whole day.
+We have to memorize this poem by the next class.
+He seduced her with false promises.
+She was ready to help him with cleaning the house.
+I didn't notice what was happening.
+Prices depend on what people will pay.
+I'm a bit of an insomniac.
+I knew them personally.
+I assume that you know what to do.
+Did you really think I did that?
+They're in trouble. Can you help them?
+She loves her garden.
+She left the room looking downcast.
+I've had a headache since this morning.
+We've put down an attempted mutiny.
+A doctor cannot heal himself.
+I need you to open the door.
+He drops in on me very often.
+I've been preparing for this all my life.
+He said more than a few words.
+The United States navy was not ready for war.
+You can tell he's a smart guy.
+She was shopping for some clothes.
+Gabor made a scarecrow.
+The cat is puzzled.
+The ship was damaged and veered off course.
+How will this contribute to Algeria's development?
+What are you going to do in Australia?
+It was hard to make this decision.
+You used to love me.
+I'm very curious about why that happened.
+Maybe I should go help them.
+I am at your mercy.
+I didn't understand half of what she was saying.
+When do you want me back here?
+I'd prefer it stay that way.
+I like oranges very much.
+What did he tell you?
+She plays baseball after school.
+When he was younger he worked at a factory.
+There shouldn't be nation-states. Every state should be for all its citizens.
+Our needs are being met.
+Don't worry. We'll get to the bottom of this.
+Diego saw an apparition in the woods.
+I think I can handle this myself.
+You are responsible for what you do.
+Have you met the new French teacher?
+That'll be a disaster.
+We talk so much, don't we?
+Did she have problems at work?
+She said that she'd try to win.
+Esperanto is pretty much a non-language.
+It's a perfect day for a barbecue.
+What can divide family members?
+That girl is so beautiful that she attracts even the most self-possessed men.
+I am going to find out if his instructions are accurate.
+It happened really quickly.
+Where does all your confidence come from?
+I didn't make it very far.
+They nursed their babies.
+He had a funny accent.
+In our opinion, we cannot fight against them now.
+I can't ride a bike because it is raining today.
+There is no controversy.
+Their entire air defense is based on blueprints stolen from the west.
+In the United States, the cornucopia is commonly associated with the holiday of Thanksgiving.
+The lake has frozen over.
+Olive oil has many medicinal properties.
+I'm standing up for myself.
+The park was designed for small children.
+We should be doing sport right now, alas it is raining.
+This is a warning.
+They told me that they did that for us.
+It'll take weeks, if not months, to plan the ceremony you desire.
+I like the diversity.
+What are the main drivers of development in Algeria?
+Who will inherit what he left?
+I should be there in half an hour.
+I think that's fantastic.
+This work is easy for me.
+I wish we could just ask them.
+I am allergic to sulfa drugs.
+All of the sugar has fallen to the ground.
+All he does is bring out the flaws of others.
+David wanted to thank the Smiths for their hospitality.
+He found a bag full of cash on the desk.
+I've eaten almost nothing.
+Don't feed the dog.
+I appreciate your attention to detail.
+He doesn't think that it's his fault.
+There's a fear that the snow will strengthen amid the strong winter pressure pattern.
+I enjoy working with Carlos, my colleague who has a great sense of humor.
+Dan is on his way home.
+Sorry, is that weird?
+I'd better report this to them.
+The prisoner was given his freedom.
+Vladimir didn't encounter Anna on the way.
+I bought an amethyst necklace for myself.
+I really have to be going.
+Part of the roof fell off.
+There were some children swimming in the pool.
+It hurts me to say this, but I can't help you.
+He loves that gravy.
+It isn't difficult. It is easy.
+Could you lend me a flashlight?
+Why are we running?
+There is no chance for reconciliation.
+Your stubble suits you.
+Your parents must be so proud of you.
+The path became steeper, and we had to slow down.
+No face has perfect symmetry.
+Dan didn't even recognize Linda.
+His illness was mainly psychological.
+The person who donated this money wishes to remain anonymous.
+What you're doing is irresponsible.
+I see the fellow.
+Is something the matter, Your Grace?
+Eat grass like a cow!
+I thought you wanted to be a dancer.
+They bought themselves new computers.
+She pulled up in her car.
+You may not have time.
+I know that eventually I'm going to have to do that.
+Algeria has lots of artistic exchanges with other countries.
+Change your thoughts, and you will change your world.
+Stefan had a big metal rod in his hand.
+I don't think that this is what you think it is.
+She may go home by herself.
+Was it in October that your baby was born?
+I'd sure like to help him.
+Children can no longer distinguish hens from cows.
+I don't think that we were spotted.
+All the guys cared about was Jessica's looks.
+He dropped a bombshell.
+Is there any place in particular that you'd recommend I visit while I'm in Boston?
+Jane seems like someone who just isn't into the bells and whistles of public life.
+You can't resign now.
+I bought this book at that bookstore.
+How are your wedding plans coming?
+Where's your older brother right now?
+How old is this palace?
+Esperanto is a planned language.
+Please don't make me go there.
+Do you have a basement?
+Kyoto is Japan's former capital.
+Does Algeria have climate targets?
+They realized they were going to die.
+Hornbeams were growing along the highway.
+Don't get so excited!
+How does paper absorb liquids?
+He crawled to the side on his belly.
+Bleach is a strong chemical used for cleaning.
+Switch on my mike.
+This isn't the way.
+Are you still holding the ladder?
+Gunter climbed down the little ladder.
+I didn't take my hat off.
+So much for all that.
+She looked straight at him.
+Ivan was so deep into the hike when Anna called him.
+Janos arrived at class tired.
+He said he's had enough of that.
+Betty could sing better.
+It's going to break.
+She found her key under the sofa.
+The lights in the hallway were extremely dim.
+It's always good to meet another ace person.
+Algeria shouldn't hit the money printing press again.
+Algeria is a gas-exporting giant.
+In Algeria, this level of growth is extremely impressive for this type of company.
+Advertising sells products over the air.
+He has no children, but he is leading an otherwise happy life.
+I spent the whole night trying to fall asleep.
+I said the opposite!
+He tried to impress her.
+I can't wait to tell you.
+I didn't say I was in love with him.
+My phone is always set to silent.
+I swept the floor in the kitchen.
+I tried one of the coats on, but it didn't fit.
+I am sorry, but I have someone coming.
+It never crossed my mind that he would actually carry out his threat.
+She told a joke.
+We suffered a devastating loss.
+The world is lit by the sun.
+He hurt himself yesterday during the competition.
+We hope you enjoy the movie.
+She tried to console him.
+I've never been sued.
+It's a sad situation.
+Diego started hearing a quiet knock on the window.
+I'm glad to see you happy again.
+I intend to carry out this plan.
+All the tasks have been duly fulfilled.
+The doctor said I should be able to walk again by October.
+Someone didn't learn physics well in school.
+He's a skirt-chaser.
+Are you pleased with your new job?
+Do you want to buy new furniture for the apartment?
+This feels like silk.
+That's a valid question.
+She had a little round object in her hand.
+My veterinarian makes house calls.
+No less than twenty houses were burnt down.
+They promised they wouldn't be late again.
+The substrate is a type of sandy loam.
+You should have an escort.
+I don't want to wake them up.
+Did you sweep the floor?
+This is simple list of exercises to perform every day.
+You look at a beautiful flower.
+News organizations should be clearly identified and journalists' contact information, easily obtainable.
+The night was quiet, and the sky was black.
+Who are some of your favorite musicians?
+Please cash this check.
+You know who that guy is, don't you?
+Spain ruled Cuba at that time.
+His language does not please me.
+Don't you think she's cute?
+I do not want to go anywhere.
+It was pouring rain.
+What it all boils down to is that we are in the same boat.
+She accused me of being a liar.
+Did you like the article?
+I won't go unless it stops raining.
+We're going to have to deal with this.
+No matter what the price of gas is, I need to fill up my tank.
+Not much is known about Pluto.
+What did he say in reply?
+She is passionately in love with him.
+She was just as confused as he was.
+This problem is very simple.
+This book helped me improve my Berber immensely.
+It won't cost much to do that.
+I believe that it can be done.
+Both boys got on their bicycles and rode away.
+A Japanese person would never do such a thing.
+The man started to look left to right without saying anything.
+I no longer believe that.
+I thought it went well.
+What made you start conversing in English?
+I have a belief that, in Algeria, the tide of history has finally begun to turn.
+If they go, I'll go, too.
+They sailed back to Algeria.
+Check it for me, please.
+They said that they're afraid.
+At ten o'clock in the evening I'm already asleep.
+Please tell us how that happened.
+We all have families.
+If anyone asks about me, you haven't seen me today.
+Love is above money. The latter can't give as much happiness as the former.
+He was cautious about overeating.
+A revolution is taking place in Algeria.
+He was the last to leave.
+If you keep trying hard enough, success will come eventually.
+At what age do most people start to develop wrinkles?
+We go out together sometimes.
+I think there's going to be trouble.
+Who's your favorite fictional character?
+We need to talk about this.
+Why did you shoot them?
+I don't have to take this from you.
+This is all stupid.
+Your job is to find it.
+They think they're funny.
+James found Amanda exhausting.
+If you're pretty, but single, then you're not pretty.
+Does that smell bother you?
+This image is not safe for work.
+Why do you want to know what I'm thinking?
+She took a picture down.
+I wish I had a tackle box as nice as yours.
+We'll meet up with him later.
+Nobody's perfect at it.
+I never see him but I am happy.
+Most people wouldn't do that.
+He just shook his head and laughed.
+I'm planning to stay in Australia for three months.
+We are going to have a baby next month.
+Did you understand what he wanted to say?
+I didn't sleep well.
+He's going to Australia.
+As a matter of fact, I love him very much.
+I'll buy her a rose.
+I have been hospitalized before.
+No matter how much effort I make, people always find mistakes in my actions.
+That cult makes people believe things that are anathema to them.
+What kind of fish do you eat most often?
+I think that something bad is likely to happen.
+I will tell you more about Japan.
+The Fertile Crescent is considered to be the cradle of civilization.
+They're going to school.
+This chair is broken.
+Don't confuse comets and asteroids.
+No, I'm not a teacher. I'm only a student.
+You should get checked by a doctor.
+I'd like to know why you did that.
+To prove that I am right, I would have to admit that I could be wrong.
+There are a few keys here that are jammed.
+Obama is the first black president in the White House.
+Zoos are a relic of the barbaric past. Animals should live in their natural habitats.
+Paul was happy to do charity work.
+I cannot clear the backyard by myself.
+He promised himself that he'd do that.
+I had a good window seat.
+There are horses in the field.
+We demand actions, not words.
+Why do you put it here?
+He is not like the person I imagined.
+Do you want to have children someday?
+He has a lot of pictures.
+The net is huge.
+My shirt is orange.
+We should be considerate to the old.
+I would've gone to prison if I hadn't had such a good lawyer.
+The master of thrillers has left the scene forever.
+Do whatever you think is right.
+According to Islamic principles, your wife and children have rights over you.
+Palm Sunday is the Sunday before Easter.
+I never want to see you get sick.
+There's absolutely nothing wrong with this.
+I am just joking.
+I don't want to trouble you.
+You don't remember having said that.
+The student made acquaintance with that woman last year.
+It's always best to do it this way.
+Cut short your avenging.
+Why are you always laughing?
+I'm tougher than I look.
+They didn't tell me where they lived.
+I have chosen it myself.
+To see her smile, you would be charmed.
+Do you have any headphones?
+This is the hardest question.
+The satellite is at its apogee.
+Only a bareback rider at the circus shaves her legs above the knees.
+When the train finally passed that station, Matthew started breathing again.
+It is possible to play checkers with chess pieces. The opposite, however, is impossible.
+Muslims should support each other.
+The light bulb is still hot. Don't touch it.
+I found an alcove with a statue of a Hindu deity.
+Who said I was wrong?
+Before long she will come back to the stage.
+He worked for one and a half years in the Netherlands.
+I received a telegram saying that my uncle had arrived.
+He told me that he was fine.
+We're going to quit trying to do that.
+Be careful not to spill anything on the computer, it's not waterproof.
+I think that might be wise.
+Paris is a jungle.
+I don't want to hear any of your complaints.
+It's crucial for Western journalists to treat all guests equally.
+His son is lazy and good for nothing.
+My husband was called away on business.
+I'd like to come home now.
+He jotted down a message to her.
+This sentence has to be proofed.
+The Devil runs deep through my veins.
+I thought that I'd do that, too.
+The attack ceased just before dawn.
+That is not a lot.
+We cook before the fourth hour.
+My family are all athletic.
+I usually have a tight timetable.
+Genius is one percent inspiration and ninety-nine percent perspiration.
+Do not take this lightly.
+Jealousy and greed are two of the most common motivators of murder.
+Starting next month, I'm not subscribing to a newspaper.
+He needed a new computer.
+Let's just do this.
+I will be late.
+He knows nothing about the plan.
+Thanks for all your great photos!
+I don't want to do that the way you say I have to.
+I'm not ashamed to cry.
+I can't move my legs.
+Supply is relative to demand.
+The oceans are warming faster than scientists previously thought.
+Drive carefully! The roads are treacherous.
+There were repeated uprisings against the Ottomans in Algeria.
+Will you mail this parcel for me?
+How many aunts do you have?
+Were all of your children born in Boston?
+It's good for your health to get up early in the morning.
+Are you sure that we can do that?
+He played golf every day during his vacation.
+We try to forget.
+I was jogging the direction of the camper.
+Does this make you feel good?
+I won't go without you.
+The pupils loved that joke.
+They're sending soldiers to protect us.
+This is real cool.
+She didn't look happy to see him.
+I'm surrounded by people that I don't like.
+Women often use bracelets.
+Tobias didn't want to speak to Isabella ever again.
+Any comments will be gratefully appreciated.
+The world has become poorer.
+An tinge of anxiety crosses my mind.
+Wait till I count to ten.
+You'll never guess who I saw in the park.
+Wasps help keep down arthropod populations.
+Ow, ow! I bit my tongue!
+Is he going to the supermarket?
+This is our biggest seller.
+She took that medicine.
+Portugal is a democratic country.
+You look as if you're about to be sick.
+Linda hasn't arrived yet.
+The man begging for money looked very hungry.
+This is the first time that I've waited this long.
+Algeria gets lots of tourists in the summer.
+Black phones are more expensive than white ones.
+We are tired of hearing you bragging about yourself, you little turkey cock!
+I refuse to do so.
+Scheherazade is an Iranian citizen.
+Many sexual attacks aren't reported.
+We're live from Boston, Massachusetts.
+The taxi is more expensive than the bus.
+We did what had to be done.
+I can't listen to this anymore.
+The poet was arrested for rhyme crime.
+My parents don't know.
+Am I allowed to smoke?
+Let's add ambiguous sentences more often.
+I was having thoughts that made my blood boil.
+Drink some wine with us.
+His success is the result of many years of perseverance.
+Don't you like cats?
+He wouldn't even tell me his name.
+She can help me.
+He chewed on his nails.
+Can anyone explain to me what is going on here?
+I love when things start falling into place.
+I won't put up with it from now on.
+Do you eat couscous?
+It's a girl thing.
+You talk like a man.
+I consulted with my father about the plan.
+Are you all right? You look a little shaken.
+Are you thinking about something in particular?
+I'll go get her.
+He started a new life somewhere else with a new name.
+Where is the yellow bird?
+I went to the airport to see my mother off.
+I've never been more serious in my life.
+She arrived at the airport.
+The female moth waits for the cover of darkness to lay her eggs.
+We'll do it tomorrow if you want to.
+He tried to kill himself yesterday.
+I should probably go.
+Have a nice lunch.
+Elias returned to his life as Sandra had never appeared.
+Italy and France are in a lot of debt.
+But I'm still not buying it.
+I want to get to know her.
+I wanted to find who was responsible.
+Significant differences were found.
+The war changed him.
+She holds a grudge against me.
+He's used to getting what he wants.
+Please tell me what you know about it.
+Did you do that just to annoy me?
+Could you show me what you're serving in the buffet?
+They just had sex.
+Let's go jogging on the beach.
+I knew you would.
+How would we say astronomy in icelandic?
+Corporate results in Japan have improved.
+I really liked talking to them.
+You have to take the good with the bad.
+The victorious country dictated the terms of peace to the defeated country.
+I'm going to take early retirement.
+He brought over his sister.
+When Daniel started to play the guitar, even the sleeping students woke up to listen.
+He's taking a gap year.
+Work shall set you free.
+Their grapes suit my palate.
+I saw the joy in their eyes when they first talked.
+Are you able to prove it?
+What's that gun on the counter?
+You need to do this right away.
+At his concerts, she screams for him from a distance.
+He entered the van.
+I haven't eaten asparagus in a long time.
+My whole life, I've never seen anything like that.
+That is unconfirmed information.
+He is not wearing a mask.
+Don't you want to join us?
+I couldn't do that any longer.
+It's not worth discussing.
+He never would have imagined being in this place again.
+He has an abrasive personality.
+I was trying to find that house.
+Promise me you'll be careful.
+Couscous is a word that English has borrowed from Berber.
+I'll wait like the rest of you.
+I don't know how to fish.
+I don't think that it'll take very long to do that.
+Everyone is so kind here.
+Algeria's economic crisis is growing even worse.
+The floor is cold.
+They said they were excited.
+He had a secret.
+I know it's not good enough.
+They have safely landed in Algiers.
+I need some get-up-and-go.
+Greenland is the world's largest island.
+She bought it for him.
+I wanted to slap myself.
+I let him do it.
+You needn't have brought your umbrella.
+The new manager is very professional.
+What's that going to prove?
+You need to get on your way as quickly as possible.
+They said that they're not sleepy yet.
+There's a leak in the roof that needs fixing.
+The boat is full of refugees.
+I always turn off the light when I leave a room.
+I hope he can help you.
+I remember what it was.
+Why don't you have dinner with me tonight?
+You're easy to talk to.
+He is a better speaker of English than I.
+I have no less than ten books.
+These terms have precise meaning for the expert audience the article was written for.
+Santiago headed to the farm.
+It was really cute.
+You want to buy books.
+There is blood in my urine.
+In Japan, tipping is not a custom, as such can be a source of offense.
+You should've thanked me.
+He was still talking.
+What questions do you have for me?
+I don't date women I work with.
+Could you get me a brandy?
+I'm surprised she turned down such a great proposal.
+It should stay that way.
+I paid for them.
+He killed her dog.
+She works as an interpreter.
+I didn't think that anybody could do this.
+There's a man at the door who wants to see you at all costs.
+I googled you and found out that you've spent time in prison.
+She let us know she needs to do that.
+If we don't get going soon, we'll be late.
+I have to go to the hospital tomorrow.
+It's important to forget about work every now and then.
+We need to prioritize the items on this list.
+I'm beginning to understand why they ended up here.
+What are you eating?
+We have a lot more supply than demand.
+I'm a scaly, not a furry.
+Have you read Romeo and Juliet?
+I don't think I'm quite ready for food.
+He never told me about Islam.
+Let's get started, shall we?
+I remember that like it was yesterday.
+The New York City police wear a dark blue uniform.
+The sky was all covered with clouds.
+You don't have much more time.
+He hit on a rare old book.
+It isn't suitable soil for this kind of plant.
+Many people didn't survive the prison labor camps.
+That's my favorite band.
+William prepared a bomb to kill all the aliens.
+Nothing is more contemptible than respect that is based on fear.
+Did the revolutionaries take over the city?
+He pressed his lips against mine.
+Refuse to take no answer.
+The brain has a complex structure.
+You should have told me you didn't know what to do.
+Judging from what you have seen of him, this fellow is not a coward.
+He's waiting downstairs, isn't he?
+Bulla, who knows who I am!
+The windshield crack is visible.
+He said that he would write to us.
+I don't normally do that.
+Mrs. Smith is our English teacher.
+An alien ship arrived.
+This village is deserted.
+That's a class act.
+Are you really a blonde?
+I think the site might be offline.
+Each day, my heart feels heavier as I try to make sense of this.
+I don't know if she will show up with her son.
+There isn't enough proof.
+If I had known his address, I would have written to him.
+He's always by himself.
+The statue only freezes when someone is looking at it.
+I reckon it's time for us to leave.
+You're braver than I am.
+I'm reading a book now.
+Alberto was trying to talk to Isabella every chance he got.
+Why don't we go in here?
+My intentions were honorable.
+The original is unfaithful to the translation.
+He hid himself behind the tree.
+Habits are hard to change.
+Even I can speak a little French.
+Education shall be free, at least in the elementary and fundamental stages.
+That isn't what I wanted to talk to you about.
+A doctor tried to remove the bullet from the president's head.
+He is of Japanese ancestry.
+I love the mountains.
+Diego drove to the mall shortly after five.
+We will be by your side for whatever you need.
+The wolf licks his lips.
+He's going to come later, isn't he?
+She claims that she's rich.
+They'd cry if they saw you doing that.
+It doesn't look like you're through doing that.
+The rule is to not let any foreigners in.
+I drank some juice.
+I hate false righteousness.
+Igor found an abandoned campsite by the river.
+There isn't much milk left.
+How long has George worked in Rio?
+We weren't a good offensive team.
+I've never been skiing.
+By my reckoning, this is of the highest quality.
+I find your reaction to be totally understandable.
+Let's start the day right with a thorough tooth brushing.
+I'd like to study in Australia.
+We need to leave here at once.
+I don't believe a word you say.
+Quantum theory describes the world in mathematical terms.
+They're sure that everyone saw them.
+We are both her boyfriends.
+Bruno put on a safety vest.
+We may not be back for a couple of weeks.
+When did you catch these fish?
+My room is upstairs.
+Michael deserved better than that.
+He put a knife to my throat.
+May I suggest another strategy?
+We're very grateful for your support.
+His aunt has three cats.
+Did something go wrong?
+Life experience is essential for grasping specific matters.
+She said that she isn't busy.
+It would have been interesting to do that.
+You'd better return home at once.
+All of them speak French.
+I was expecting something a little fancier than this.
+Let me look at this again, OK?
+He put the shot farther than I did.
+You should've opened the door.
+Both my parents have died.
+He may have anything he wants.
+Where will we get water?
+I am sure of success.
+Did you make soup?
+He's frightened, isn't he?
+Frost tormented her terribly.
+Each one says she's the one he wants.
+Do you have family?
+Their price is below ours.
+You're grasping at straws.
+Yesterday I played the guitar.
+Cheese makes pasta rich.
+She cleaned her room before her guests arrived.
+They shouted for help.
+The car he was riding crashed into a train.
+Don't work yourself too hard.
+She'll explain it to him.
+The female teacher will begin studying English this year.
+They rode their bikes to the pool.
+I pinched myself to make sure that I wasn't dreaming.
+Let's see what we can do to help.
+Let the boys play.
+Don't be such a cry baby.
+I'll ring you in a couple of days.
+Don't you have to be somewhere?
+He's a good painter, isn't he?
+Diluting the mixture, he screwed on the atomizer and sprayed it on his wrist.
+Is she here, too?
+We passed a milestone again.
+He has no descendants, he's likely sterile.
+They knew that they had to escape.
+He's chopped some firewood.
+I let those words out without meaning to.
+Did you tell her how you feel?
+The process of reading the tarot is a very complex one.
+She was disappointed in him.
+I wanted to thank you for earlier.
+I have little time at my disposal.
+We've made too many bad decisions.
+This young man is a doctor.
+Stick to your plan.
+Everything I look for, I don't find.
+Flee ever so fast, you cannot flee your fortune.
+I believe he aims to make me leave.
+This book is both interesting and instructive.
+I don't know who they are.
+I'd like to send a registered letter.
+I hope that I didn't offend you.
+And what do you like about your job?
+He had no other clothing than that which he was wearing then.
+I think that you've been doing great.
+The cat is warming my feet.
+The dog wants us to play with it.
+Playing the piano is her favorite pastime.
+I don't know how to play hide-and-seek.
+I also like Australia.
+Everyone else charges more than you do.
+It's important for young people to study English.
+A tapir is a mammal with prehensile lips for eating tree foliage.
+He gave an example.
+Let's get off the bus.
+Is ravioli a pasta or a dumpling?
+I'm afraid I don't love you any longer.
+Give me your names.
+There was a chain-reaction crash during rush hour.
+He began heading back to the city.
+As is often the case with him, he went to the office without shaving.
+The scarecrow in the backyard fell over during the hurricane.
+I remembered the past.
+He never told me he didn't like her.
+About a minute later, he flipped each half over.
+I think that is wrong.
+The forest felt quite peaceful.
+Java and Javascript are like India and Indonesia, they aren't the same thing.
+Can you see something red down below?
+I'm disappointed, to say the least.
+What do you think I'll do then?
+Let's just get this over with.
+He collapsed on the floor.
+That would be cheating.
+They asked me where they should put their coats.
+On the other side of the street, there are no houses yet.
+I'm so so sorry that I'd like to crawl into a hole and die.
+That must have been surprising.
+I will contact you another day.
+They say that they're good at cooking.
+Where can I learn French?
+Everything's coming to an end.
+The lost boy held out until the rescue team came.
+Vladimir took Anna's guitar and broke it in half.
+He made a tour of Europe.
+I parted from her long ago.
+The naive man was utterly embarrassed in her presence.
+Does she like China?
+I'm sure you heard all about it from her.
+I hope that this doesn't hurt you.
+You'll regret this in the morning.
+Leon crushed the monster's skull.
+Fyodor quickly left after that.
+The quick brown fox may as well go fuck the lazy dog.
+Order me a drink.
+It has very good content.
+How do banks make money?
+What the hell did you just call me?
+Try it and tell me what it tastes like.
+Have you ever been on a camping trip?
+You go crazy when you watch a soccer game.
+He's met many interesting people through the process.
+I was planning to become a teacher.
+We have to talk about what to do.
+Would you mind giving me a minute?
+He didn't have time to think.
+One of the lights on the stairs doesn't work.
+I sure appreciate all your help.
+She didn't really like her job.
+During dinner the elk drank a lot of beer, fell down the stairs, and died.
+Europeans find truth in wine, Russians in vodka.
+I am going to stay with you until Sunday morning.
+Dmitri had to walk to school.
+I have to give you a chance.
+I'll make you a model plane.
+I can't stress this enough.
+Gold is a metal.
+I looked at the lawn again.
+No one knows you're in Australia.
+Raising the economy to a new level is the top priority.
+He admitted that he's done that.
+He spent the night in a homeless hostel.
+It's a great place to visit if you watch yourself.
+China has a massive military.
+I haven't finished doing my homework yet.
+You should lose a few pounds.
+That judge was paid off for sure.
+I want to send this postcard to Australia.
+The new government hasn't yet been formed.
+The baby is sleeping.
+We can't find anything wrong with your car.
+Do you plan on taking part in the interview?
+This was the most interesting book that she had ever read.
+That wasn't a rational decision.
+It's essential to respect each other's preferences.
+I like my grandparents.
+He kicked the snow off his boots.
+Daniela called me at home.
+I've lost the charger for my mobile.
+You still want to do that someday, don't you?
+They don't know anything about anything.
+The Fed made an emergency cut to interest rates, bringing them to near zero.
+They say that they need to study French.
+The midterms are coming up.
+He hung out with criminals.
+I'll take the stairs.
+I think we shouldn't have gotten married.
+People tend to eat more when more food is available.
+Unlike him, his son is tall.
+Am I just dreaming? Am I in the land of Oz?
+The branch loaded with fruit inevitably bends.
+She came to my house.
+Matthew and Linda got on the same train.
+I'll help you in the kitchen.
+I am not who you think I am.
+Do you know who the mayor of Boston is?
+I believe that everybody deserves a chance.
+To the south, Algeria borders Mali and Niger.
+Janos threatened Martha with a knife.
+It suddenly started raining very hard.
+You've been an inspiration to us all.
+Keep the CDs away from liquids and food.
+I went camping in the Japan Alps with my club.
+Don't make a nuisance of yourself.
+I was good, wasn't I?
+If you are willing to suffer all this I am ready to help you!
+He gave a bouquet of flowers to her.
+You need to learn more and mess around less.
+We learned to dive when we were five.
+I want to see your real face.
+Children hate making teachers angry.
+It was so cold last week that I had to wear two coats.
+I'm sick of doing the same thing every day.
+That really hit the spot.
+Have you seen my mom?
+Sunday is not an ordinary day to me.
+Stay just the way you are.
+Maybe I don't want to know.
+You're our last hope.
+Many people think that children don't spend enough time playing outside.
+I'm thinking of changing majors.
+We're all equal before the law.
+This once more shows that you are an idiot.
+He admitted that he was homeless.
+Nobody was able to solve the problem.
+How did you spend your spare time?
+Am I being fired?
+What's the strangest food you've ever eaten?
+That music always reminded me of you.
+He doesn't dare say anything.
+You should get one.
+You don't look like you're exhausted.
+We didn't take anything with us.
+Can you come back tomorrow?
+He took the rest of the pie home.
+Are you playing volleyball?
+I want to eat something sweet.
+The cell phone is ringing.
+He always complains about his job.
+Do you have a bucket I could use?
+I dreamed that you wanted to kill me.
+Please tell me how to delete my Facebook account.
+I've got a party tonight.
+I used to come here when it was a cafeteria.
+I'm walking in a dream.
+The ice broke under him.
+I'm probably going to lose.
+Bruno continues with his work.
+I just got done eating lunch.
+The road narrows drastically there.
+How many packs does he smoke per day?
+I wanted her to win.
+Perhaps you should go elsewhere.
+The charges against him were dropped because of his youth.
+They told me they didn't like swimming.
+Many people have asked us that question.
+I know sooner or later I'm going to have to do that.
+The hall, in which we are now, had already a lot of very important meetings.
+He never fasted Ramadan in his life.
+Our bags are heavy.
+I know that you'll enjoy this book.
+You are welcome to the use of my yacht.
+Do you like my ringtone?
+What do you know about Brazil?
+I had a piano teacher for a while.
+Have you ever seen a UFO?
+Put in a little more effort.
+I'm just being real.
+They say that there's nothing they can do.
+You as well as I are wrong.
+I admit that I've never done that.
+I know that you're scared.
+My son really likes slugs. He says they're sticky and slippery, and he finds that fascinating.
+I feel sorry for your patients.
+She gave the cat milk.
+This watch is broken.
+I'll wait for her.
+He went to the mosque with his friend and his family.
+Gabor had a rainy-day fund.
+Reality remains subject to change.
+She opened her mouth to speak.
+I have a feeling that something is lacking in my life.
+And where are the aliens, the flying saucers, and the laser guns?
+Nothing interests me any more.
+They said that they couldn't breathe.
+Something must have happened.
+Did you have a good concert?
+I'll be in Australia for three more weeks.
+I mean you no harm.
+Antonio continued to take care of the baby.
+I might not go.
+She'll catch a cold yet.
+Did you want to buy that book?
+I won the first prize.
+I have no pencil to write with.
+What are you going to eat now?
+The West no longer runs the world.
+Are you familiar with sign language?
+Birds have nests, spiders have webs, and humans have friendship.
+What's your grandfather's name?
+She's a very quiet and withdrawn girl.
+What do you think of the new teacher?
+Just tell him what you need.
+We'll bring plenty of food.
+That isn't true anymore.
+You sure do use a lot of butter.
+Western leaders condemned the action.
+He needs to rest in bed.
+I don't understand at all.
+Is that a fox?
+It wasn't your brother.
+The compass points to the north.
+Many people came to the concert.
+My plan for the summer is to go to Europe.
+Change is necessary and possible.
+Children may participate, too.
+He's certainly not the ideal employee.
+The verdict was a death sentence.
+Have you ever had dinner with your family?
+Rodrigo was getting ready for the next race.
+Put your mask on.
+We are going to the movies. You should come.
+He doesn't read any more books.
+The room was bare of furniture.
+We didn't have enough to pay all our bills last month.
+We had to make concessions.
+The old lady sitting next to you on the bus looked very tired.
+One fool can easily destroy a thousand wise men.
+It's best to leave them to their own devices.
+Algeria isn't located in Southwest Asia.
+I don't need a haircut.
+The monster grabbed Bruno's body.
+We were told to stay in the room.
+The last time that I did that I was still in kindergarten.
+We probably won't do that together.
+I knew a man with that name.
+I don't do it out of obligation to my mother.
+You have no right to interfere in other people's affairs.
+Paul went to the shed to grab his bicycle.
+I wonder if you could do me a favor.
+I am hoarse. I have a cold.
+You don't see the rose, do you?
+It is an honor to meet you, miss.
+Just think about it.
+Democracy is an idea that goes back to the ancient Greeks.
+You should not trifle with his feelings.
+Are you still there?
+Fresh fruit is dear in winter.
+We approached the rocks.
+Is it OK if I hold your hand?
+He has been to the dentist lots of times.
+A stay in hospital is not very nice.
+It looks like we're on our own.
+This singer uses auto-tune.
+I don't often sleep on planes.
+Mars, son of Jupiter and Juno, was the god of war.
+I really wish you would do that.
+Today, I knew everything the professor asked me.
+He made the situation worse.
+I burst out laughing when I saw him.
+Robert got a small proportion of the profit.
+There's no telling how this might end.
+Didn't I say she would come?
+He got the better of his opponent.
+I don't really like doing things like this.
+May I use the restroom?
+I understand more than you think.
+It isn't sunny today.
+She was very moved by the news.
+You should eat a lot more vegetables.
+Those that live here are quite worried.
+Let's share the expenses.
+Let's have pizza for lunch today.
+Do you consider this one of your best paintings?
+Her parents are rich.
+This idiot can't even speak his own language!
+Stop fighting and start negotiating. War isn't a solution, it's just suffering.
+Can someone close the curtains?
+You look like a little girl in that dress.
+You must follow the rules of the game.
+I agree with his idea.
+I figured that this would happen.
+This isn't the only exception.
+I wish I'd never stepped foot in this house!
+He was always finding fault with me.
+Most species of kingfisher are found in tropical regions.
+She asked me to go with him.
+They said they don't care at all.
+It would be very insensitive to do that now.
+The most corrupt government has the most laws.
+What's your second choice?
+Ladies and gentlemen, I'm very happy to be here.
+A mass of maggots were infecting Gabriel's arm.
+When he heard that, Rafael stopped the horse.
+Have you been learning Latin long?
+We need to hire more people.
+I have all day to finish doing that.
+My passion is music.
+He is an expert in the area of city planning.
+He says he's having fun.
+What a fool I am to think that she loves me!
+I wonder if we're finished.
+This film is a comedy.
+London seems tiny compared to Tokyo.
+Leon wasn't dressed at all like a staff member.
+There are just too many people.
+I just don't get it either.
+Most of the people in my area don't live anywhere near a bus stop.
+I love that man.
+She leaned forward and spoke to him.
+He caught a glimpse of the driver as the train raced past.
+The documentary is meant to raise consciousness about the plight of the poor.
+She was alone with her baby in the house.
+It is something I cannot do.
+She is incapable of doing anything alone.
+Instead of ink, there was some unidentified liquid in the bottle.
+I have a credit card.
+I was silent for a little while.
+It's hardly been a secret.
+You look like you're lost.
+We anticipate the theater festival with enthusiasm.
+Which emoji do you use the most?
+Is it in stock?
+Take a liberal view of young people.
+I hate the dark.
+Do you think it's going to rain this afternoon?
+We walked on the dune.
+Do you plan on attending today's meeting?
+The challenge is responding to a need.
+He realized there was nothing he could do to help her.
+Our worries don't drown in alcohol. They can swim.
+She became Mother Teresa years later when she founded the Missionaries of Charity.
+You boil water to kill all the microbes in it.
+Who will be in charge of our class when Miss Smith leaves school?
+His Italian heritage influences his passion for art, music, and storytelling.
+Do you believe in guiding stars?
+I can't comment on that right now.
+He apologized a thousand times.
+It took a while till I got here.
+His lie complicated matters.
+The plan is still on schedule.
+Please show me your passport.
+I'm still the same person I used to be.
+In synagogues, they like to pray standing up.
+Elves live longer than humans.
+These things are not mentioned in the law.
+I met a friend of yours yesterday.
+That book's over here.
+He is difficult to get along with.
+He isn't a friend of hers.
+I hope he'll overlook it.
+The most popular European destinations for the Chinese are Britain, Italy, France, Germany and Spain.
+He has a great admiration for actor Olivier.
+He rode his motorcycle across the country.
+The city was deserted by its inhabitants.
+Despite all the science behind drug development, scientists often don't know exactly how medications work.
+Take this away to the kitchen.
+What countries would you like to visit?
+I love this country.
+He was careless in handling his pistol.
+He deliberately kept on provoking a confrontation.
+Together, you represent the harmony between tradition and progress.
+The leaves are dry.
+She is popular with other girls.
+You won't do that here, will you?
+I was very frustrated.
+She is spinning wool.
+My dream is to study philosophy.
+I honestly believe that.
+Meet me at the park.
+An echidna has spines like a hedgehog, but it is not closely related to one.
+I thought I had it all.
+It was almost worth it.
+I'll be on vacation next week.
+There were many good-looking guys at the party.
+The rumors were false.
+I was a fool. I'm sorry.
+I knew you'd do that.
+Let me know what you're up to.
+Are you an American?
+All three of you chop wood every day, don't you?
+Is your grandpa still sick?
+I can't sleep now.
+This man is really stupid.
+Hang on, I need to go to the bathroom.
+I can't control my body's movements anymore.
+Today's topic is the Berber language?

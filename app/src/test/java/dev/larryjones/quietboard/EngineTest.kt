@@ -215,26 +215,48 @@ class EngineTest {
     @Test fun builtInNextWordsWorkFromDayOne() {
         val h = UserHistory(Files.createTempDirectory("qb").toFile())
         val s = Suggest(dict, h)
-        s.nextWords = File("src/main/assets/nextwords_en.txt").useLines { Suggest.parseNextWords(it) }
+        s.phrases = File("src/main/assets/phrases_en.bin").inputStream().use { PhraseModel.fromStream(it, dict) }
         fun words(prev: String?, start: Boolean = false, learned: Boolean = true) =
             s.predict(prev, false, learned, start).mapNotNull { it?.word }
         assertTrue(words("thank").contains("you"))
         assertTrue("I" in words(null, start = true))
-        assertTrue("nothing after a comma-ish non-word", words(null).isEmpty())
-        // Your own habit comes first, but only where learning is allowed.
+        assertTrue("nothing after a non-word", words(null).isEmpty())
+        // Your own habit wins, but only where learning is allowed.
         repeat(3) { h.learn("thank", "goodness") }
         assertEquals("goodness", s.predict("thank", false).getOrNull(1)?.word)
         assertTrue("goodness" !in words("thank", learned = false))
+        // A habit of a word the model never predicts there shows up too.
+        repeat(2) { h.learn("thank", "Zorbix") }
+        assertTrue("Zorbix" in words("thank"))
     }
 
-    @Test fun nextWordsAssetIsSane() {
-        val lines = File("src/main/assets/nextwords_en.txt").readLines().filter { it.isNotBlank() }
-        assertTrue(lines.size > 100)
-        for (l in lines) {
-            val parts = l.split('\t')
-            assertTrue("bad line: $l", parts.size >= 2 && parts.none { it.isBlank() || ' ' in it })
-            assertEquals("keys are lowercase: $l", parts[0].lowercase(), parts[0])
-        }
+    @Test fun textContextReadsTheWordsBeforeTheCursor() {
+        assertEquals(TextContext("i'm", "going"), TextContext.of("Well I'm going "))
+        assertEquals(TextContext(null, TextContext.START), TextContext.of(""))
+        assertEquals(TextContext(null, TextContext.START), TextContext.of("It's late. "))
+        assertEquals(TextContext(null, TextContext.START), TextContext.of("Done!\n"))
+        assertEquals(TextContext("hey", TextContext.COMMA), TextContext.of("Hey, "))
+        assertEquals(TextContext("at", TextContext.NUMBER), TextContext.of("Meet at 5:30 "))
+        assertEquals(TextContext(TextContext.START, "thank"), TextContext.of("Thank "))
+        assertEquals("curly apostrophes read as straight ones", TextContext("i", "don't"), TextContext.of("I don\u2019t "))
+        assertEquals("Mr. doesn't end a sentence", TextContext(TextContext.START, "mr"), TextContext.of("Mr. "))
+        assertEquals("\"...\" trails off: no context", TextContext(null, null), TextContext.of("well... "))
+        assertEquals(TextContext(null, null), TextContext.of("Note: "))
+        assertEquals("quotes are skipped", TextContext("said", "hi"), TextContext.of("he said \"hi\" "))
+        assertEquals("an emoji starts afresh", TextContext(null, TextContext.START), TextContext.of("lol \uD83D\uDE02 "))
+    }
+
+    @Test fun phraseModelLoadsAndScores() {
+        val m = File("src/main/assets/phrases_en.bin").inputStream().use { PhraseModel.fromStream(it, dict) }
+        assertTrue("a real model: ${m.size} phrases", m.size > 200_000)
+        val going = m.context(TextContext("i'm", "going"))
+        assertTrue(going.known)
+        assertTrue("\"to\" fits after \"I'm going\"", going.boost(dict.exactIndex("to")) > 1f)
+        assertTrue("\"the\" doesn't fit after \"the\"", m.context(TextContext(null, "the")).boost(dict.exactIndex("the")) < 0f)
+        assertEquals("no opinion without context", 0f, m.context(TextContext.NONE).boost(dict.exactIndex("to")))
+        assertTrue(!m.context(TextContext(null, "zzzqx")).known)
+        val top = going.top(3) { true }.map { dict.words[it.first] }
+        assertEquals("to", top.first())
     }
 
     @Test fun brandsAndContractions() {
