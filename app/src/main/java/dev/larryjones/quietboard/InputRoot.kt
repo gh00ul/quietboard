@@ -2,6 +2,7 @@ package dev.larryjones.quietboard
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -26,16 +27,24 @@ class InputRoot(context: Context) : FrameLayout(context) {
     private val autofill = HorizontalScrollView(context).apply {
         isHorizontalScrollBarEnabled = false
         visibility = GONE
+        // The strip is drawn left to right in every language: keep the logins right of the tools button.
+        layoutDirection = LAYOUT_DIRECTION_LTR
         addView(autofillRow, LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        setOnScrollChangeListener { _, _, _, _, _ -> clipChips() }
     }
 
     init {
+        // An English keyboard laid out left to right whatever the phone's language: in Arabic or Hebrew
+        // the strip's buttons and the edit panel's Home/End and arrows would otherwise swap sides.
+        layoutDirection = LAYOUT_DIRECTION_LTR
         content.addView(keyboard, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         val bar = FrameLayout(context)
         bar.addView(topBar, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight))
+        bar.layoutDirection = LAYOUT_DIRECTION_LTR
         bar.addView(autofill, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight).apply {
-            marginStart = topBar.leadWidth
+            leftMargin = topBar.leadWidth
         })
+        autofillRow.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> clipChips() }
         topBar.onModeChange = { autofill.visibility = if (topBar.showingAutofill) VISIBLE else GONE }
         column.addView(bar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight))
         column.addView(content, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -71,13 +80,30 @@ class InputRoot(context: Context) : FrameLayout(context) {
         autofillRow.removeAllViews()
         val gap = (4 * resources.displayMetrics.density).toInt()
         for (v in views) {
-            autofillRow.addView(v, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                marginEnd = gap
-            })
+            // The system sizes each chip itself (its view can't measure its own content): keep that size.
+            val lp = v.layoutParams
+            autofillRow.addView(v, LinearLayout.LayoutParams(
+                lp?.width ?: ViewGroup.LayoutParams.WRAP_CONTENT, lp?.height ?: ViewGroup.LayoutParams.WRAP_CONTENT,
+            ).apply { rightMargin = gap })
         }
         autofill.scrollTo(0, 0)
         topBar.autofillCount = views.size
         autofill.visibility = if (topBar.showingAutofill) VISIBLE else GONE
+    }
+
+    /**
+     * Each chip is a surface drawn over the whole window: it isn't cut off by the scrolling row, so cut
+     * it to the part that's in view, or it would cover (and take taps meant for) the tools button.
+     */
+    private fun clipChips() {
+        val from = autofill.scrollX
+        val to = from + autofill.width
+        for (i in 0 until autofillRow.childCount) {
+            val c = autofillRow.getChildAt(i)
+            val l = maxOf(from, c.left) - c.left
+            val r = minOf(to, c.right) - c.left
+            c.clipBounds = if (r > l) Rect(l, 0, r, c.height) else Rect(0, 0, 0, 0)
+        }
     }
 
     /** Adds a panel (emoji, clipboard) that sits over the keys. */

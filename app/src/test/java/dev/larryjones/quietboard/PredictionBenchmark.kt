@@ -1,5 +1,6 @@
 package dev.larryjones.quietboard
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.BeforeClass
 import org.junit.Test
@@ -70,12 +71,14 @@ class PredictionBenchmark {
         return if (strip.any { it?.word?.lowercase(Locale.US) == w }) 3 else 0
     }
 
-    internal fun nextWords(s: Suggest, sents: List<String>): Rates {
+    /** With [oneWord], the model only gets the last token, to check the one before it helps. */
+    internal fun nextWords(s: Suggest, sents: List<String>, oneWord: Boolean = false): Rates {
         var n = 0; var t1 = 0; var t3 = 0
         for (sent in sents) for ((before, word) in positions(sent)) {
             if (dict.exactIndex(word.lowercase(Locale.US)) < 0) continue
             n++
-            when (place(s.predict(null, false, before = TextContext.of(before)), word)) {
+            val ctx = TextContext.of(before).let { if (oneWord) TextContext(null, it.prev1) else it }
+            when (place(s.predict(null, false, before = ctx), word)) {
                 1 -> { t1++; t3++ }
                 3 -> t3++
             }
@@ -128,8 +131,10 @@ class PredictionBenchmark {
         val held = heldOut()
         val s = suggest()
         val r = nextWords(s, held)
+        val one = nextWords(s, held, oneWord = true)
         println("prediction benchmark: ${held.size} held-out sentences, ${r.n} words")
-        println("  next word before typing a letter: in the middle %5.1f%%  in the strip %5.1f%%".format(100 * r.rate1, 100 * r.rate3))
+        println("  next word before typing a letter: in the middle %5.1f%%  in the strip %5.1f%%  (one word of context: %5.1f%% / %5.1f%%)"
+            .format(100 * r.rate1, 100 * r.rate3, 100 * one.rate1, 100 * one.rate3))
         val t0 = System.nanoTime()
         val saved = keystrokesSaved(s, held.take(600))
         println("  letters saved by tapping a suggestion (600 sentences): %5.1f%%  (%.0f s)".format(100 * saved, (System.nanoTime() - t0) / 1e9))
@@ -139,8 +144,12 @@ class PredictionBenchmark {
         println("  ${cases.size} typos in context: fixed %5.1f%% without context (%4.1f%% wrong), %5.1f%% with (%4.1f%% wrong)"
             .format(100 * f0, 100 * w0, 100 * f1, 100 * w1))
         assertTrue("predictions dropped: ${r.rate3}", r.rate3 >= MIN_IN_STRIP)
+        assertTrue("middle-slot predictions dropped: ${r.rate1}", r.rate1 >= MIN_MIDDLE)
+        assertTrue("the word two back stopped helping", r.rate3 > one.rate3 + 0.01)
         assertTrue("keystroke savings dropped: $saved", saved >= MIN_SAVED)
         assertTrue("context made autocorrect worse", f1 > f0 && w1 <= w0)
+        assertTrue("typos in context: fixed rate dropped: $f1", f1 >= MIN_FIXED)
+        assertTrue("typos in context: wrong fixes rose: $w1", w1 <= MAX_WRONG)
     }
 
     @Test fun predictionsAreSensible() {
@@ -148,6 +157,10 @@ class PredictionBenchmark {
         fun mid(text: String) = s.predict(null, false, before = TextContext.of(text)).getOrNull(1)?.word
         fun strip(text: String) = s.predict(null, false, before = TextContext.of(text)).mapNotNull { it?.word }
         assertTrue("you" in strip("Thank "))
+        // After a closing phrase the sentence usually just ends: that's no reason to expect "know".
+        assertTrue("\"Thank you\" -> ${strip("Thank you ")}", "know" !in strip("Thank you "))
+        assertEquals("caps lock: predictions in capitals too", "YOU", s.predict(null, true, before = TextContext.of("THANK "), allCaps = true).getOrNull(1)?.word)
+        assertTrue("predictions after \"5pm\"", strip("See you at 5pm ").isNotEmpty())
         assertTrue("to" in strip("I'm going "))
         assertTrue("way" in strip("I'm on my "))
         assertTrue("I" in strip(""))
@@ -188,5 +201,8 @@ class PredictionBenchmark {
      * 6.8% wrong. 1.9.0 (phrase model): 29.5% (18.2%), 59.8%, 96.2% with 3.6% wrong.
      */
     private val MIN_IN_STRIP = 0.28
+    private val MIN_MIDDLE = 0.17
     private val MIN_SAVED = 0.57
+    private val MIN_FIXED = 0.955
+    private val MAX_WRONG = 0.04
 }

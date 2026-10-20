@@ -30,8 +30,11 @@ class ThemeBackdrop(
     private var still: Bitmap? = null
     private var awakeUntil = 0L
     private var lastFrame = 0L
-    /** Seconds of motion so far. It only advances while awake, so a pause freezes the frame. */
-    private var clock = 0f
+    /**
+     * Seconds of motion so far. It only advances while awake, so a pause freezes the frame. Wrapped
+     * every hour of motion: a float that only grows loses the precision smooth motion needs.
+     */
+    private var clock = 0.0
     private val frame = Runnable { invalidateSelf() }
     private val moves = effects && t.decor != Decor.NONE
 
@@ -71,14 +74,14 @@ class ThemeBackdrop(
         val now = SystemClock.uptimeMillis()
         val running = moves && isVisible && now < awakeUntil
         if (running) {
-            if (lastFrame != 0L) clock += minOf(now - lastFrame, 100L) / 1000f
+            if (lastFrame != 0L) clock = (clock + minOf(now - lastFrame, 100L) / 1000.0) % CLOCK_WRAP_S
             lastFrame = now
         } else {
             lastFrame = 0L
         }
         canvas.save()
         canvas.translate(b.left.toFloat(), b.top.toFloat())
-        Ambient.draw(canvas, t, w.toFloat(), h.toFloat(), stripH, dp, clock)
+        Ambient.draw(canvas, t, w.toFloat(), h.toFloat(), stripH, dp, clock.toFloat())
         canvas.restore()
         if (running) {
             unscheduleSelf(frame)
@@ -105,6 +108,7 @@ class ThemeBackdrop(
     override fun getOpacity() = PixelFormat.OPAQUE
 
     private companion object {
+        private const val CLOCK_WRAP_S = 3600.0
         const val FRAME_MS = 33L
         const val AWAKE_MS = 10_000L
     }

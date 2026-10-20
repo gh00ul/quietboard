@@ -29,6 +29,7 @@ public class BuildPhrases {
     static final int BITS = 20;
     static final long MASK = (1L << BITS) - 1;
     static final int CHUNK_LINES = 1000;
+    static final int COUNTS_VERSION = 3;
     static final double DISCOUNT = 0.6;
     static final Set<String> ABBREV = new HashSet<>(Arrays.asList(
         "mr", "mrs", "ms", "dr", "st", "jr", "sr", "vs", "prof", "sgt", "capt", "lt", "col", "gen", "mt", "ft"));
@@ -43,6 +44,14 @@ public class BuildPhrases {
     static List<String> names = new ArrayList<>();
     static long[] uni;
     static long total;
+    /**
+     * Times a sentence end or a break (colon, dash, "...") came right after each token, and after each
+     * pair of tokens. That share isn't any word, so it must not go to the backoff for unseen words
+     * (after "thank you" the sentence usually just ends; that's no reason to expect "know").
+     */
+    static long[] stop1;
+    static Table stop2;
+    static long stopTotal;
     static int chunks;
     static Table bi, tri;
 
@@ -67,12 +76,14 @@ public class BuildPhrases {
             }
         }
         uni = new long[names.size()];
+        stop1 = new long[names.size()];
 
         if (opt.containsKey("load-counts")) {
             loadCounts(opt.get("load-counts"));
         } else {
             bi = new Table(27);
             tri = new Table(28);
+            stop2 = new Table(26);
             long maxLines = Long.parseLong(opt.getOrDefault("max-lines", "" + Long.MAX_VALUE));
             Writer holdout = opt.containsKey("holdout")
                 ? new OutputStreamWriter(new FileOutputStream(opt.get("holdout")), StandardCharsets.UTF_8) : null;
@@ -94,19 +105,30 @@ public class BuildPhrases {
         uni[id]++;
         if (h1 >= 0) {
             bi.inc(((long) h1 << BITS) | id, chunks);
-            if (h2 >= 0 && id >= FIRST_WORD) tri.inc(((long) h2 << (2 * BITS)) | ((long) h1 << BITS) | id, chunks);
+            // Comma and number followers too: they're part of what the context's probabilities add up to.
+            if (h2 >= 0) tri.inc(((long) h2 << (2 * BITS)) | ((long) h1 << BITS) | id, chunks);
         }
         h2 = h1; h1 = id;
     }
 
     /** End of a sentence: counts as a token (the sentence end follows the last word). */
     static void end() {
-        if (!pendingStart) total++;
+        if (!pendingStart) stop();
         pendingStart = true; h1 = -1; h2 = -1;
     }
 
     /** Something with no useful context after it (a colon, a dash, "..."). */
-    static void brk() { if (!pendingStart) { h1 = -1; h2 = -1; } }
+    static void brk() { if (!pendingStart) { stop(); h1 = -1; h2 = -1; } }
+
+    /** No word comes next: counts toward the context's "not a word" share. */
+    static void stop() {
+        total++;
+        stopTotal++;
+        if (h1 >= 0) {
+            stop1[h1]++;
+            if (h2 >= 0) stop2.inc(((long) h2 << BITS) | h1, chunks);
+        }
+    }
 
     static void unknown() {
         if (pendingStart) { uni[SENT]++; pendingStart = false; }
@@ -279,6 +301,9 @@ public class BuildPhrases {
         /** Lossy counting: drop the rarest entries until the table is half full. */
         void prune() {
             int keep;
+            // Search from 1 each time: a floor that only grows would throw away phrases that first
+            // appear late in the corpus long before they could reach it.
+            floor = 0;
             do {
                 floor++;
                 keep = 0;
@@ -304,9 +329,12 @@ public class BuildPhrases {
 
     static void saveCounts(String path) throws IOException {
         try (DataOutputStream o = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path), 1 << 20))) {
-            o.writeInt(uni.length); o.writeLong(total); o.writeInt(chunks);
+            o.writeInt(COUNTS_VERSION);
+            o.writeInt(names.hashCode()); // ids are positions in words_en.txt: the same list, or nothing
+            o.writeInt(uni.length); o.writeLong(total); o.writeInt(chunks); o.writeLong(stopTotal);
             for (long u : uni) o.writeLong(u);
-            for (Table t : new Table[]{bi, tri}) {
+            for (long u : stop1) o.writeLong(u);
+            for (Table t : new Table[]{bi, tri, stop2}) {
                 int n = 0;
                 for (int i = 0; i < t.keys.length; i++) if (t.keys[i] != 0 && t.cnt[i] >= 2) n++;
                 o.writeInt(n);
@@ -319,19 +347,22 @@ public class BuildPhrases {
 
     static void loadCounts(String path) throws IOException {
         try (DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(path), 1 << 20))) {
+            if (in.readInt() != COUNTS_VERSION) throw new IOException("counts from an older builder: count the corpus again");
+            if (in.readInt() != names.hashCode()) throw new IOException("counts were made with a different words_en.txt");
             int v = in.readInt();
             if (v != uni.length) throw new IOException("counts were made with a different words_en.txt");
-            total = in.readLong(); chunks = in.readInt();
+            total = in.readLong(); chunks = in.readInt(); stopTotal = in.readLong();
             for (int i = 0; i < v; i++) uni[i] = in.readLong();
-            Table[] ts = new Table[2];
-            for (int t = 0; t < 2; t++) {
+            for (int i = 0; i < v; i++) stop1[i] = in.readLong();
+            Table[] ts = new Table[3];
+            for (int t = 0; t < 3; t++) {
                 int n = in.readInt();
                 int bits = 4;
                 while ((1L << bits) * 0.6 < n) bits++;
                 ts[t] = new Table(bits);
                 for (int i = 0; i < n; i++) ts[t].put(in.readLong(), in.readInt(), in.readInt());
             }
-            bi = ts[0]; tri = ts[1];
+            bi = ts[0]; tri = ts[1]; stop2 = ts[2];
         }
     }
 
@@ -393,7 +424,8 @@ public class BuildPhrases {
         Map<Integer, Double> biAlpha = new HashMap<>();
         for (Map.Entry<Integer, double[]> e : biBackoff.entrySet()) {
             double[] s = e.getValue();
-            biAlpha.put(e.getKey(), clampAlpha(Math.max(1e-4, 1 - s[0]) / Math.max(1e-4, 1 - s[1])));
+            // What's left for unlisted words: not the listed ones, and not "no word at all".
+            biAlpha.put(e.getKey(), clampAlpha(Math.max(1e-4, 1 - s[0] - nonWordBi(e.getKey())) / Math.max(1e-4, 1 - s[1] - nonWordUni())));
         }
         System.err.printf("bigrams: %,d candidates, kept %,d in %,d contexts%n", nCand, order.length, biBackoff.size());
 
@@ -401,13 +433,13 @@ public class BuildPhrases {
         nCand = 0;
         for (int i = 0; i < tri.keys.length; i++) {
             long k = tri.keys[i];
-            if (k != 0 && tri.cnt[i] >= minCount && !bursty(tri.cnt[i], tri.df[i]) && bi.get(k >>> BITS) >= minTriContext) nCand++;
+            if (k != 0 && (k & MASK) >= FIRST_WORD && tri.cnt[i] >= minCount && !bursty(tri.cnt[i], tri.df[i]) && bi.get(k >>> BITS) >= minTriContext) nCand++;
         }
         long[] triKey = new long[nCand]; int[] triCnt = new int[nCand]; int[] triCtxCnt = new int[nCand]; double[] triScore = new double[nCand];
         j = 0;
         for (int i = 0; i < tri.keys.length; i++) {
             long k = tri.keys[i];
-            if (k == 0 || tri.cnt[i] < minCount || bursty(tri.cnt[i], tri.df[i]) || bi.get(k >>> BITS) < minTriContext) continue;
+            if (k == 0 || (k & MASK) < FIRST_WORD || tri.cnt[i] < minCount || bursty(tri.cnt[i], tri.df[i]) || bi.get(k >>> BITS) < minTriContext) continue;
             int a = (int) (k >>> (2 * BITS)), b = (int) ((k >>> BITS) & MASK), w = (int) (k & MASK);
             int cab = Math.max(bi.get(((long) a << BITS) | b), tri.cnt[i]);
             double p = Math.min(0.99, (double) tri.cnt[i] / cab);
@@ -433,7 +465,8 @@ public class BuildPhrases {
         Map<Long, Double> triAlpha = new HashMap<>();
         for (Map.Entry<Long, double[]> e : triBackoff.entrySet()) {
             double[] s = e.getValue();
-            triAlpha.put(e.getKey(), clampAlpha(Math.max(1e-4, 1 - s[0]) / Math.max(1e-4, 1 - s[1])));
+            int a = (int) (e.getKey() >>> BITS), b = (int) (e.getKey() & MASK);
+            triAlpha.put(e.getKey(), clampAlpha(Math.max(1e-4, 1 - s[0] - nonWordTri(a, b)) / Math.max(1e-4, 1 - s[1] - nonWordBi(b))));
         }
         System.err.printf("trigrams: %,d candidates, kept %,d in %,d contexts%n", nCand, tOrder.length, triBackoff.size());
 
@@ -498,6 +531,22 @@ public class BuildPhrases {
         if (dump != null) dumpContexts(dump, biP, biAlpha, triP);
     }
 
+    /** Share of a token's occurrences followed by no word: a sentence end, a break, a comma or a number. */
+    static double nonWordBi(int b) {
+        long n = stop1[b] + bi.get(((long) b << BITS) | COMMA) + bi.get(((long) b << BITS) | NUM);
+        return Math.min(0.999, (double) n / Math.max(1, uni[b]));
+    }
+
+    static double nonWordTri(int a, int b) {
+        long ctx = ((long) a << BITS) | b;
+        long n = stop2.get(ctx) + tri.get((ctx << BITS) | COMMA) + tri.get((ctx << BITS) | NUM);
+        return Math.min(0.999, (double) n / Math.max(1, bi.get(ctx)));
+    }
+
+    static double nonWordUni() {
+        return (double) (stopTotal + uni[COMMA] + uni[NUM]) / total;
+    }
+
     static double biModel(int b, int w, Map<Long, Double> biP, Map<Integer, Double> biAlpha) {
         Double p = biP.get(((long) b << BITS) | w);
         if (p != null) return p;
@@ -545,7 +594,7 @@ public class BuildPhrases {
             {"ok"}, {"okay"}, {"please"}, {"miss"}, {"happy"}, {"was"}, {"have"}, {"a"}, {"be"}, {"of"}, {"in"},
             {"i", "want"}, {"want", "to"}, {"going", "to"}, {"i'm", "going"}, {"how", "are"}, {"what", "are"},
             {"<s>", "thank"}, {"see", "you"}, {"hey", ","}, {"<s>", "i"}, {"i", "love"}, {"do", "you"}, {"i", "don't"},
-            {"let", "me"}, {"on", "my"}, {"at", "the"}, {"in", "the"}, {"talk", "to"}, {"call", "me"}, {"good", "morning"},
+            {"let", "me"}, {"thank", "you"}, {"love", "you"}, {"miss", "you"}, {"on", "my"}, {"at", "the"}, {"in", "the"}, {"talk", "to"}, {"call", "me"}, {"good", "morning"},
         };
         try (PrintWriter p = new PrintWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8))) {
             for (String[] ctx : probes) {

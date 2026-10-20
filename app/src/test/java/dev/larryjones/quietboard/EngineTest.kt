@@ -270,6 +270,11 @@ class EngineTest {
         assertEquals("Mr. doesn't end a sentence", TextContext(TextContext.START, "mr"), TextContext.of("Mr. "))
         assertEquals("\"...\" trails off: no context", TextContext(null, null), TextContext.of("well... "))
         assertEquals(TextContext(null, null), TextContext.of("Note: "))
+        assertEquals("\"4th\" is a number, as the model counted it", TextContext("may", TextContext.NUMBER), TextContext.of("May 4th "))
+        assertEquals("\"mp3\" isn't anything the model knows", TextContext(null, null), TextContext.of("an mp3 "))
+        assertEquals("\"1st.\" ends the sentence", TextContext(null, TextContext.START), TextContext.of("the 1st. "))
+        assertEquals("an opening quote is skipped", TextContext("said", TextContext.COMMA).prev2, TextContext.of("he said, '").prev2)
+        assertEquals("tabs and other spaces count as spaces", TextContext("i", "think"), TextContext.of("I think\t"))
         assertEquals("quotes are skipped", TextContext("said", "hi"), TextContext.of("he said \"hi\" "))
         assertEquals("an emoji starts afresh", TextContext(null, TextContext.START), TextContext.of("lol \uD83D\uDE02 "))
     }
@@ -285,6 +290,13 @@ class EngineTest {
         assertTrue(!m.context(TextContext(null, "zzzqx")).known)
         val top = going.top(3) { true }.map { dict.words[it.first] }
         assertEquals("to", top.first())
+        // The quick path (each context's likeliest followers, found at load) agrees with a full scan.
+        for (ctx in listOf(TextContext(null, "the"), TextContext(null, TextContext.START), TextContext("i", "want"), TextContext("in", "the"))) {
+            val c = m.context(ctx)
+            val quick = c.top(8) { true }
+            val full = c.top(100_000) { true }.take(8)
+            assertEquals("top words after $ctx", full.map { it.first }, quick.map { it.first })
+        }
     }
 
     @Test fun brandsAndContractions() {

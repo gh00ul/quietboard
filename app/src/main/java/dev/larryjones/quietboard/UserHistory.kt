@@ -112,7 +112,7 @@ class UserHistory(dir: File) {
         e.count = minOf(e.count + 1, 1000)
         if (word == lower) e.word = word
         if (prev != null && isLearnable(prev)) {
-            val pl = prev.lowercase(Locale.US)
+            val pl = norm(prev)
             countFollower(pairs.getOrPut(pl) { HashMap() }, word)
             tripleKey(prev2, pl)?.let { countFollower(triples.getOrPut(it) { HashMap() }, word) }
         }
@@ -170,7 +170,7 @@ class UserHistory(dir: File) {
         val lower = word.lowercase(Locale.US)
         words[lower]?.let { e -> e.count -= 1; if (e.count <= 0) words.remove(lower) }
         if (prev != null) {
-            val pl = prev.lowercase(Locale.US)
+            val pl = norm(prev)
             for (m in listOfNotNull(pairs[pl], tripleKey(prev2, pl)?.let { triples[it] })) {
                 val c = m[word] ?: continue
                 if (c <= 1) m.remove(word) else m[word] = c - 1
@@ -186,7 +186,7 @@ class UserHistory(dir: File) {
 
     /** What you've typed after [prevLower], with counts (main thread). */
     fun followers(prevLower: String, fn: (word: String, count: Int) -> Unit) {
-        pairs[prevLower]?.forEach { (w, c) -> fn(w, c) }
+        pairs[norm(prevLower)]?.forEach { (w, c) -> fn(w, c) }
     }
 
     fun completions(prefixLower: String, out: (word: String, count: Int) -> Unit) {
@@ -195,7 +195,7 @@ class UserHistory(dir: File) {
 
     fun pairCount(prevLower: String?, word: String): Int {
         if (prevLower == null) return 0
-        return pairs[prevLower]?.get(word) ?: 0
+        return pairs[norm(prevLower)]?.get(word) ?: 0
     }
 
     /** What you've typed after these two (lowercase tokens, as in [learn]), with counts (main thread). */
@@ -204,13 +204,16 @@ class UserHistory(dir: File) {
         triples[key]?.forEach { (w, c) -> fn(w, c) }
     }
 
-    fun tripleCount(prev2: String?, prev1: String?, word: String): Int {
-        val key = tripleKey(prev2, prev1 ?: return 0) ?: return 0
-        return triples[key]?.get(word) ?: 0
+    fun tripleCount(prev2: String?, prev1: String?, word: String): Int = triplesAfter(prev2, prev1)[word] ?: 0
+
+    /** Everything you've typed after these two, as typed -> count (main thread; don't keep it). */
+    fun triplesAfter(prev2: String?, prev1: String?): Map<String, Int> {
+        val key = tripleKey(prev2, prev1 ?: return emptyMap()) ?: return emptyMap()
+        return triples[key] ?: emptyMap()
     }
 
     fun predict(prevLower: String, limit: Int): List<String> {
-        val m = pairs[prevLower] ?: return emptyList()
+        val m = pairs[norm(prevLower)] ?: return emptyList()
         return m.entries.filter { it.value >= 2 }.sortedByDescending { it.value }.take(limit).map { it.key }
     }
 
@@ -279,11 +282,15 @@ class UserHistory(dir: File) {
 
         /** "two-back one-back", or null when there's no usable word or marker two back. */
         fun tripleKey(prev2: String?, prev1Lower: String): String? {
-            val p2 = prev2?.lowercase(Locale.US)?.replace('\u2019', '\'') ?: return null
+            val p2 = prev2?.let { norm(it) } ?: return null
             if (p2 != TextContext.START && p2 != TextContext.COMMA && !isLearnable(p2)) return null
-            if (' ' in p2 || ' ' in prev1Lower) return null
-            return "$p2 $prev1Lower"
+            val p1 = norm(prev1Lower)
+            if (' ' in p2 || ' ' in p1) return null
+            return "$p2 $p1"
         }
+
+        /** Lowercase, with one spelling of the apostrophe ("I’m" is "i'm"). */
+        private fun norm(w: String) = w.lowercase(Locale.US).replace('\u2019', '\'')
         /** Room for newcomers: a new follower needs a few uses to get counted, not to be evicted at once. */
         const val MAX_KEPT_FOLLOWERS = 2 * MAX_FOLLOWERS
         const val PAIR_AGING_TOTAL = 400

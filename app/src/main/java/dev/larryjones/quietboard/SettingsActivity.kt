@@ -154,8 +154,8 @@ class SettingsActivity : Activity() {
                 .setMessage("This can't be undone.")
                 .setPositiveButton("Clear") { _, _ ->
                     UserHistory.deleteFiles(filesDir)
-                    prefs.sp.edit().remove(QuietIME.KEY_RECENTS)
-                        .putLong(Prefs.CLEAR_HISTORY, System.currentTimeMillis()).apply()
+                    prefs.clearEmojiRecents()
+                    prefs.sp.edit().putLong(Prefs.CLEAR_HISTORY, System.currentTimeMillis()).apply()
                     Toast.makeText(this, "Learned words cleared", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Cancel", null)
@@ -379,6 +379,18 @@ class SettingsActivity : Activity() {
             setOnCheckedChangeListener { _, v ->
                 prefs.sp.edit().putBoolean(key, v).apply()
                 onChange?.invoke(v)
+            }
+        }
+        // One TalkBack stop per setting: the row is the switch ("Scene motion, on, switch").
+        sw.isClickable = false
+        sw.isFocusable = false
+        sw.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        row.accessibilityDelegate = object : View.AccessibilityDelegate() {
+            override fun onInitializeAccessibilityNodeInfo(host: View, info: android.view.accessibility.AccessibilityNodeInfo) {
+                super.onInitializeAccessibilityNodeInfo(host, info)
+                info.className = Switch::class.java.name
+                info.isCheckable = true
+                info.isChecked = sw.isChecked
             }
         }
         row.addView(sw)

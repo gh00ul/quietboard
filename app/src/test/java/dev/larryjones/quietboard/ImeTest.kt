@@ -8,12 +8,14 @@ import android.os.SystemClock
 import android.view.MotionEvent
 import android.text.InputType
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,6 +47,11 @@ class ImeTest {
         root.layout(0, 0, 1080, root.measuredHeight)
         edit = EditText(ctx).apply { inputType = InputType.TYPE_CLASS_TEXT }
         start(fieldId = 1)
+    }
+
+    /** Background work (dictionary load, saves) from one test mustn't land in the next. */
+    @After fun tearDown() {
+        ime.onDestroy()
     }
 
     private fun start(fieldId: Int, restarting: Boolean = false, type: Int = InputType.TYPE_CLASS_TEXT) {
@@ -230,6 +237,7 @@ class ImeTest {
 
     @Test fun funThemeTypesAndDraws() {
         waitForEngine()
+        Prefs(RuntimeEnvironment.getApplication()).sp.edit().putBoolean(Prefs.TAP_SPARKLES, true).commit()
         Prefs(RuntimeEnvironment.getApplication()).sp.edit().putString(Prefs.THEME, "christmas").commit()
         start(fieldId = 30)
         assertEquals(Decor.CHRISTMAS, root.keyboard.theme?.decor)
@@ -395,9 +403,116 @@ class ImeTest {
 
     @Test fun learnsThreeWordPhrasesFromTyping() {
         waitForEngine()
+        // A stronger two-word habit ("sounds good") must lose to the three-word one after "ok sounds".
+        repeat(6) { type("that sounds good ") }
         repeat(3) { type("ok sounds chill ") }
-        type("ok sounds ")
+        type("that sounds ")
+        assertEquals("good", root.topBar.itemsForTest().getOrNull(1)?.word)
+        type("ok ok sounds ")
         assertEquals("chill", root.topBar.itemsForTest().getOrNull(1)?.word)
+    }
+
+    @Test fun theKeyboardTellsAndroidItShowsLogins() {
+        // Without this declaration Android never asks the keyboard for password-manager logins at all.
+        val xml = RuntimeEnvironment.getApplication().resources.getXml(R.xml.method)
+        var declared = false
+        while (xml.next() != org.xmlpull.v1.XmlPullParser.END_DOCUMENT) {
+            if (xml.eventType == org.xmlpull.v1.XmlPullParser.START_TAG && xml.name == "input-method") {
+                declared = xml.getAttributeBooleanValue("http://schemas.android.com/apk/res/android", "supportsInlineSuggestions", false)
+            }
+        }
+        assertTrue(declared)
+    }
+
+    @Test fun noSpaceBeforeTheNextMessageAfterSend() {
+        waitForEngine()
+        val (xs, ys) = swipe("hello")
+        ime.onGesture(xs, ys, xs.size)
+        assertTrue(waitUntil { text == "hello" })
+        // The chat app sends and clears its box, restarting input on the same field.
+        edit.setText("")
+        start(fieldId = 1, restarting = true)
+        type("i")
+        assertEquals("i", text)
+    }
+
+    @Test fun backspaceUndoesACorrectionMadeByEnter() {
+        waitForEngine()
+        start(fieldId = 7, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+        type("teh")
+        ime.onEnter()
+        // The test connection can't deliver the Enter key event: put the newline in as the editor would.
+        if (text == "the") edit.append("\n")
+        assertEquals("the\n", text)
+        // The editor reports the corrected word and the newline as two separate cursor moves.
+        ime.onUpdateSelection(3, 3, 3, 3, -1, -1)
+        ime.onUpdateSelection(3, 3, 4, 4, -1, -1)
+        ime.onDelete()
+        assertEquals("teh", text)
+    }
+
+    @Test fun anAppRestartingInputMidWordKeepsTheWord() {
+        waitForEngine()
+        type("teh")
+        start(fieldId = 1, restarting = true) // a formatter re-sets the text on the same field
+        assertEquals("teh", text)
+        type(" ")
+        assertEquals("still corrected", "the ", text)
+    }
+
+    @Test fun glidesInAnAddressBarAreSeparateWords() {
+        waitForEngine()
+        start(fieldId = 8, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
+        for (w in listOf("best", "pizza")) {
+            val (xs, ys) = swipe(w)
+            ime.onGesture(xs, ys, xs.size)
+            assertTrue(waitUntil { text.endsWith(w) })
+        }
+        assertEquals("best pizza", text)
+    }
+
+    @Test fun nameFieldsCapitaliseTheWordAfterAGlide() {
+        waitForEngine()
+        start(fieldId = 9, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+        val (xs, ys) = swipe("hello")
+        ime.onGesture(xs, ys, xs.size)
+        assertTrue("glided: $text", waitUntil { text.equals("hello", ignoreCase = true) })
+        assertEquals("the next tapped letter starts a new name", ShiftState.ON, root.keyboard.shiftState)
+    }
+
+    @Test fun noShortcutsOnTheLockScreen() {
+        waitForEngine()
+        val prefs = Prefs(RuntimeEnvironment.getApplication())
+        prefs.saveShortcuts(mapOf("addr" to "1 Main St"))
+        shadowOf(Looper.getMainLooper()).idle()
+        start(fieldId = 10)
+        type("addr")
+        assertTrue("your shortcut when unlocked", root.topBar.itemsForTest().any { it?.word == "1 Main St" })
+        ime.onDelete(); ime.onDelete(); ime.onDelete(); ime.onDelete()
+        val km = RuntimeEnvironment.getApplication().getSystemService(KeyguardManager::class.java)
+        shadowOf(km).setKeyguardLocked(true)
+        try {
+            start(fieldId = 11)
+            type("addr")
+            assertFalse("not for whoever holds the locked phone", root.topBar.itemsForTest().any { it?.word == "1 Main St" })
+        } finally {
+            shadowOf(km).setKeyguardLocked(false)
+            prefs.saveShortcuts(emptyMap())
+        }
+    }
+
+    @Test fun lockedPrefsNeverTouchEncryptedStorage() {
+        val app = RuntimeEnvironment.getApplication()
+        val locked = object : android.content.ContextWrapper(app) {
+            override fun getSharedPreferences(name: String?, mode: Int): android.content.SharedPreferences =
+                error("encrypted storage read before the first unlock: $name")
+            override fun createDeviceProtectedStorageContext() = app.createDeviceProtectedStorageContext()
+        }
+        val p = Prefs(locked, unlocked = false)
+        assertEquals("defaults until unlock", "system", p.theme)
+        assertTrue(p.shortcuts().isEmpty())
+        p.saveShortcuts(mapOf("a" to "b")) // quietly not kept
+        assertEquals(null, p.emojiRecents())
     }
 
     @Test fun tapSparklesAreOffUnlessTurnedOn() {
@@ -432,14 +547,20 @@ class ImeTest {
         // Two logins arrive: they take the strip, over predictions, until you open the tools.
         type("thank ")
         val ctx = RuntimeEnvironment.getApplication()
-        root.setAutofill(listOf(View(ctx), View(ctx)))
+        // The system sizes each chip itself: that size must survive being placed.
+        val chip = View(ctx).apply { layoutParams = ViewGroup.LayoutParams(300, 80) }
+        root.setAutofill(listOf(chip, View(ctx)))
+        assertEquals(300, chip.layoutParams.width)
         assertTrue(root.topBar.showingAutofill)
         assertFalse(root.topBar.showingSuggestions)
         tapStrip(10f * root.resources.displayMetrics.density)
         assertTrue(root.topBar.toolsOpen)
         assertFalse("the toolbar covers them", root.topBar.showingAutofill)
         type("y")
-        assertTrue("typing brings them back", root.topBar.showingAutofill)
+        assertFalse("typing a word: suggestions (and the autocorrection) show instead", root.topBar.showingAutofill)
+        assertTrue(root.topBar.showingSuggestions)
+        ime.onDelete()
+        assertTrue("the word's gone: the logins are back", root.topBar.showingAutofill)
         // The form is gone: an empty answer clears them.
         val empty = android.view.inputmethod.InlineSuggestionsResponse::class.java
             .getMethod("newInlineSuggestionsResponse", List::class.java).invoke(null, emptyList<Any>())
@@ -472,7 +593,7 @@ class ImeTest {
             ei.packageName = "test.app"
             locked.onStartInputView(ei, false)
             val f = QuietIME::class.java.getDeclaredField("decoder").apply { isAccessible = true }
-            waitUntil { f.get(locked) != null }
+            assertTrue("the dictionary loads before unlock", waitUntil { f.get(locked) != null })
             "hello there ".forEach { if (it == ' ') locked.onSpace() else locked.onText(it.toString()) }
             assertEquals("the keyboard types", "hello there ", field.text.toString())
             val history = QuietIME::class.java.getDeclaredField("history").apply { isAccessible = true }.get(locked) as UserHistory
@@ -482,7 +603,7 @@ class ImeTest {
             shadowOf(um).setUserUnlocked(true)
             shadowOf(km).setKeyguardLocked(false)
             app.sendBroadcast(android.content.Intent(android.content.Intent.ACTION_USER_UNLOCKED))
-            waitUntil { history.count("zorbix") > 0 }
+            assertTrue("your words load on unlock", waitUntil { history.count("zorbix") > 0 })
             assertEquals(5, history.count("zorbix"))
             assertTrue(java.io.File(app.filesDir, "user_words.tsv").readText().contains("Zorbix"))
             locked.onDestroy()
@@ -519,12 +640,13 @@ class ImeTest {
         assertEquals("Hi. Hello ", text)
     }
 
-    private fun waitUntil(cond: () -> Boolean) {
+    private fun waitUntil(cond: () -> Boolean): Boolean {
         repeat(300) {
             shadowOf(Looper.getMainLooper()).idle()
-            if (cond()) return
+            if (cond()) return true
             Thread.sleep(20)
         }
+        return false
     }
 
     private fun waitForEngine() {

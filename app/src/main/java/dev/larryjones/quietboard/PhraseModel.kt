@@ -30,25 +30,39 @@ data class TextContext(val prev2: String?, val prev1: String?) {
             return TextContext(prev2, prev1)
         }
 
-        /** The token ending at [end] (spaces and quotes skipped) and where it starts. */
+        /** The token ending at [end] (spaces and quotes skipped) and where it starts, split as the builder splits text. */
         private fun tokenBefore(text: CharSequence, end: Int): Pair<String?, Int> {
             var i = end
-            while (i > 0 && (text[i - 1] == ' ' || text[i - 1] in IGNORED)) i--
+            while (i > 0) {
+                val c = text[i - 1]
+                // Spaces (not new lines), quotes and brackets, and a lone apostrophe (an opening quote).
+                if ((c.isWhitespace() && c != '\n') || c in IGNORED || (isApostrophe(c) && (i < 2 || !text[i - 2].isLetterOrDigit()))) {
+                    i--
+                    continue
+                }
+                break
+            }
             if (i == 0) return START to 0
             val c = text[i - 1]
             when {
-                c.isLetter() || isApostrophe(c) -> {
+                c.isLetterOrDigit() || isApostrophe(c) -> {
+                    // The whole run: letters, digits, apostrophes, and "." ":" "," between digits (5:30, 3.5).
                     var s = i
-                    while (s > 0 && (text[s - 1].isLetter() || isApostrophe(text[s - 1]))) s--
-                    // "mp3", "4th": glued to digits, so not a word the model knows.
-                    if (s > 0 && text[s - 1].isDigit()) return null to s
-                    val w = text.subSequence(s, i).toString().lowercase(Locale.US).replace('’', '\'').replace('‘', '\'').trim('\'')
-                    return (w.ifEmpty { null }) to s
-                }
-                c.isDigit() -> {
-                    var s = i
-                    while (s > 0 && (text[s - 1].isLetterOrDigit() || (text[s - 1] in ".:," && s > 1 && text[s - 2].isDigit()))) s--
-                    return NUMBER to s
+                    while (s > 0) {
+                        val p = text[s - 1]
+                        if (p.isLetterOrDigit() || isApostrophe(p)) { s--; continue }
+                        if (p in ".:," && s > 1 && text[s - 2].isDigit() && text[s].isDigit()) { s--; continue }
+                        break
+                    }
+                    val run = text.subSequence(s, i)
+                    val first = run.firstOrNull { !isApostrophe(it) }
+                    return when {
+                        first == null -> null to s
+                        // "5pm", "4th", "10:30": a number. "mp3", "covid19": nothing the model knows.
+                        first.isDigit() -> NUMBER to s
+                        run.any { it.isDigit() } -> null to s
+                        else -> run.toString().lowercase(Locale.US).replace('\u2019', '\'').replace('\u2018', '\'').trim('\'').ifEmpty { null } to s
+                    }
                 }
                 c == ',' -> return COMMA to (i - 1)
                 c == '!' || c == '?' || c == '\n' -> return START to (i - 1)
@@ -56,9 +70,9 @@ data class TextContext(val prev2: String?, val prev1: String?) {
                     if (i > 1 && text[i - 2] == '.') return null to (i - 1) // "..." trails off
                     var s = i - 1
                     while (s > 0 && text[s - 1].isLetter()) s--
-                    // "Mr." isn't the end of a sentence: the abbreviation is the context.
+                    // "Mr." isn't the end of a sentence: the abbreviation is the context. ("1st." is.)
                     val w = text.subSequence(s, i - 1).toString().lowercase(Locale.US)
-                    return if (w in ABBREV && (s == 0 || !text[s - 1].isLetter())) w to s else START to (i - 1)
+                    return if (w in ABBREV && (s == 0 || !text[s - 1].isLetterOrDigit())) w to s else START to (i - 1)
                 }
                 // An emoji usually closes a thought: what comes next starts afresh.
                 Character.isSurrogate(c) || c == '\uFE0F' || c == '\u200D' ||
@@ -92,6 +106,9 @@ class PhraseModel private constructor(
     private val biBo: ByteArray,
     private val biWord: IntArray,
     private val biLp: ByteArray,
+    /** Per bigram context ([biTopStart]), positions of its likeliest followers, likeliest first. */
+    private val biTopStart: IntArray,
+    private val biTop: IntArray,
     private val triKey: LongArray,
     private val triStart: IntArray,
     private val triBo: ByteArray,
@@ -171,13 +188,25 @@ class PhraseModel private constructor(
             if (b < 0) return emptyList()
             val seen = HashSet<Int>()
             val out = ArrayList<Pair<Int, Float>>()
-            fun consider(id: Int) {
-                if (!seen.add(id)) return
+            fun consider(id: Int): Boolean {
+                if (!seen.add(id)) return false
                 val di = dictIndexOf[id]
-                if (di >= 0 && keep(di)) out += di to logProb(id)
+                if (di < 0 || !keep(di)) return false
+                out += di to logProb(id)
+                return true
             }
             if (tri >= 0) for (k in triStart[tri] until triStart[tri + 1]) consider(triWord[k])
-            for (k in biStart[b] until biStart[b + 1]) consider(biWord[k])
+            // Words only the bigram list has all share one backoff, so their order is the list's: its
+            // likeliest few (found at load) are enough, unless the filter or the trigram list took too many.
+            var fresh = 0
+            for (k in biTopStart[b] until biTopStart[b + 1]) {
+                val id = biWord[biTop[k]]
+                val inTri = tri >= 0 && find(triWord, triStart[tri], triStart[tri + 1], id) >= 0
+                if (consider(id) && !inTri) fresh++
+            }
+            if (fresh < n && biStart[b + 1] - biStart[b] > biTopStart[b + 1] - biTopStart[b]) {
+                for (k in biStart[b] until biStart[b + 1]) consider(biWord[k])
+            }
             out.sortByDescending { it.second }
             return if (out.size > n) out.subList(0, n) else out
         }
@@ -189,6 +218,32 @@ class PhraseModel private constructor(
         const val NUMBER = 2
         const val FIRST_WORD = 3
         private const val BITS = 20
+
+        /** How many of each context's likeliest bigram followers [Context.top] looks at first. */
+        private const val TOP = 24
+
+        /** For each context, the positions of its [TOP] likeliest followers (smallest -ln P first). */
+        private fun likeliest(start: IntArray, lp: ByteArray, v: Int): Pair<IntArray, IntArray> {
+            val topStart = IntArray(v + 1)
+            var total = 0
+            for (c in 0 until v) { topStart[c] = total; total += minOf(TOP, start[c + 1] - start[c]) }
+            topStart[v] = total
+            val top = IntArray(total)
+            val buf = IntArray(TOP)
+            for (c in 0 until v) {
+                var n = 0
+                for (k in start[c] until start[c + 1]) {
+                    val q = lp[k].toInt() and 0xFF
+                    if (n == TOP && q >= (lp[buf[n - 1]].toInt() and 0xFF)) continue
+                    // Insert into the small sorted buffer, dropping the worst when full.
+                    var j = if (n < TOP) n++ else n - 1
+                    while (j > 0 && (lp[buf[j - 1]].toInt() and 0xFF) > q) { buf[j] = buf[j - 1]; j-- }
+                    buf[j] = k
+                }
+                System.arraycopy(buf, 0, top, topStart[c], n)
+            }
+            return topStart to top
+        }
 
         private fun find(words: IntArray, from: Int, to: Int, id: Int): Int {
             var lo = from
@@ -282,7 +337,8 @@ class PhraseModel private constructor(
                 readFollowers()
             }
             triStart[nTri] = size
-            return PhraseModel(dict, uni, dictIndexOf, idOfDict, biStart, biBo, biWord, biLp,
+            val (topStart, top) = likeliest(biStart, biLp, v)
+            return PhraseModel(dict, uni, dictIndexOf, idOfDict, biStart, biBo, biWord, biLp, topStart, top,
                 triKey, triStart, triBo, words.copyOf(size), probs.copyOf(size))
         }
     }

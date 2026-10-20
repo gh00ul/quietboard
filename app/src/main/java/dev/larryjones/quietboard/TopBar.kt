@@ -32,7 +32,7 @@ class TopBar(context: Context) : View(context) {
 
     var listener: Listener? = null
     var theme: KbTheme? = null
-        set(v) { field = v; invalidate() }
+        set(v) { field = v; chipFit = null; invalidate() }
 
     private var items: List<SuggestionItem?> = emptyList()
     var pasteChip: String? = null
@@ -73,6 +73,19 @@ class TopBar(context: Context) : View(context) {
      * any they take the place of suggestions, until you open the tools.
      */
     var autofillCount = 0
+        set(v) {
+            if (field == v) return
+            field = v
+            pressedSlot = -1
+            handler.removeCallbacks(longPress)
+            layoutTools()
+            invalidate()
+            a11y.invalidateAll()
+            onModeChange?.invoke()
+        }
+
+    /** Logins step aside while you type a word or a panel (emoji, clipboard) is open. */
+    var autofillPaused = false
         set(v) {
             if (field == v) return
             field = v
@@ -125,8 +138,8 @@ class TopBar(context: Context) : View(context) {
     }
 
     private val hasSuggestions get() = items.any { it != null }
-    val showingAutofill get() = autofillCount > 0 && !toolsOpen
-    val showingSuggestions get() = hasSuggestions && !toolsOpen && autofillCount == 0
+    val showingAutofill get() = autofillCount > 0 && !toolsOpen && !autofillPaused
+    val showingSuggestions get() = hasSuggestions && !toolsOpen && !showingAutofill
 
     /** Width of the tools button, where the logins start. */
     internal val leadWidth get() = lead.toInt()
@@ -162,6 +175,7 @@ class TopBar(context: Context) : View(context) {
      */
     private fun layoutTools() {
         toolRects.clear()
+        chipFit = null // the chip's width may change with the buttons around it
         if (width == 0) return
         if (showingSuggestions || showingAutofill) {
             place(Tool.MORE, 0f, 0f, lead, height.toFloat())

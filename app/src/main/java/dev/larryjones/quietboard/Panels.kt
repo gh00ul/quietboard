@@ -240,6 +240,7 @@ class EmojiPanel(context: Context, private val listener: Listener) : LinearLayou
         for ((i, tv) in tabViews.withIndex()) {
             tv.background = if (i == current) rounded(t.special, context.dp(12f), t.specialStroke, context.dp(1.2f).toInt()) else null
             tv.alpha = if (i == current) 1f else 0.75f
+            tv.isSelected = i == current // TalkBack says which category is open
         }
     }
 
@@ -384,7 +385,8 @@ class ClipboardPanel(context: Context, private val listener: Listener) : LinearL
             meta.visibility = if (meta.text.isNullOrEmpty()) View.GONE else View.VISIBLE
             val pin = row.getChildAt(1) as IconButton
             val close = row.getChildAt(2) as IconButton
-            text.text = item.text
+            // Only two lines show: don't lay out (or have TalkBack read) a whole 50,000-character clip.
+            text.text = item.text.take(300).replace('\n', ' ')
             pin.icon = if (item.pinned) Icon.PIN_ON else Icon.PIN
             pin.contentDescription = if (item.pinned) "Unpin" else "Pin"
             close.contentDescription = "Remove"

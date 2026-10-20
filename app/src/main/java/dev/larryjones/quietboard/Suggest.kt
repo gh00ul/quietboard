@@ -81,8 +81,10 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
      */
     fun suggest(
         typed: String, prev: String?, allowAutoCorrect: Boolean, rejected: Set<String>, learned: Boolean = true,
-        before: TextContext? = null,
+        before: TextContext? = null, personal: Boolean = true,
     ): SuggestionResult {
+        // Your text shortcuts can hold an address or an account number: none on the lock screen.
+        val shortcuts = if (personal) shortcuts else emptyMap()
         // A typographic apostrophe (don’t) looks words up like a plain one.
         val lower = typed.lowercase(Locale.US).replace('’', '\'')
         if (typed.any { it.isDigit() }) {
@@ -91,9 +93,9 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
             if (sc != null) {
                 return SuggestionResult(listOf(SuggestionItem(typed, "“$typed”", literal = true), SuggestionItem(sc), null), null)
             }
-            return SuggestionResult(listOf(null, SuggestionItem(typed), null), null)
+            return SuggestionResult(withEmoji(listOf(null, SuggestionItem(typed), null), typed), null) // "100" -> 💯
         }
-        val prevLower = prev?.lowercase(Locale.US)
+        val prevLower = prev?.lowercase(Locale.US)?.replace('\u2019', '\'')
         val exactIdx = dict.exactIndex(lower)
         val shortcut = shortcuts[lower]
         val userKnown = learned && history.isKnown(lower)
@@ -112,6 +114,12 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         // What fits after the words before ("I" + "wold" -> would, not wild; "going t" -> to).
         val words2 = contextOf(before, prev)
         val here = phrases?.context(words2)?.takeIf { it.known }
+        // Your three-word habits here, looked up once (thousands of candidates follow).
+        val mine3 = if (learned) history.triplesAfter(words2.prev2, words2.prev1) else emptyMap()
+        fun tripleBonus(w: String): Float {
+            val c = mine3[w] ?: return 0f
+            return 30f * minOf(c, 3)
+        }
         fun ctx(i: Int) = if (here == null) 0f else contextPoints * here.boost(i).coerceIn(boostMin, boostMax)
 
         // Keyed by lowercase so "Haven"/"haven" or a learned "Thanks" never show up twice.
@@ -130,13 +138,13 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         dict.forEachWithPrefix(lower) { i ->
             if (dict.keys[i] != lower && !hidden(i)) {
                 val w = dict.words[i]
-                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + tripleBonus(words2, w, learned) + ctx(i) - (dict.keys[i].length - lower.length) * 1.5f
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + tripleBonus(w) + ctx(i) - (dict.keys[i].length - lower.length) * 1.5f
                 top.add(i, s)
             }
         }
         top.forEach { i, s -> offer(dict.words[i], s) }
         if (learned) history.completions(lower) { w, c ->
-            if (c >= 2 && !blocked(w)) offer(w, 120f + 10f * minOf(c, 10) + pairBonus(prevLower, w, true) + tripleBonus(words2, w, true))
+            if (c >= 2 && !blocked(w)) offer(w, 120f + 10f * minOf(c, 10) + pairBonus(prevLower, w, true) + tripleBonus(w))
         }
 
         // 2) Typo corrections.
@@ -158,7 +166,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
                 if (typed == lower && w.length > 1 && dict.freqs[i] < 120 && w.all { !it.isLetter() || it.isUpperCase() }) {
                     return@corrections
                 }
-                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + tripleBonus(words2, w, learned) + ctx(i) - d * EDIT_COST
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + tripleBonus(w) + ctx(i) - d * EDIT_COST
                 offer(w, s - 5f)
                 if (s > bestFixScore && dict.freqs[i] >= 40) { bestFixScore = s; bestFix = w }
             }
@@ -224,7 +232,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
      */
     fun predict(
         prev: String?, capitalize: Boolean, learned: Boolean = true, sentenceStart: Boolean = false,
-        before: TextContext? = null,
+        before: TextContext? = null, allCaps: Boolean = false,
     ): List<SuggestionItem?> {
         val ctx = contextOf(before, prev, sentenceStart)
         val key = ctx.prev1 ?: return emptyList()
@@ -256,7 +264,11 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         }
         val p = scores.entries.sortedByDescending { it.value }.take(3).map { display.getValue(it.key) }
         if (p.isEmpty()) return emptyList()
-        fun c(w: String) = if (capitalize) w.replaceFirstChar { it.titlecase(Locale.US) } else w
+        fun c(w: String) = when {
+            allCaps -> w.uppercase(Locale.US) // caps lock or an all-caps field
+            capitalize -> w.replaceFirstChar { it.titlecase(Locale.US) }
+            else -> w
+        }
         return listOf(
             p.getOrNull(1)?.let { SuggestionItem(c(it)) },
             SuggestionItem(c(p[0])),
@@ -317,12 +329,6 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         if (!learned) return 0f
         val c = history.count(w.lowercase(Locale.US))
         return if (c <= 0) 0f else 20f + 8f * minOf(c, 8)
-    }
-
-    private fun tripleBonus(ctx: TextContext, w: String, learned: Boolean): Float {
-        if (!learned) return 0f
-        val c = history.tripleCount(ctx.prev2, ctx.prev1, w)
-        return if (c <= 0) 0f else 30f * minOf(c, 3)
     }
 
     /** Your followers from [each]: lowercase -> (as typed, count) for those typed twice or more, and the total. */

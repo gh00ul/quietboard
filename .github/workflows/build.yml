@@ -4,15 +4,21 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
+          cache: gradle
       # The runner image already has the Android SDK (ANDROID_HOME). android-actions/setup-android@v3
       # now fails there: it installs the long-removed "tools" package by default.
       - name: Test

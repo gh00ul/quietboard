@@ -52,8 +52,8 @@ internal object InlineAutofill {
         val chip = Bundle().apply {
             putBoolean("view_style", true)
             putParcelable("background", Icon.createWithResource(ctx, R.drawable.autofill_chip).setTint(t.chip))
+            // No margins: the chip's window is its measured size, so margins would cut off its text.
             putIntArray("padding", intArrayOf(px(12f), 0, px(12f), 0))
-            putIntArray("layout_margin", intArrayOf(px(3f), px(4f), px(3f), px(4f)))
         }
         fun text(color: Int, sp: Float) = Bundle().apply {
             putBoolean("text_view_style", true)

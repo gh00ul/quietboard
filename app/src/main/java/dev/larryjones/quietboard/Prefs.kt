@@ -12,11 +12,22 @@ import android.os.UserManager
  * you've unlocked the phone once. Nothing personal goes there: text shortcuts, learned words and
  * clipboard history stay in the normal encrypted storage, which opens only once you unlock.
  */
-class Prefs(context: Context) {
-    val sp: SharedPreferences = settingsStorage(context).getSharedPreferences(FILE, Context.MODE_PRIVATE)
-    /** Personal data (text shortcuts); null until the phone has been unlocked since it started. */
+class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
+    val sp: SharedPreferences = settingsStorage(context, unlocked).getSharedPreferences(FILE, Context.MODE_PRIVATE)
+    /** Personal data (text shortcuts, recent emoji); null until the phone has been unlocked since it started. */
     private val personal: SharedPreferences? =
-        if (unlocked(context)) context.getSharedPreferences(PERSONAL_FILE, Context.MODE_PRIVATE) else null
+        if (unlocked) context.getSharedPreferences(PERSONAL_FILE, Context.MODE_PRIVATE) else null
+
+    /** Emoji you used lately, as saved by the keyboard (null before the first unlock or if none). */
+    fun emojiRecents(): String? = personal?.getString(EMOJI_RECENTS, null)
+
+    fun saveEmojiRecents(value: String) {
+        personal?.edit()?.putString(EMOJI_RECENTS, value)?.apply()
+    }
+
+    fun clearEmojiRecents() {
+        personal?.edit()?.remove(EMOJI_RECENTS)?.apply()
+    }
 
     private fun b(key: String, def: Boolean) = sp.getBoolean(key, def)
 
@@ -90,6 +101,7 @@ class Prefs(context: Context) {
     companion object {
         const val FILE = "settings"
         const val PERSONAL_FILE = "personal"
+        const val EMOJI_RECENTS = "emoji_recents"
         private const val STATE_FILE = "storage_state"
 
         /** Whether the phone has been unlocked since it started (encrypted storage is open). */
@@ -97,25 +109,31 @@ class Prefs(context: Context) {
 
         /**
          * Where settings live. Once, after updating from a version that kept them in encrypted
-         * storage, moves them over (text shortcuts go to their own encrypted file). Needs an
-         * unlocked phone; until then the keyboard runs on defaults. Writes synchronously on purpose:
-         * the move must be finished before anything reads the settings.
+         * storage, moves them over. Personal values (text shortcuts, recent emoji) are taken out of
+         * the old file first, so they never reach device storage even for a moment. Any failed step
+         * (a full disk) leaves the old file in place to try again next time. Needs an unlocked phone;
+         * until then the keyboard runs on defaults. Writes synchronously on purpose: the move must be
+         * finished before anything reads the settings.
          */
         @SuppressLint("ApplySharedPref")
         @Synchronized
-        fun settingsStorage(context: Context): Context {
+        fun settingsStorage(context: Context, unlocked: Boolean = unlocked(context)): Context {
             val de = context.createDeviceProtectedStorageContext()
-            if (!unlocked(context)) return de
+            if (!unlocked) return de
             val state = de.getSharedPreferences(STATE_FILE, Context.MODE_PRIVATE)
-            if (!state.getBoolean("moved", false)) {
-                de.moveSharedPreferencesFrom(context, FILE)
-                val settings = de.getSharedPreferences(FILE, Context.MODE_PRIVATE)
-                settings.getString(SHORTCUTS, null)?.let { s ->
-                    context.getSharedPreferences(PERSONAL_FILE, Context.MODE_PRIVATE).edit().putString(SHORTCUTS, s).commit()
-                    settings.edit().remove(SHORTCUTS).commit()
-                }
-                state.edit().putBoolean("moved", true).commit()
+            if (state.getBoolean("moved", false)) return de
+            val old = context.getSharedPreferences(FILE, Context.MODE_PRIVATE)
+            val keep = listOf(SHORTCUTS, EMOJI_RECENTS).mapNotNull { k -> old.getString(k, null)?.let { k to it } }
+            if (keep.isNotEmpty()) {
+                val personal = context.getSharedPreferences(PERSONAL_FILE, Context.MODE_PRIVATE).edit()
+                for ((k, v) in keep) personal.putString(k, v)
+                if (!personal.commit()) return de
+                val trimmed = old.edit()
+                for ((k, _) in keep) trimmed.remove(k)
+                if (!trimmed.commit()) return de
             }
+            if (!de.moveSharedPreferencesFrom(context, FILE)) return de
+            state.edit().putBoolean("moved", true).commit()
             return de
         }
         const val NUMBER_ROW = "number_row"
