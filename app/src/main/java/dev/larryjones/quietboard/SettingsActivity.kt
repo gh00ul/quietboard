@@ -21,7 +21,7 @@ import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import java.util.Calendar
+import java.time.LocalDate
 import java.util.Locale
 
 class SettingsActivity : Activity() {
@@ -129,7 +129,7 @@ class SettingsActivity : Activity() {
         // --- Look
         val look = section("Appearance")
         themeRow(look)
-        switchRow(look, "Theme effects", "In the fun themes: snow, embers or petals from each key you tap, and twinkling lights", Prefs.THEME_EFFECTS, true)
+        switchRow(look, "Theme effects", "In the fun themes: falling snow, petals, bubbles and other motion while you type, and a little burst from each key", Prefs.THEME_EFFECTS, true)
         choiceRowString(look, "Font", listOf("Google Sans (Gboard)", "System font"), listOf("google", "system"), Prefs.FONT, "google")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             switchRow(look, "Material You colors", "Match your wallpaper colors (Light, Dark, Black and Follow system)", Prefs.DYNAMIC_COLOR, true)
@@ -431,15 +431,15 @@ class SettingsActivity : Activity() {
     private fun themeLabel(id: String): String {
         val choice = KbTheme.CHOICES.firstOrNull { it.id == id } ?: KbTheme.CHOICES[0]
         if (choice.id != "seasonal") return choice.label
-        val now = KbTheme.effectiveId("seasonal", Calendar.getInstance().get(Calendar.MONTH))
-        return KbTheme.CHOICES.firstOrNull { it.id == now && now != "system" }?.let { "Seasonal · ${it.label} now" } ?: "Seasonal"
+        val now = KbTheme.effectiveId("seasonal", LocalDate.now())
+        return KbTheme.CHOICES.firstOrNull { it.id == now && now != "system" }?.let { "Seasonal \u00B7 ${it.label} now" } ?: "Seasonal"
     }
 
-    /** Every theme with a miniature keyboard in its colours; a tap picks it. */
+    /** Every theme as a card with a miniature of the real keyboard in it; a tap picks it. */
     private fun pickTheme(summary: TextView) {
         val list = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(0, dpi(6f), 0, dpi(6f))
+            setPadding(dpi(12f), dpi(4f), dpi(12f), dpi(8f))
         }
         val dialog = AlertDialog.Builder(this)
             .setTitle("Theme")
@@ -447,49 +447,72 @@ class SettingsActivity : Activity() {
             .setNegativeButton("Cancel", null)
             .create()
         val current = prefs.theme
-        val month = Calendar.getInstance().get(Calendar.MONTH)
-        for (choice in KbTheme.CHOICES) {
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.CENTER_VERTICAL
-                setPadding(dpi(20f), dpi(8f), dpi(20f), dpi(8f))
-                isClickable = true
-                val out = TypedValue()
-                if (theme.resolveAttribute(android.R.attr.selectableItemBackground, out, true)) foreground = getDrawable(out.resourceId)
-                // The whole row is one TalkBack item: name, what it is, and whether it's the current one.
-                contentDescription = choice.label + ". " + choice.blurb + (if (choice.id == current) ". Selected" else "")
-            }
-            val look = KbTheme.forChoice(this, prefs, choice.id, month)
-            row.addView(ThemeSwatch(this, look), LinearLayout.LayoutParams(dpi(96f), dpi(96f * ThemeSwatch.ASPECT)))
-            val texts = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-            texts.addView(TextView(this).apply {
-                text = choice.label
-                setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                setTextColor(textPrimary)
-                if (choice.id == current) typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+        val today = LocalDate.now()
+        fun section(title: String, choices: List<KbTheme.Choice>) {
+            list.addView(TextView(this).apply {
+                text = title
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+                setTextColor(accent)
+                setPadding(dpi(6f), dpi(14f), 0, dpi(6f))
             })
-            texts.addView(TextView(this).apply {
-                text = choice.blurb
-                setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-                setTextColor(textSecondary)
-            })
-            row.addView(texts, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dpi(14f) })
-            if (choice.id == current) {
-                row.addView(TextView(this).apply {
-                    text = "✓"
-                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                    setTextColor(accent)
-                    setPadding(dpi(8f), 0, 0, 0)
-                })
+            for (pair in choices.chunked(2)) {
+                val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+                for (choice in pair) {
+                    val card = themeCard(choice, choice.id == current, today) {
+                        prefs.sp.edit().putString(Prefs.THEME, choice.id).apply()
+                        summary.text = themeLabel(choice.id)
+                        dialog.dismiss()
+                    }
+                    row.addView(card, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        setMargins(dpi(4f), dpi(4f), dpi(4f), dpi(4f))
+                    })
+                }
+                if (pair.size == 1) row.addView(View(this), LinearLayout.LayoutParams(0, 0, 1f).apply { setMargins(dpi(4f), 0, dpi(4f), 0) })
+                list.addView(row)
             }
-            row.setOnClickListener {
-                prefs.sp.edit().putString(Prefs.THEME, choice.id).apply()
-                summary.text = themeLabel(choice.id)
-                dialog.dismiss()
-            }
-            list.addView(row)
         }
+        section("Everyday", KbTheme.CHOICES.filter { it.everyday })
+        section("Fun", KbTheme.CHOICES.filter { !it.everyday })
         dialog.show()
+    }
+
+    private fun themeCard(choice: KbTheme.Choice, selected: Boolean, today: LocalDate, onPick: () -> Unit): View {
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpi(6f), dpi(6f), dpi(6f), dpi(8f))
+            background = GradientDrawable().apply {
+                cornerRadius = dp(16f)
+                setColor(if (selected) KbTheme.blend(card, accent, 0.16f) else card)
+                if (selected) setStroke(dpi(2f), accent)
+            }
+            isClickable = true
+            val out = TypedValue()
+            if (theme.resolveAttribute(android.R.attr.selectableItemBackground, out, true)) foreground = getDrawable(out.resourceId)
+            // One TalkBack item per card: name, what it is, and whether it's the current one.
+            contentDescription = choice.label + ". " + choice.blurb + (if (selected) ". Selected" else "")
+            setOnClickListener { onPick() }
+        }
+        val look = KbTheme.forChoice(this, prefs, choice.id, today)
+        box.addView(KeyboardPreview(this, look), LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        box.addView(TextView(this).apply {
+            text = if (selected) "\u2713 " + themeLabel(choice.id) else themeLabel(choice.id)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            setTextColor(if (selected) accent else textPrimary)
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            setPadding(dpi(4f), dpi(8f), dpi(4f), 0)
+        })
+        box.addView(TextView(this).apply {
+            text = choice.blurb
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f)
+            setTextColor(textSecondary)
+            maxLines = 2
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            setPadding(dpi(4f), dpi(2f), dpi(4f), 0)
+        })
+        return box
     }
 
     private fun actionRow(parent: LinearLayout, title: String, summary: String?, onClick: () -> Unit): TextView {

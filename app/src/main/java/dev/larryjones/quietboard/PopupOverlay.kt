@@ -192,7 +192,7 @@ class PopupOverlay(context: Context) : View(context) {
         val now = SystemClock.uptimeMillis()
         val n = when (t.decor) {
             Decor.NEON -> 1
-            Decor.HALLOWEEN, Decor.CHRISTMAS -> 5
+            Decor.HALLOWEEN, Decor.CHRISTMAS, Decor.NEW_YEAR -> 5
             else -> 4
         }
         // Speeds in dp per second, gravity in dp per second squared (negative floats up).
@@ -203,7 +203,7 @@ class PopupOverlay(context: Context) : View(context) {
             px[i] = x + r(-6f, 6f) * dp
             py[i] = y + r(-3f, 3f) * dp
             rot[i] = r(0f, 360f)
-            tint[i] = rnd.nextInt(2)
+            tint[i] = rnd.nextInt(5)
             var g = 0f
             when (t.decor) {
                 Decor.HALLOWEEN -> { vx[i] = r(-40f, 40f); vy[i] = r(-120f, -50f); g = 40f; size[i] = r(1.4f, 2.4f); life[i] = 650 }
@@ -212,6 +212,10 @@ class PopupOverlay(context: Context) : View(context) {
                 Decor.SAKURA -> { vx[i] = r(-70f, 70f); vy[i] = r(-100f, -40f); g = 200f; size[i] = r(3.5f, 5f); life[i] = 750; spin[i] = r(-240f, 240f) }
                 Decor.OCEAN -> { vx[i] = r(-25f, 25f); vy[i] = r(-90f, -45f); g = -30f; size[i] = r(1.6f, 3.2f); life[i] = 700 }
                 Decor.RETRO -> { vx[i] = r(-90f, 90f); vy[i] = r(-90f, 20f); size[i] = 2.6f; life[i] = 320 }
+                Decor.GALAXY -> { vx[i] = r(-50f, 50f); vy[i] = r(-80f, -20f); g = 40f; size[i] = r(2.5f, 4f); life[i] = 600 }
+                Decor.AUTUMN -> { vx[i] = r(-60f, 60f); vy[i] = r(-90f, -30f); g = 180f; size[i] = r(3f, 4.5f); life[i] = 800; spin[i] = r(-200f, 200f) }
+                Decor.VALENTINE -> { vx[i] = r(-40f, 40f); vy[i] = r(-110f, -50f); g = -20f; size[i] = r(3f, 4.5f); life[i] = 750; spin[i] = 0f }
+                Decor.NEW_YEAR -> { vx[i] = r(-90f, 90f); vy[i] = r(-130f, -60f); g = 260f; size[i] = r(3f, 5f); life[i] = 800; spin[i] = r(-400f, 400f) }
                 Decor.NONE -> Unit
             }
             // To px per ms (and px per ms squared).

@@ -1,26 +1,19 @@
 package dev.larryjones.quietboard
 
 import android.graphics.Canvas
-import android.graphics.ColorFilter
 import android.graphics.DashPathEffect
-import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.PixelFormat
 import android.graphics.RectF
-import android.graphics.Shader
-import android.graphics.drawable.Drawable
-import android.os.SystemClock
 import kotlin.math.PI
-import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /** A fun theme's scene: what it draws behind the strip and keys, on the keys, and when you tap. */
-enum class Decor { NONE, HALLOWEEN, CHRISTMAS, NEON, SAKURA, OCEAN, RETRO }
+enum class Decor { NONE, HALLOWEEN, CHRISTMAS, NEON, SAKURA, OCEAN, RETRO, GALAXY, AUTUMN, VALENTINE, NEW_YEAR }
 
 /** How the glide trail looks. */
 enum class Trail {
@@ -49,65 +42,9 @@ internal fun noise(i: Int, salt: Int): Float {
 }
 
 /**
- * The keyboard window's background: the theme's gradient plus its scene. A standard theme is one
- * flat colour. Christmas lights twinkle about once a second while the keyboard is on screen (only
- * this background is redrawn, not the keys), unless [effects] is off.
- */
-class ThemeBackdrop(
-    private val t: KbTheme,
-    private val stripH: Float,
-    private val dp: Float,
-    private val effects: Boolean,
-) : Drawable() {
-    private val paint = Paint()
-    private var shaderFor = Int.MIN_VALUE
-    private val twinkle = Runnable { invalidateSelf() }
-
-    override fun draw(canvas: Canvas) {
-        val b = bounds
-        if (!t.hasBackdrop) {
-            paint.shader = null
-            paint.color = t.background
-            canvas.drawRect(b, paint)
-            return
-        }
-        if (shaderFor != b.top * 31 + b.bottom) {
-            paint.shader = LinearGradient(0f, b.top.toFloat(), 0f, b.bottom.toFloat(), t.background, t.backgroundEnd, Shader.TileMode.CLAMP)
-            shaderFor = b.top * 31 + b.bottom
-        }
-        canvas.drawRect(b, paint)
-        val now = SystemClock.uptimeMillis()
-        val phase = if (effects) ((now / TWINKLE_MS) % 2).toInt() else 0
-        canvas.save()
-        canvas.translate(b.left.toFloat(), b.top.toFloat())
-        Scenery.backdrop(canvas, t, b.width().toFloat(), b.height().toFloat(), stripH, dp, phase)
-        canvas.restore()
-        if (effects && t.decor == Decor.CHRISTMAS && isVisible) {
-            unscheduleSelf(twinkle)
-            scheduleSelf(twinkle, now + TWINKLE_MS - now % TWINKLE_MS)
-        }
-    }
-
-    override fun setVisible(visible: Boolean, restart: Boolean): Boolean {
-        val changed = super.setVisible(visible, restart)
-        if (!visible) unscheduleSelf(twinkle) else if (changed) invalidateSelf()
-        return changed
-    }
-
-    override fun setAlpha(alpha: Int) {}
-    override fun setColorFilter(colorFilter: ColorFilter?) {}
-    @Deprecated("Deprecated in Java")
-    override fun getOpacity() = PixelFormat.OPAQUE
-
-    private companion object {
-        const val TWINKLE_MS = 1100L
-    }
-}
-
-/**
- * Draws the fun themes' decorations: all vector shapes sized in dp, placed with [noise] so nothing
- * jumps between frames. Scenery hugs the top edge of the strip and its corners, clear of the
- * suggestions. Main thread only (one shared paint and set of paths).
+ * The fun themes' small drawings: decorations on keys, the space bar's motifs, what the glide trail
+ * drops and what a tap throws off, plus the shapes the scenes ([Scenes], [Ambient]) share. All
+ * vector, sized in dp. Main thread only (one shared paint and set of paths).
  */
 internal object Scenery {
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -119,87 +56,16 @@ internal object Scenery {
     private var dash: DashPathEffect? = null
     private var dashFor = 0f
 
-    private val BULBS = intArrayOf(0xFFFF4D4D.toInt(), 0xFFFFD54F.toInt(), 0xFF5CFF8F.toInt(), 0xFF4FC3F7.toInt())
-    private val PETAL = 0xFFF6A5C0.toInt()
+    val PETAL = 0xFFF6A5C0.toInt()
     private val SNOW = 0xFFF4F9FF.toInt()
-    private val NIGHT = 0xFF07040C.toInt()
+    val NIGHT = 0xFF07040C.toInt()
+    val LEAVES = intArrayOf(0xFFD9531E.toInt(), 0xFFE8892B.toInt(), 0xFFF2B33D.toInt(), 0xFFB5371A.toInt())
+    val HEARTS = intArrayOf(0xFFFF5C8A.toInt(), 0xFFFF85A7.toInt(), 0xFFFFC2D4.toInt(), 0xFFE0245E.toInt())
+    val FIREWORKS = intArrayOf(0xFFF5C542.toInt(), 0xFFFF6FB5.toInt(), 0xFF5CE1FF.toInt(), 0xFFFFFFFF.toInt(), 0xFF7CFF9B.toInt())
 
     private fun reset() {
         p.reset()
         p.isAntiAlias = true
-    }
-
-    // ------------------------------------------------------------------ backdrop
-
-    fun backdrop(c: Canvas, t: KbTheme, w: Float, h: Float, strip: Float, dp: Float, phase: Int) {
-        reset()
-        when (t.decor) {
-            Decor.HALLOWEEN -> halloween(c, w, h, strip, dp)
-            Decor.CHRISTMAS -> christmas(c, w, h, strip, dp, phase)
-            Decor.NEON -> neon(c, t, w, h, strip, dp)
-            Decor.SAKURA -> sakura(c, w, h, strip, dp)
-            Decor.OCEAN -> ocean(c, w, h, strip, dp)
-            Decor.RETRO -> {
-                p.color = 0x4039FF6A
-                c.drawRect(0f, strip - 0.5f * dp, w, strip + 0.5f * dp, p)
-            }
-            Decor.NONE -> Unit
-        }
-        reset()
-    }
-
-    private fun halloween(c: Canvas, w: Float, h: Float, strip: Float, dp: Float) {
-        for (i in 0 until 40) {
-            val y = if (i % 3 == 0) noise(i, 2) * h else noise(i, 2) * strip
-            p.color = 0xFFFFE9C9.toInt()
-            p.alpha = (50 + 110 * noise(i, 3)).toInt()
-            c.drawCircle(noise(i, 1) * w, y, (0.5f + 0.8f * noise(i, 4)) * dp, p)
-        }
-        crescent(c, w * 0.70f, 9.5f * dp, 6.5f * dp, dp)
-        bat(c, w * 0.235f, 7f * dp, 7f * dp, -10f, NIGHT, dp)
-        bat(c, w * 0.295f, 4.2f * dp, 4.6f * dp, 12f, NIGHT, dp)
-        bat(c, w * 0.77f, 7.5f * dp, 5.5f * dp, -6f, NIGHT, dp)
-        web(c, 0f, 1f, 26f * dp, dp)
-        web(c, w, -1f, 21f * dp, dp)
-        spider(c, 13f * dp, 6.5f * dp, 15.5f * dp, dp)
-    }
-
-    private fun crescent(c: Canvas, x: Float, y: Float, r: Float, dp: Float) {
-        path.reset()
-        path.addCircle(x, y, r, Path.Direction.CW)
-        path2.reset()
-        path2.addCircle(x + r * 0.45f, y - r * 0.25f, r * 0.86f, Path.Direction.CW)
-        path.op(path2, Path.Op.DIFFERENCE)
-        p.color = 0xFFFFE6A8.toInt()
-        p.setShadowLayer(5f * dp, 0f, 0f, 0xAAFFC46B.toInt())
-        c.drawPath(path, p)
-        p.clearShadowLayer()
-    }
-
-    /** A bat [s] half-wingspans wide, a faint purple rim so it reads against the night sky. */
-    private fun bat(c: Canvas, x: Float, y: Float, s: Float, tilt: Float, color: Int, dp: Float) {
-        path.reset()
-        path.moveTo(0f, -0.12f)
-        path.lineTo(0.10f, -0.34f); path.lineTo(0.16f, -0.14f)
-        path.quadTo(0.48f, -0.40f, 1.0f, -0.30f)
-        path.quadTo(0.86f, -0.10f, 0.88f, 0.10f)
-        path.quadTo(0.72f, -0.02f, 0.58f, 0.12f)
-        path.quadTo(0.44f, 0.00f, 0.30f, 0.16f)
-        path.quadTo(0.20f, 0.06f, 0.10f, 0.22f)
-        path.lineTo(0f, 0.30f)
-        path.lineTo(-0.10f, 0.22f)
-        path.quadTo(-0.20f, 0.06f, -0.30f, 0.16f)
-        path.quadTo(-0.44f, 0.00f, -0.58f, 0.12f)
-        path.quadTo(-0.72f, -0.02f, -0.88f, 0.10f)
-        path.quadTo(-0.86f, -0.10f, -1.0f, -0.30f)
-        path.quadTo(-0.48f, -0.40f, -0.16f, -0.14f)
-        path.lineTo(-0.10f, -0.34f)
-        path.close()
-        place(s, tilt, x, y)
-        p.color = color
-        p.setShadowLayer(1.6f * dp, 0f, 0f, 0x999D4DFF.toInt())
-        c.drawPath(path, p)
-        p.clearShadowLayer()
     }
 
     /** Scales, rotates and moves [path] from unit coordinates to the screen. */
@@ -211,8 +77,52 @@ internal object Scenery {
         path.transform(m)
     }
 
+    // ------------------------------------------------------------------ shared shapes
+
+    fun crescent(c: Canvas, x: Float, y: Float, r: Float, dp: Float) {
+        reset()
+        path.reset()
+        path.addCircle(x, y, r, Path.Direction.CW)
+        path2.reset()
+        path2.addCircle(x + r * 0.45f, y - r * 0.25f, r * 0.86f, Path.Direction.CW)
+        path.op(path2, Path.Op.DIFFERENCE)
+        p.color = 0xFFFFE6A8.toInt()
+        p.setShadowLayer(5f * dp, 0f, 0f, 0xAAFFC46B.toInt())
+        c.drawPath(path, p)
+        reset()
+    }
+
+    /** A bat [s] half-wingspans wide; [flap] 1 = wings up, -1 = down. Faint purple rim against the sky. */
+    fun bat(c: Canvas, x: Float, y: Float, s: Float, tilt: Float, color: Int, dp: Float, flap: Float = 0f) {
+        reset()
+        val up = -0.30f - 0.18f * flap
+        path.reset()
+        path.moveTo(0f, -0.12f)
+        path.lineTo(0.10f, -0.34f); path.lineTo(0.16f, -0.14f)
+        path.quadTo(0.48f, up - 0.1f, 1.0f, up)
+        path.quadTo(0.86f, up + 0.2f, 0.88f, up + 0.4f)
+        path.quadTo(0.72f, up + 0.28f, 0.58f, up + 0.42f + 0.06f * flap)
+        path.quadTo(0.44f, 0.00f, 0.30f, 0.16f)
+        path.quadTo(0.20f, 0.06f, 0.10f, 0.22f)
+        path.lineTo(0f, 0.30f)
+        path.lineTo(-0.10f, 0.22f)
+        path.quadTo(-0.20f, 0.06f, -0.30f, 0.16f)
+        path.quadTo(-0.44f, 0.00f, -0.58f, up + 0.42f + 0.06f * flap)
+        path.quadTo(-0.72f, up + 0.28f, -0.88f, up + 0.4f)
+        path.quadTo(-0.86f, up + 0.2f, -1.0f, up)
+        path.quadTo(-0.48f, up - 0.1f, -0.16f, -0.14f)
+        path.lineTo(-0.10f, -0.34f)
+        path.close()
+        place(s, tilt, x, y)
+        p.color = color
+        p.setShadowLayer(1.6f * dp, 0f, 0f, 0x999D4DFF.toInt())
+        c.drawPath(path, p)
+        reset()
+    }
+
     /** A cobweb in a top corner at [cx]; [dir] 1 opens to the right, -1 to the left. */
-    private fun web(c: Canvas, cx: Float, dir: Float, r: Float, dp: Float) {
+    fun web(c: Canvas, cx: Float, dir: Float, r: Float, dp: Float) {
+        reset()
         p.style = Paint.Style.STROKE
         p.strokeWidth = 0.8f * dp
         p.color = 0x50FFFFFF
@@ -236,10 +146,11 @@ internal object Scenery {
             }
             c.drawPath(path, p)
         }
-        p.style = Paint.Style.FILL
+        reset()
     }
 
-    private fun spider(c: Canvas, x: Float, top: Float, y: Float, dp: Float) {
+    fun spider(c: Canvas, x: Float, top: Float, y: Float, dp: Float) {
+        reset()
         p.style = Paint.Style.STROKE
         p.strokeWidth = 0.7f * dp
         p.color = 0x60FFFFFF
@@ -260,117 +171,12 @@ internal object Scenery {
         p.setShadowLayer(1.5f * dp, 0f, 0f, 0x999D4DFF.toInt())
         c.drawCircle(x, y, 2.1f * dp, p)
         c.drawCircle(x, y - 2.3f * dp, 1.3f * dp, p)
-        p.clearShadowLayer()
-        p.strokeCap = Paint.Cap.BUTT
-    }
-
-    private fun christmas(c: Canvas, w: Float, h: Float, strip: Float, dp: Float, phase: Int) {
-        for (i in 0 until 70) {
-            val y = if (i % 3 == 0) noise(i, 6) * h else noise(i, 6) * strip
-            p.color = 0xFFFFFFFF.toInt()
-            p.alpha = (70 + 120 * noise(i, 7)).toInt()
-            c.drawCircle(noise(i, 5) * w, y, (0.6f + 1.2f * noise(i, 8)) * dp, p)
-        }
-        // A string of lights along the top edge: sagging swags, two bulbs on each.
-        val swags = max(2, (w / (46f * dp)).roundToInt())
-        val sw = w / swags
-        val y0 = 1.5f * dp
-        val yc = 9f * dp
-        p.style = Paint.Style.STROKE
-        p.strokeWidth = 1.1f * dp
-        p.color = 0xCC03100A.toInt()
-        path.reset()
-        path.moveTo(0f, y0)
-        for (i in 0 until swags) path.quadTo(sw * (i + 0.5f), yc, sw * (i + 1), y0)
-        c.drawPath(path, p)
-        p.style = Paint.Style.FILL
-        var b = 0
-        for (i in 0 until swags) for (k in 1..2) {
-            val tt = k / 3f
-            val u = 1 - tt
-            val x0 = sw * i
-            val xm = sw * (i + 0.5f)
-            val x1 = sw * (i + 1)
-            val x = u * u * x0 + 2 * u * tt * xm + tt * tt * x1
-            val y = u * u * y0 + 2 * u * tt * yc + tt * tt * y0
-            val dx = 2 * u * (xm - x0) + 2 * tt * (x1 - xm)
-            val dy = 2 * u * (yc - y0) + 2 * tt * (y0 - yc)
-            val color = BULBS[b % BULBS.size]
-            val lit = (b + phase) % 2 == 0
-            c.save()
-            c.translate(x, y)
-            c.rotate(atan2(dy, dx) * 180f / PI.toFloat())
-            p.color = 0xFF39403A.toInt()
-            c.drawRect(-1.1f * dp, -0.4f * dp, 1.1f * dp, 1.6f * dp, p)
-            p.color = color
-            if (lit) p.setShadowLayer(5f * dp, 0f, 0f, color) else p.alpha = 140
-            oval.set(-2.2f * dp, 1.2f * dp, 2.2f * dp, 7.2f * dp)
-            c.drawOval(oval, p)
-            p.clearShadowLayer()
-            p.color = 0x99FFFFFF.toInt()
-            c.drawCircle(-0.8f * dp, 3f * dp, 0.7f * dp, p)
-            c.restore()
-            b++
-        }
-    }
-
-    private fun neon(c: Canvas, t: KbTheme, w: Float, h: Float, strip: Float, dp: Float) {
-        // A perspective grid behind the keys, peeking through the gaps like a synthwave floor.
-        p.style = Paint.Style.STROKE
-        p.strokeWidth = 1f * dp
-        p.color = 0x38FF2BD6
-        val vx = w / 2
-        for (i in -9..9) c.drawLine(vx + i * w * 0.03f, strip, vx + i * w * 0.2f, h, p)
-        var y = strip + 4f * dp
-        var gap = 5f * dp
-        while (y < h) {
-            c.drawLine(0f, y, w, y, p)
-            y += gap
-            gap *= 1.32f
-        }
-        p.style = Paint.Style.FILL
-        for (i in 0 until 26) {
-            p.color = if (i % 2 == 0) 0xFF00E5FF.toInt() else 0xFFFF2BD6.toInt()
-            p.alpha = (60 + 120 * noise(i, 21)).toInt()
-            c.drawCircle(noise(i, 22) * w, noise(i, 23) * strip * 0.9f, (0.5f + 0.7f * noise(i, 24)) * dp, p)
-        }
-        // The horizon: a glowing laser line between the strip and the keys.
-        p.color = t.keyStroke
-        p.setShadowLayer(6f * dp, 0f, 0f, t.keyStroke)
-        c.drawRect(0f, strip - 0.6f * dp, w, strip + 0.6f * dp, p)
-        p.clearShadowLayer()
-    }
-
-    private fun sakura(c: Canvas, w: Float, h: Float, strip: Float, dp: Float) {
-        for (i in 0 until 30) {
-            val y = if (i % 3 == 0) noise(i, 12) * h else noise(i, 12) * strip
-            petal(c, noise(i, 11) * w, y, (3.2f + 2.4f * noise(i, 13)) * dp, noise(i, 14) * 360f, PETAL, (120 + 100 * noise(i, 15)).toInt())
-        }
-        // A blossoming branch reaching in from the top-right corner.
-        p.style = Paint.Style.STROKE
-        p.strokeCap = Paint.Cap.ROUND
-        p.color = 0xFF8A5A44.toInt()
-        p.strokeWidth = 1.7f * dp
-        path.reset()
-        path.moveTo(w + 2f * dp, 1.5f * dp)
-        path.quadTo(w - 32f * dp, 9.5f * dp, w - 76f * dp, 4.5f * dp)
-        c.drawPath(path, p)
-        p.strokeWidth = 1.1f * dp
-        path.reset()
-        path.moveTo(w - 38f * dp, 7.4f * dp)
-        path.quadTo(w - 46f * dp, 12f * dp, w - 54f * dp, 12.5f * dp)
-        c.drawPath(path, p)
-        p.style = Paint.Style.FILL
-        p.strokeCap = Paint.Cap.BUTT
-        blossom(c, w - 20f * dp, 5.5f * dp, 4.8f * dp)
-        blossom(c, w - 50f * dp, 8f * dp, 4.1f * dp)
-        blossom(c, w - 76f * dp, 4.5f * dp, 3.5f * dp)
-        p.color = 0xFFFF8FB4.toInt()
-        c.drawCircle(w - 55f * dp, 12.6f * dp, 1.7f * dp, p)
+        reset()
     }
 
     /** A falling petal [s] long. */
-    private fun petal(c: Canvas, x: Float, y: Float, s: Float, rot: Float, color: Int, alpha: Int) {
+    fun petal(c: Canvas, x: Float, y: Float, s: Float, rot: Float, color: Int, alpha: Int) {
+        reset()
         path.reset()
         path.moveTo(0f, -0.5f)
         path.cubicTo(0.55f, -0.35f, 0.5f, 0.3f, 0.08f, 0.5f)
@@ -382,59 +188,29 @@ internal object Scenery {
         p.color = color
         p.alpha = alpha
         c.drawPath(path, p)
+        reset()
     }
 
     /** A five-petal cherry blossom of radius [r]. */
-    private fun blossom(c: Canvas, x: Float, y: Float, r: Float) {
+    fun blossom(c: Canvas, x: Float, y: Float, r: Float, alpha: Int = 255) {
+        reset()
         p.color = 0xFFFFB7CE.toInt()
+        p.alpha = alpha
         for (k in 0 until 5) {
             val a = (k * 72 - 90) * PI.toFloat() / 180
             c.drawCircle(x + cos(a) * r * 0.52f, y + sin(a) * r * 0.52f, r * 0.5f, p)
         }
         p.color = 0xFFFFD6E3.toInt()
+        p.alpha = alpha
         c.drawCircle(x, y, r * 0.42f, p)
         p.color = 0xFFE0457B.toInt()
+        p.alpha = alpha
         c.drawCircle(x, y, r * 0.2f, p)
+        reset()
     }
 
-    private fun ocean(c: Canvas, w: Float, h: Float, strip: Float, dp: Float) {
-        // Sunlight slanting down from the surface.
-        p.color = 0x10FFFFFF
-        for (k in 0 until 3) {
-            val x0 = w * (0.1f + 0.32f * k)
-            path.reset()
-            path.moveTo(x0, 0f)
-            path.lineTo(x0 + w * 0.07f, 0f)
-            path.lineTo(x0 + w * 0.2f, h)
-            path.lineTo(x0 + w * 0.08f, h)
-            path.close()
-            c.drawPath(path, p)
-        }
-        // Ripples along the top edge.
-        p.style = Paint.Style.STROKE
-        p.strokeWidth = 1f * dp
-        for (row in 0..1) {
-            p.color = if (row == 0) 0x55BFEFFF else 0x30BFEFFF
-            val base = (2.5f + 3.5f * row) * dp
-            path.reset()
-            var x = 0f
-            path.moveTo(0f, base)
-            while (x <= w) {
-                path.lineTo(x, base + sin(x / (9f * dp) + row * 1.7f) * 1.1f * dp)
-                x += 2f * dp
-            }
-            c.drawPath(path, p)
-        }
-        for (i in 0 until 24) {
-            // In the strip, above or below the words, never on them.
-            val band = noise(i, 35) < 0.5f
-            val y = if (i % 3 == 0) noise(i, 32) * h else strip * (if (band) 0.06f + 0.22f * noise(i, 32) else 0.74f + 0.26f * noise(i, 32))
-            bubble(c, noise(i, 31) * w, y, (1.3f + 2.7f * noise(i, 33)) * dp, (80 + 80 * noise(i, 34)).toInt(), dp)
-        }
-        p.style = Paint.Style.FILL
-    }
-
-    private fun bubble(c: Canvas, x: Float, y: Float, r: Float, alpha: Int, dp: Float) {
+    fun bubble(c: Canvas, x: Float, y: Float, r: Float, alpha: Int, dp: Float) {
+        reset()
         p.style = Paint.Style.STROKE
         p.strokeWidth = 0.9f * dp
         p.color = 0xFFEAF8FF.toInt()
@@ -442,6 +218,112 @@ internal object Scenery {
         c.drawCircle(x, y, r, p)
         p.style = Paint.Style.FILL
         c.drawCircle(x - r * 0.35f, y - r * 0.35f, max(0.5f * dp, r * 0.2f), p)
+        reset()
+    }
+
+    fun snowflake(c: Canvas, x: Float, y: Float, s: Float, rot: Float, alpha: Int, dp: Float) {
+        reset()
+        p.style = Paint.Style.STROKE
+        p.strokeWidth = max(0.8f * dp, s * 0.13f)
+        p.strokeCap = Paint.Cap.ROUND
+        p.color = 0xFFFFFFFF.toInt()
+        p.alpha = alpha
+        for (k in 0 until 3) {
+            val a = (rot + k * 60f) * PI.toFloat() / 180
+            val dx = cos(a) * s / 2
+            val dy = sin(a) * s / 2
+            c.drawLine(x - dx, y - dy, x + dx, y + dy, p)
+        }
+        reset()
+    }
+
+    fun ember(c: Canvas, x: Float, y: Float, r: Float, color: Int, alpha: Int, dp: Float) {
+        reset()
+        p.color = color
+        p.alpha = alpha
+        p.setShadowLayer(3f * dp, 0f, 0f, color)
+        c.drawCircle(x, y, r, p)
+        reset()
+    }
+
+    /** A heart [s] wide, point down. */
+    fun heart(c: Canvas, x: Float, y: Float, s: Float, rot: Float, color: Int, alpha: Int, glow: Float = 0f) {
+        reset()
+        path.reset()
+        path.moveTo(0f, 0.42f)
+        path.cubicTo(-0.62f, 0.02f, -0.52f, -0.52f, -0.26f, -0.48f)
+        path.cubicTo(-0.1f, -0.46f, -0.02f, -0.36f, 0f, -0.24f)
+        path.cubicTo(0.02f, -0.36f, 0.1f, -0.46f, 0.26f, -0.48f)
+        path.cubicTo(0.52f, -0.52f, 0.62f, 0.02f, 0f, 0.42f)
+        path.close()
+        place(s, rot, x, y)
+        p.color = color
+        p.alpha = alpha
+        if (glow > 0f) p.setShadowLayer(glow, 0f, 0f, color)
+        c.drawPath(path, p)
+        reset()
+    }
+
+    /** A maple-ish leaf [s] long, stem down. */
+    fun leaf(c: Canvas, x: Float, y: Float, s: Float, rot: Float, color: Int, alpha: Int) {
+        reset()
+        path.reset()
+        path.moveTo(0f, 0.5f)
+        path.lineTo(0.03f, 0.22f)
+        path.lineTo(0.42f, 0.28f); path.lineTo(0.32f, 0.12f); path.lineTo(0.5f, -0.04f)
+        path.lineTo(0.28f, -0.08f); path.lineTo(0.34f, -0.34f); path.lineTo(0.14f, -0.22f)
+        path.lineTo(0f, -0.5f)
+        path.lineTo(-0.14f, -0.22f); path.lineTo(-0.34f, -0.34f); path.lineTo(-0.28f, -0.08f)
+        path.lineTo(-0.5f, -0.04f); path.lineTo(-0.32f, 0.12f); path.lineTo(-0.42f, 0.28f)
+        path.lineTo(-0.03f, 0.22f)
+        path.close()
+        place(s, rot, x, y)
+        p.color = color
+        p.alpha = alpha
+        p.style = Paint.Style.FILL_AND_STROKE
+        p.strokeJoin = Paint.Join.ROUND
+        p.strokeWidth = s * 0.04f
+        c.drawPath(path, p)
+        reset()
+    }
+
+    /** A four-pointed sparkle [s] across. */
+    fun sparkle(c: Canvas, x: Float, y: Float, s: Float, color: Int, alpha: Int, glow: Float = 0f) {
+        reset()
+        val r = s / 2
+        val q = r * 0.18f
+        path.reset()
+        path.moveTo(x, y - r)
+        path.quadTo(x + q, y - q, x + r, y)
+        path.quadTo(x + q, y + q, x, y + r)
+        path.quadTo(x - q, y + q, x - r, y)
+        path.quadTo(x - q, y - q, x, y - r)
+        path.close()
+        p.color = color
+        p.alpha = alpha
+        if (glow > 0f) p.setShadowLayer(glow, 0f, 0f, color)
+        c.drawPath(path, p)
+        reset()
+    }
+
+    /** A firework burst: [n] rays from ([x], [y]), [r] long, fading with [fade]. */
+    fun burstRays(c: Canvas, x: Float, y: Float, r: Float, n: Int, color: Int, alpha: Int, dp: Float) {
+        reset()
+        p.style = Paint.Style.STROKE
+        p.strokeCap = Paint.Cap.ROUND
+        p.strokeWidth = 1.2f * dp
+        p.color = color
+        p.alpha = alpha
+        for (k in 0 until n) {
+            val a = (k * 2 * PI / n).toFloat()
+            c.drawLine(x + cos(a) * r * 0.35f, y + sin(a) * r * 0.35f, x + cos(a) * r, y + sin(a) * r, p)
+        }
+        p.style = Paint.Style.FILL
+        for (k in 0 until n) {
+            val a = (k * 2 * PI / n).toFloat()
+            c.drawCircle(x + cos(a) * r * 1.12f, y + sin(a) * r * 1.12f, 1.1f * dp, p)
+        }
+        reset()
     }
 
     // ------------------------------------------------------------------ keys
@@ -449,7 +331,17 @@ internal object Scenery {
     /** A fun theme's extras on one key, drawn over its background and under its label. */
     fun keyExtra(c: Canvas, t: KbTheme, r: RectF, radius: Float, look: KeyLook, hasHint: Boolean, seed: Int, dp: Float) {
         reset()
-        if (t.keyStroke != 0) outline(c, t, r, radius, look, dp)
+        if (t.keyStroke != 0) {
+            outline(c, t, r, radius, look, dp)
+        } else if (t.keyAlpha < 1f && look != KeyLook.ACCENT) {
+            // Glass keys: a fine rim catches the light so the edge reads over the scene.
+            p.style = Paint.Style.STROKE
+            p.strokeWidth = 0.8f * dp
+            p.color = if (t.dark) 0x2EFFFFFF else 0x66FFFFFF
+            val i = 0.4f * dp
+            c.drawRoundRect(r.left + i, r.top + i, r.right - i, r.bottom - i, radius, radius, p)
+            p.style = Paint.Style.FILL
+        }
         when (t.decor) {
             Decor.CHRISTMAS -> snowCap(c, r, radius, hasHint, seed, dp)
             Decor.HALLOWEEN -> if (look == KeyLook.ACCENT) pumpkin(c, r, dp)
@@ -557,6 +449,13 @@ internal object Scenery {
             Decor.NEON -> { sun(c, lx, cy, s); sun(c, rx, cy, s) }
             Decor.SAKURA -> { blossom(c, lx, cy, s * 0.42f); blossom(c, rx, cy, s * 0.42f) }
             Decor.OCEAN -> { fish(c, lx, cy, s); starfish(c, rx, cy, s) }
+            Decor.GALAXY -> { planet(c, lx, cy, s); sparkle(c, rx, cy, s * 0.8f, 0xFFFFF4C2.toInt(), 255, 3f * dp) }
+            Decor.AUTUMN -> { leaf(c, lx, cy, s, -20f, LEAVES[0], 255); leaf(c, rx, cy, s, 25f, LEAVES[2], 255) }
+            Decor.VALENTINE -> { heart(c, lx, cy, s * 0.9f, -12f, HEARTS[0], 255, 3f * dp); heart(c, rx, cy, s * 0.7f, 14f, HEARTS[1], 255, 3f * dp) }
+            Decor.NEW_YEAR -> {
+                burstRays(c, lx, cy, s * 0.42f, 10, FIREWORKS[0], 255, dp)
+                burstRays(c, rx, cy, s * 0.36f, 8, FIREWORKS[2], 255, dp)
+            }
             else -> Unit
         }
         reset()
@@ -692,6 +591,24 @@ internal object Scenery {
         c.restore()
     }
 
+    /** A little ringed planet for the space bar. */
+    private fun planet(c: Canvas, x: Float, y: Float, s: Float) {
+        val r = s * 0.3f
+        p.color = 0xFFE7A6FF.toInt()
+        c.drawCircle(x, y, r, p)
+        p.color = 0x55FFFFFF
+        c.drawCircle(x - r * 0.3f, y - r * 0.3f, r * 0.45f, p)
+        p.style = Paint.Style.STROKE
+        p.strokeWidth = s * 0.07f
+        p.color = 0xFFFFF4C2.toInt()
+        oval.set(x - r * 1.75f, y - r * 0.5f, x + r * 1.75f, y + r * 0.5f)
+        c.save()
+        c.rotate(-18f, x, y)
+        c.drawOval(oval, p)
+        c.restore()
+        p.style = Paint.Style.FILL
+    }
+
     private fun fish(c: Canvas, x: Float, y: Float, s: Float) {
         p.color = 0xFFFFB74D.toInt()
         oval.set(x - s * 0.3f, y - s * 0.2f, x + s * 0.3f, y + s * 0.2f)
@@ -739,27 +656,29 @@ internal object Scenery {
 
     /** A small piece of scenery dropped along the glide trail (nothing for themes without one). */
     fun trailBit(c: Canvas, decor: Decor, x: Float, y: Float, size: Float, rot: Float, alpha: Int, dp: Float) {
-        reset()
         when (decor) {
             Decor.HALLOWEEN -> ember(c, x, y, size * 0.3f, 0xFFFFB347.toInt(), alpha, dp)
             Decor.CHRISTMAS -> snowflake(c, x, y, size, rot, alpha, dp)
             Decor.SAKURA -> petal(c, x, y, size, rot, PETAL, alpha)
             Decor.OCEAN -> bubble(c, x, y, size * 0.35f, alpha, dp)
+            Decor.GALAXY -> sparkle(c, x, y, size, 0xFFFFF4C2.toInt(), alpha, 2f * dp)
+            Decor.AUTUMN -> leaf(c, x, y, size * 1.1f, rot, LEAVES[(rot.toInt() and 0x7fffffff) % LEAVES.size], alpha)
+            Decor.VALENTINE -> heart(c, x, y, size, rot * 0.1f - 18f, HEARTS[(rot.toInt() and 0x7fffffff) % 3], alpha)
+            Decor.NEW_YEAR -> sparkle(c, x, y, size * 0.9f, FIREWORKS[0], alpha, 2.5f * dp)
             else -> Unit
         }
-        reset()
     }
 
     /**
      * One particle of a tap burst. [age] runs 0..1 over its life; [tint] picks between the theme's
-     * two particle colours.
+     * particle colours.
      */
     fun particle(c: Canvas, decor: Decor, x: Float, y: Float, size: Float, rot: Float, alpha: Int, age: Float, tint: Int, dp: Float) {
-        reset()
         when (decor) {
             Decor.HALLOWEEN -> ember(c, x, y, size, if (tint == 0) 0xFFFFB347.toInt() else 0xFFFF6A00.toInt(), alpha, dp)
             Decor.CHRISTMAS -> snowflake(c, x, y, size, rot, alpha, dp)
             Decor.NEON -> {
+                reset()
                 p.style = Paint.Style.STROKE
                 p.strokeWidth = 1.6f * dp
                 val color = if (tint == 0) 0xFFFF2BD6.toInt() else 0xFF00E5FF.toInt()
@@ -767,42 +686,33 @@ internal object Scenery {
                 p.alpha = alpha
                 p.setShadowLayer(4f * dp, 0f, 0f, color)
                 c.drawCircle(x, y, size * (0.6f + 2.6f * age), p)
-                p.clearShadowLayer()
+                reset()
             }
             Decor.SAKURA -> petal(c, x, y, size, rot, if (tint == 0) PETAL else 0xFFFFD1E0.toInt(), alpha)
             Decor.OCEAN -> bubble(c, x, y, size, alpha, dp)
             Decor.RETRO -> {
+                reset()
                 p.color = 0xFF39FF6A.toInt()
                 p.alpha = alpha
                 c.drawRect(x - size / 2, y - size / 2, x + size / 2, y + size / 2, p)
+                reset()
+            }
+            Decor.GALAXY -> sparkle(c, x, y, size * 1.6f, if (tint == 0) 0xFFFFF4C2.toInt() else 0xFFA99BFF.toInt(), alpha, 2f * dp)
+            Decor.AUTUMN -> leaf(c, x, y, size * 1.4f, rot, LEAVES[tint % LEAVES.size], alpha)
+            Decor.VALENTINE -> heart(c, x, y, size * 1.4f, rot * 0.1f, HEARTS[tint % HEARTS.size], alpha)
+            Decor.NEW_YEAR -> {
+                reset()
+                // Confetti: little tumbling strips of gold and colour.
+                p.color = FIREWORKS[tint % FIREWORKS.size]
+                p.alpha = alpha
+                c.save()
+                c.rotate(rot, x, y)
+                c.drawRect(x - size * 0.5f, y - size * 0.22f, x + size * 0.5f, y + size * 0.22f, p)
+                c.restore()
+                reset()
             }
             Decor.NONE -> Unit
         }
-        reset()
-    }
-
-    private fun ember(c: Canvas, x: Float, y: Float, r: Float, color: Int, alpha: Int, dp: Float) {
-        p.color = color
-        p.alpha = alpha
-        p.setShadowLayer(3f * dp, 0f, 0f, color)
-        c.drawCircle(x, y, r, p)
-        p.clearShadowLayer()
-    }
-
-    private fun snowflake(c: Canvas, x: Float, y: Float, s: Float, rot: Float, alpha: Int, dp: Float) {
-        p.style = Paint.Style.STROKE
-        p.strokeWidth = max(0.8f * dp, s * 0.13f)
-        p.strokeCap = Paint.Cap.ROUND
-        p.color = 0xFFFFFFFF.toInt()
-        p.alpha = alpha
-        for (k in 0 until 3) {
-            val a = (rot + k * 60f) * PI.toFloat() / 180
-            val dx = cos(a) * s / 2
-            val dy = sin(a) * s / 2
-            c.drawLine(x - dx, y - dy, x + dx, y + dy, p)
-        }
-        p.style = Paint.Style.FILL
-        p.strokeCap = Paint.Cap.BUTT
     }
 
     /** Old-monitor scanlines over everything (the retro terminal). */

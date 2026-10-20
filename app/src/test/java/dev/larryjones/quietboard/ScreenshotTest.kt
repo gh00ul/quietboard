@@ -14,7 +14,7 @@ import org.robolectric.annotation.GraphicsMode
 import org.robolectric.shadows.ShadowSystemClock
 import java.io.File
 import java.time.Duration
-import java.util.Calendar
+import java.time.LocalDate
 
 /**
  * Draws the actual keyboard views (same onDraw code that runs on the phone) into PNGs.
@@ -79,27 +79,32 @@ class ScreenshotTest {
         File("build/screens/$file").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 
-    /** The theme picker's miniature keyboards, one per choice, as Settings shows them in October. */
+    /** The theme picker's cards, two to a row, as Settings shows them on 20 October. */
     private fun swatches() {
         val ctx = RuntimeEnvironment.getApplication()
         val prefs = Prefs(ctx)
         prefs.sp.edit().putBoolean(Prefs.DYNAMIC_COLOR, false).commit()
         val d = ctx.resources.displayMetrics.density
-        val sw = (96 * d).toInt()
-        val sh = (96 * ThemeSwatch.ASPECT * d).toInt()
+        val cw = (170 * d).toInt()
         val pad = (12 * d).toInt()
-        val rowH = sh + pad
-        val bmp = Bitmap.createBitmap((300 * d).toInt(), pad + rowH * KbTheme.CHOICES.size, Bitmap.Config.ARGB_8888)
+        val label = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { textSize = 13 * d; color = 0xFF202124.toInt() }
+        val views = KbTheme.CHOICES.map { choice ->
+            KeyboardPreview(ctx, KbTheme.forChoice(ctx, prefs, choice.id, LocalDate.of(2026, 10, 20))).also {
+                it.measure(View.MeasureSpec.makeMeasureSpec(cw, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                it.layout(0, 0, cw, it.measuredHeight)
+            }
+        }
+        val ch = views[0].measuredHeight
+        val rowH = ch + (26 * d).toInt()
+        val rows = (views.size + 1) / 2
+        val bmp = Bitmap.createBitmap(pad * 3 + cw * 2, pad + rowH * rows, Bitmap.Config.ARGB_8888)
         val c = Canvas(bmp)
         c.drawColor(0xFFF6F7F9.toInt())
-        val label = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { textSize = 15 * d; color = 0xFF202124.toInt() }
-        for ((i, choice) in KbTheme.CHOICES.withIndex()) {
-            val v = ThemeSwatch(ctx, KbTheme.forChoice(ctx, prefs, choice.id, Calendar.OCTOBER))
-            v.measure(View.MeasureSpec.makeMeasureSpec(sw, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(sh, View.MeasureSpec.EXACTLY))
-            v.layout(0, 0, sw, sh)
-            val y = pad + i * rowH
-            c.save(); c.translate(pad.toFloat(), y.toFloat()); v.draw(c); c.restore()
-            c.drawText(choice.label, (pad * 2 + sw).toFloat(), y + sh / 2f + 5 * d, label)
+        for ((i, v) in views.withIndex()) {
+            val x = pad + (i % 2) * (cw + pad)
+            val y = pad + (i / 2) * rowH
+            c.save(); c.translate(x.toFloat(), y.toFloat()); v.draw(c); c.restore()
+            c.drawText(KbTheme.CHOICES[i].label, x + 4 * d, y + ch + 17 * d, label)
         }
         File("build/screens").mkdirs()
         File("build/screens/swatches.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
@@ -173,7 +178,7 @@ class ScreenshotTest {
             ov.burst(p.centerX(), p.top + p.height() * 0.3f)
             ShadowSystemClock.advanceBy(Duration.ofMillis(220))
         }
-        for (id in listOf("halloween", "christmas", "neon", "sakura", "ocean", "retro")) {
+        for (id in listOf("halloween", "christmas", "neon", "sakura", "ocean", "retro", "galaxy", "autumn", "valentine", "newyear")) {
             render(id, "fun_$id.png", setup = funGlide)
             render(id, "fun_${id}_bar.png", setup = funToolbar)
         }

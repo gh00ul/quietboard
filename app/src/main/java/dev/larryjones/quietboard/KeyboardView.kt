@@ -329,11 +329,17 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                 k.functional -> KbTheme.blend(t.special, t.specialPressed, amount)
                 else -> KbTheme.blend(t.key, t.keyPressed, amount)
             }
+            // Fun themes' glass keys: the scene shows through letters and function keys (enter stays solid).
+            val glass = t.keyAlpha < 1f && !accentKey
             if (t.keyShadow != 0) {
+                // Under glass the shadow would show through the whole key: keep it to the edge below.
+                if (glass) { canvas.save(); canvas.clipOutRect(k.visual) }
                 keyPaint.color = t.keyShadow
                 canvas.drawRoundRect(k.visual.left, k.visual.top + 1.2f * dp, k.visual.right, k.visual.bottom + 1.2f * dp, radius, radius, keyPaint)
+                if (glass) canvas.restore()
             }
             keyPaint.color = bg
+            if (glass) keyPaint.alpha = (255 * t.keyAlpha).toInt()
             canvas.drawRoundRect(k.visual, radius, radius, keyPaint)
             seed++
             if (extras) {

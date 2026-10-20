@@ -315,6 +315,7 @@ class QuietIME : InputMethodService(),
         }
         updateShift()
         refreshSuggestions()
+        wakeScene()
     }
 
     override fun onFinishInputView(finishingInput: Boolean) {
@@ -658,7 +659,15 @@ class QuietIME : InputMethodService(),
 
     // ------------------------------------------------------------------ keyboard events
 
-    override fun onKeyFeedback(key: Key) = feedback.key(key.type)
+    override fun onKeyFeedback(key: Key) {
+        feedback.key(key.type)
+        wakeScene()
+    }
+
+    /** A fun theme's scene moves for a few seconds after each key, glide or opening (see [ThemeBackdrop]). */
+    private fun wakeScene() {
+        (root?.background as? ThemeBackdrop)?.wake()
+    }
 
     override fun onHaptic(key: Key, kind: Haptic) {
         feedback.haptic(kind)
@@ -1128,6 +1137,7 @@ class QuietIME : InputMethodService(),
     }
 
     override fun onGestureStart() {
+        wakeScene()
         flushGesture() // the previous glide's word is the context for this one
         glideId++
         glidePreviewing = true
@@ -1136,6 +1146,7 @@ class QuietIME : InputMethodService(),
     }
 
     override fun onGestureProgress(xs: FloatArray, ys: FloatArray, count: Int) {
+        wakeScene()
         if (previewBusy || !glidePreviewing || !suggestionsOn) return
         val dec = decoder ?: return
         val kv = keyboard ?: return

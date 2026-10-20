@@ -17,9 +17,11 @@ its private storage on your phone.
 - Crisp per-key haptics (lighter for repeats and cursor steps, firmer for space/enter), or the phone's
   own keyboard haptics
 - Number, phone and date/time pads, email/URL keys, smart enter key, double-space period, auto-caps
-- Light, dark, black (OLED) and Material You themes, plus fun ones: Halloween, Christmas, Neon,
-  Sakura, Ocean and Retro terminal, each with its own scenery and swipe trail, and a Seasonal theme
-  that switches to Halloween in October and Christmas in December. TalkBack support
+- Light, dark, black (OLED) and Material You themes, plus ten fun ones: Halloween, Christmas, Neon,
+  Sakura, Ocean, Retro terminal, Galaxy, Autumn, Valentine and New Year. Each is a whole scene behind
+  glass keys, with gentle motion while you type (snow, petals, bubbles, fireworks; it pauses when you
+  stop, and Theme effects turns it off), its own swipe trail and tap sparkles. Seasonal follows the
+  calendar: New Year, Valentine's, spring, summer, Halloween, autumn and Christmas. TalkBack support
 - Never learns (words or emoji) from password or incognito fields; clipboard history skips clips marked
   sensitive, images, and copies made while a password/incognito field is active (best effort)
 
