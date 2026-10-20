@@ -110,7 +110,8 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         val known = (exactIdx >= 0 && !rareCapsOnly) || userKnown || shortcut != null || quoted
 
         // What fits after the words before ("I" + "wold" -> would, not wild; "going t" -> to).
-        val here = phrases?.context(contextOf(before, prev))?.takeIf { it.known }
+        val words2 = contextOf(before, prev)
+        val here = phrases?.context(words2)?.takeIf { it.known }
         fun ctx(i: Int) = if (here == null) 0f else contextPoints * here.boost(i).coerceIn(boostMin, boostMax)
 
         // Keyed by lowercase so "Haven"/"haven" or a learned "Thanks" never show up twice.
@@ -129,13 +130,13 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         dict.forEachWithPrefix(lower) { i ->
             if (dict.keys[i] != lower && !hidden(i)) {
                 val w = dict.words[i]
-                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(i) - (dict.keys[i].length - lower.length) * 1.5f
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + tripleBonus(words2, w, learned) + ctx(i) - (dict.keys[i].length - lower.length) * 1.5f
                 top.add(i, s)
             }
         }
         top.forEach { i, s -> offer(dict.words[i], s) }
         if (learned) history.completions(lower) { w, c ->
-            if (c >= 2 && !blocked(w)) offer(w, 120f + 10f * minOf(c, 10) + pairBonus(prevLower, w, true))
+            if (c >= 2 && !blocked(w)) offer(w, 120f + 10f * minOf(c, 10) + pairBonus(prevLower, w, true) + tripleBonus(words2, w, true))
         }
 
         // 2) Typo corrections.
@@ -157,7 +158,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
                 if (typed == lower && w.length > 1 && dict.freqs[i] < 120 && w.all { !it.isLetter() || it.isUpperCase() }) {
                     return@corrections
                 }
-                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + ctx(i) - d * EDIT_COST
+                val s = dict.freqs[i] + userBonus(w, learned) + pairBonus(prevLower, w, learned) + tripleBonus(words2, w, learned) + ctx(i) - d * EDIT_COST
                 offer(w, s - 5f)
                 if (s > bestFixScore && dict.freqs[i] >= 40) { bestFixScore = s; bestFix = w }
             }
@@ -228,29 +229,30 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         val ctx = contextOf(before, prev, sentenceStart)
         val key = ctx.prev1 ?: return emptyList()
         val model = phrases?.context(ctx)
-        // Your followers of this word: lowercase -> (as typed, count).
-        val mine = HashMap<String, Pair<String, Int>>()
-        var total = 0
-        if (learned && key.first().isLetter()) history.followers(key) { w, c ->
-            total += c
-            val k = w.lowercase(Locale.US)
-            if (c >= 2 && (mine[k]?.second ?: 0) < c) mine[k] = w to c
-        }
+        // What you type after this word, and after these two words ("ok sounds" -> good).
+        val personal = learned && key.first().isLetter()
+        val (mine, total) = if (personal) habits { history.followers(key, it) } else NO_HABITS
+        val (mine3, total3) = if (personal) habits { history.tripleFollowers(ctx.prev2, key, it) } else NO_HABITS
         // How much your own counts weigh against the built-in model: half once you've typed 2 words here.
         val mu = total / (total + PERSONAL_PRIOR)
-        val scores = HashMap<String, Float>()
+        val mu3 = total3 / (total3 + PERSONAL_PRIOR)
         val display = HashMap<String, String>()
+        val modelP = HashMap<String, Float>()
         model?.top(MODEL_CANDIDATES) { i -> predictable(i) }?.forEach { (i, lp) ->
-            val k = dict.keys[i]
-            scores[k] = (1 - mu) * exp(lp) + mu * (mine[k]?.second ?: 0) / maxOf(total, 1)
-            display[k] = dict.words[i]
+            modelP[dict.keys[i]] = exp(lp)
+            display[dict.keys[i]] = dict.words[i]
         }
-        for ((k, wc) in mine) {
-            if (k in scores || blocked(wc.first)) continue
+        for ((k, wc) in mine.entries + mine3.entries) {
+            if (k !in display && !blocked(wc.first)) display[k] = canonical(wc.first)
+        }
+        fun modelProb(k: String): Float = modelP[k] ?: run {
             val id = dict.exactIndex(k).let { if (it >= 0) phrases?.idOf(it) ?: -1 else -1 }
-            val pm = if (model != null && id >= PhraseModel.FIRST_WORD) exp(model.logProb(id)) else 0f
-            scores[k] = (1 - mu) * pm + mu * wc.second / total
-            display[k] = canonical(wc.first)
+            if (model != null && id >= PhraseModel.FIRST_WORD) exp(model.logProb(id)) else 0f
+        }
+        val scores = HashMap<String, Float>()
+        for (k in display.keys) {
+            val pair = (1 - mu) * modelProb(k) + mu * (mine[k]?.second ?: 0) / maxOf(total, 1)
+            scores[k] = (1 - mu3) * pair + mu3 * (mine3[k]?.second ?: 0) / maxOf(total3, 1)
         }
         val p = scores.entries.sortedByDescending { it.value }.take(3).map { display.getValue(it.key) }
         if (p.isEmpty()) return emptyList()
@@ -281,10 +283,19 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         val ctx = contextOf(before, prev, sentenceStart)
         val out = HashMap<String, Float>()
         val key = ctx.prev1
-        if (learned && key != null && key.first().isLetter()) history.followers(key) { w, c ->
-            if (c >= 2) {
-                val k = w.lowercase(Locale.US)
-                out[k] = maxOf(out[k] ?: 0f, minOf(1f, 0.4f + 0.15f * c))
+        if (learned && key != null && key.first().isLetter()) {
+            history.followers(key) { w, c ->
+                if (c >= 2) {
+                    val k = w.lowercase(Locale.US)
+                    out[k] = maxOf(out[k] ?: 0f, minOf(1f, 0.4f + 0.15f * c))
+                }
+            }
+            // A three-word habit is surer than a two-word one.
+            history.tripleFollowers(ctx.prev2, key) { w, c ->
+                if (c >= 2) {
+                    val k = w.lowercase(Locale.US)
+                    out[k] = maxOf(out[k] ?: 0f, minOf(1f, 0.5f + 0.2f * c))
+                }
             }
         }
         return GlideContext(phrases?.context(ctx)?.takeIf { it.known }, out)
@@ -308,6 +319,24 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         return if (c <= 0) 0f else 20f + 8f * minOf(c, 8)
     }
 
+    private fun tripleBonus(ctx: TextContext, w: String, learned: Boolean): Float {
+        if (!learned) return 0f
+        val c = history.tripleCount(ctx.prev2, ctx.prev1, w)
+        return if (c <= 0) 0f else 30f * minOf(c, 3)
+    }
+
+    /** Your followers from [each]: lowercase -> (as typed, count) for those typed twice or more, and the total. */
+    private fun habits(each: ((String, Int) -> Unit) -> Unit): Pair<Map<String, Pair<String, Int>>, Int> {
+        val mine = HashMap<String, Pair<String, Int>>()
+        var total = 0
+        each { w, c ->
+            total += c
+            val k = w.lowercase(Locale.US)
+            if (c >= 2 && (mine[k]?.second ?: 0) < c) mine[k] = w to c
+        }
+        return mine to total
+    }
+
     private fun pairBonus(prevLower: String?, w: String, learned: Boolean): Float {
         if (!learned) return 0f
         val c = history.pairCount(prevLower, w)
@@ -320,6 +349,7 @@ class Suggest(private val dict: Dictionary, private val history: UserHistory) {
         const val BOOST_MAX = 8f
         /** Your counts after a word weigh as much as the built-in model once they add up to this. */
         private const val PERSONAL_PRIOR = 2f
+        private val NO_HABITS = emptyMap<String, Pair<String, Int>>() to 0
         private const val MODEL_CANDIDATES = 8
         /** Capitalised words this common are everyday words ("God", "English"), not someone's name. */
         private const val NAME_FREQ = 150

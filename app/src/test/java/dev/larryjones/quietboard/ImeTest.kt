@@ -393,6 +393,121 @@ class ImeTest {
         assertTrue("completions too: ${stripWords()}", "store" in stripWords())
     }
 
+    @Test fun learnsThreeWordPhrasesFromTyping() {
+        waitForEngine()
+        repeat(3) { type("ok sounds chill ") }
+        type("ok sounds ")
+        assertEquals("chill", root.topBar.itemsForTest().getOrNull(1)?.word)
+    }
+
+    @Test fun tapSparklesAreOffUnlessTurnedOn() {
+        waitForEngine()
+        val prefs = Prefs(RuntimeEnvironment.getApplication())
+        prefs.sp.edit().putString(Prefs.THEME, "halloween").commit()
+        start(fieldId = 60)
+        assertFalse("no bursts by default", root.keyboard.effects)
+        prefs.sp.edit().putBoolean(Prefs.TAP_SPARKLES, true).commit()
+        shadowOf(Looper.getMainLooper()).idle()
+        start(fieldId = 61)
+        assertTrue(root.keyboard.effects)
+        prefs.sp.edit().putBoolean(Prefs.THEME_EFFECTS, false).putBoolean(Prefs.TAP_SPARKLES, false).putString(Prefs.THEME, "system").commit()
+    }
+
+    @Test fun passwordManagerLoginsTakeTheStrip() {
+        waitForEngine()
+        val v1 = android.os.Bundle().apply {
+            putStringArrayList("androidx.autofill.inline.ui.version:key", arrayListOf(InlineAutofill.V1))
+        }
+        val req = ime.onCreateInlineSuggestionsRequest(v1)
+        assertTrue("asks for logins", req != null)
+        val style = req!!.inlinePresentationSpecs[0].style.getBundle(InlineAutofill.V1)
+        assertTrue("in the chip format the password manager draws", style?.getBoolean("style_v1") == true)
+        assertEquals(InlineAutofill.MAX_SUGGESTIONS, req.maxSuggestionCount)
+        assertEquals("not if the system can't draw these chips", null, ime.onCreateInlineSuggestionsRequest(android.os.Bundle()))
+        val km = RuntimeEnvironment.getApplication().getSystemService(KeyguardManager::class.java)
+        shadowOf(km).setKeyguardLocked(true)
+        assertEquals("never on the lock screen", null, ime.onCreateInlineSuggestionsRequest(v1))
+        shadowOf(km).setKeyguardLocked(false)
+
+        // Two logins arrive: they take the strip, over predictions, until you open the tools.
+        type("thank ")
+        val ctx = RuntimeEnvironment.getApplication()
+        root.setAutofill(listOf(View(ctx), View(ctx)))
+        assertTrue(root.topBar.showingAutofill)
+        assertFalse(root.topBar.showingSuggestions)
+        tapStrip(10f * root.resources.displayMetrics.density)
+        assertTrue(root.topBar.toolsOpen)
+        assertFalse("the toolbar covers them", root.topBar.showingAutofill)
+        type("y")
+        assertTrue("typing brings them back", root.topBar.showingAutofill)
+        // The form is gone: an empty answer clears them.
+        val empty = android.view.inputmethod.InlineSuggestionsResponse::class.java
+            .getMethod("newInlineSuggestionsResponse", List::class.java).invoke(null, emptyList<Any>())
+            as android.view.inputmethod.InlineSuggestionsResponse
+        assertTrue(ime.onInlineSuggestionsResponse(empty))
+        assertFalse(root.topBar.showingAutofill)
+        assertTrue("predictions are back", root.topBar.showingSuggestions)
+    }
+
+    @Test fun worksBeforeTheFirstUnlock() {
+        val app = RuntimeEnvironment.getApplication()
+        // Words you'd learned before the reboot, saved in encrypted storage.
+        java.io.File(app.filesDir, "user_words.tsv").writeText("Zorbix\t5\n")
+        val um = app.getSystemService(android.os.UserManager::class.java)
+        shadowOf(um).setUserUnlocked(false)
+        val km = app.getSystemService(KeyguardManager::class.java)
+        shadowOf(km).setKeyguardLocked(true)
+        try {
+            val locked = Robolectric.setupService(QuietIME::class.java)
+            val lockedRoot = locked.onCreateInputView() as InputRoot
+            lockedRoot.measure(
+                View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(2340, View.MeasureSpec.AT_MOST),
+            )
+            lockedRoot.layout(0, 0, 1080, lockedRoot.measuredHeight)
+            val field = EditText(app).apply { inputType = InputType.TYPE_CLASS_TEXT }
+            val ei = EditorInfo()
+            locked.testConnection = field.onCreateInputConnection(ei)
+            ei.fieldId = 70
+            ei.packageName = "test.app"
+            locked.onStartInputView(ei, false)
+            val f = QuietIME::class.java.getDeclaredField("decoder").apply { isAccessible = true }
+            waitUntil { f.get(locked) != null }
+            "hello there ".forEach { if (it == ' ') locked.onSpace() else locked.onText(it.toString()) }
+            assertEquals("the keyboard types", "hello there ", field.text.toString())
+            val history = QuietIME::class.java.getDeclaredField("history").apply { isAccessible = true }.get(locked) as UserHistory
+            assertEquals("your words stay locked away", 0, history.count("zorbix"))
+
+            // Unlocked: your words load, and nothing was written over them meanwhile.
+            shadowOf(um).setUserUnlocked(true)
+            shadowOf(km).setKeyguardLocked(false)
+            app.sendBroadcast(android.content.Intent(android.content.Intent.ACTION_USER_UNLOCKED))
+            waitUntil { history.count("zorbix") > 0 }
+            assertEquals(5, history.count("zorbix"))
+            assertTrue(java.io.File(app.filesDir, "user_words.tsv").readText().contains("Zorbix"))
+            locked.onDestroy()
+        } finally {
+            shadowOf(um).setUserUnlocked(true)
+            shadowOf(km).setKeyguardLocked(false)
+        }
+    }
+
+    @Test fun settingsMoveOverFromOlderVersions() {
+        val app = RuntimeEnvironment.getApplication()
+        // 1.9 kept everything in encrypted storage.
+        val de = app.createDeviceProtectedStorageContext()
+        de.getSharedPreferences("storage_state", 0).edit().clear().commit()
+        app.getSharedPreferences(Prefs.FILE, 0).edit()
+            .putString(Prefs.THEME, "neon")
+            .putString(Prefs.SHORTCUTS, "[{\"k\":\"addr\",\"v\":\"1 Main St\"}]")
+            .commit()
+        val p = Prefs(app)
+        assertEquals("neon", p.theme)
+        assertEquals("1 Main St", p.shortcuts()["addr"])
+        assertFalse("shortcuts stay in encrypted storage", p.sp.contains(Prefs.SHORTCUTS))
+        p.sp.edit().putString(Prefs.THEME, "system").commit()
+    }
+
     @Test fun glideAfterPeriodIsCapitalized() {
         waitForEngine()
         edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
@@ -402,6 +517,14 @@ class ImeTest {
         ime.onGesture(xs, ys, xs.size)
         ime.onSpace()
         assertEquals("Hi. Hello ", text)
+    }
+
+    private fun waitUntil(cond: () -> Boolean) {
+        repeat(300) {
+            shadowOf(Looper.getMainLooper()).idle()
+            if (cond()) return
+            Thread.sleep(20)
+        }
     }
 
     private fun waitForEngine() {

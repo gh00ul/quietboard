@@ -65,7 +65,27 @@ class TopBar(context: Context) : View(context) {
             layoutTools()
             invalidate()
             a11y.invalidateAll()
+            onModeChange?.invoke()
         }
+
+    /**
+     * How many password-manager logins sit over the strip ([InputRoot.setAutofill]). While there are
+     * any they take the place of suggestions, until you open the tools.
+     */
+    var autofillCount = 0
+        set(v) {
+            if (field == v) return
+            field = v
+            pressedSlot = -1
+            handler.removeCallbacks(longPress)
+            layoutTools()
+            invalidate()
+            a11y.invalidateAll()
+            onModeChange?.invoke()
+        }
+
+    /** Called when the strip switches between suggestions, logins and the toolbar. */
+    var onModeChange: (() -> Unit)? = null
 
     private val dp = resources.displayMetrics.density
     val barHeight = (46 * dp).toInt()
@@ -105,7 +125,11 @@ class TopBar(context: Context) : View(context) {
     }
 
     private val hasSuggestions get() = items.any { it != null }
-    val showingSuggestions get() = hasSuggestions && !toolsOpen
+    val showingAutofill get() = autofillCount > 0 && !toolsOpen
+    val showingSuggestions get() = hasSuggestions && !toolsOpen && autofillCount == 0
+
+    /** Width of the tools button, where the logins start. */
+    internal val leadWidth get() = lead.toInt()
 
     /** Width of the tools button left of the suggestions. */
     private val lead get() = LEAD_DP * dp
@@ -139,12 +163,12 @@ class TopBar(context: Context) : View(context) {
     private fun layoutTools() {
         toolRects.clear()
         if (width == 0) return
-        if (showingSuggestions) {
+        if (showingSuggestions || showingAutofill) {
             place(Tool.MORE, 0f, 0f, lead, height.toFloat())
             return
         }
         var x = 4 * dp
-        if (hasSuggestions) {
+        if (hasSuggestions || autofillCount > 0) {
             place(Tool.BACK, 0f, 0f, lead, height.toFloat())
             x = lead
         }
@@ -226,7 +250,7 @@ class TopBar(context: Context) : View(context) {
                 Tool.HIDE -> "Hide keyboard"
                 Tool.PASTE -> "Paste: " + (chipLabel ?: "").take(100)
                 Tool.MORE -> "Tools: emoji, clipboard, settings"
-                Tool.BACK -> "Back to suggestions"
+                Tool.BACK -> if (autofillCount > 0) "Back to saved logins" else "Back to suggestions"
                 null -> null
             }
         }
@@ -269,12 +293,14 @@ class TopBar(context: Context) : View(context) {
             boldPaint.clearShadowLayer()
         }
         chipText.typeface = t.fonts.regular
-        if (showingSuggestions) drawSuggestions(canvas, t) else drawToolbar(canvas, t)
+        when {
+            showingAutofill -> drawMore(canvas, t) // the logins are views on top
+            showingSuggestions -> drawSuggestions(canvas, t)
+            else -> drawToolbar(canvas, t)
+        }
     }
 
-    private val dim get() = theme?.let { KbTheme.blend(it.text, it.background, 0.18f) } ?: 0
-
-    private fun drawSuggestions(canvas: Canvas, t: KbTheme) {
+    private fun drawMore(canvas: Canvas, t: KbTheme) {
         val cy = height / 2f
         toolRects[Tool.MORE]?.let { r ->
             if (pressedTool == Tool.MORE) {
@@ -283,6 +309,13 @@ class TopBar(context: Context) : View(context) {
             }
             Icons.draw(canvas, Icon.APPS, r.centerX(), cy, 19 * dp, dim)
         }
+    }
+
+    private val dim get() = theme?.let { KbTheme.blend(it.text, it.background, 0.18f) } ?: 0
+
+    private fun drawSuggestions(canvas: Canvas, t: KbTheme) {
+        val cy = height / 2f
+        drawMore(canvas, t)
         val cw = slotWidth
         for (i in 0 until 3) {
             val item = items.getOrNull(i)

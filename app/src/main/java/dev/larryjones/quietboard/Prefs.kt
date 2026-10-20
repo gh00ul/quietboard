@@ -1,11 +1,22 @@
 package dev.larryjones.quietboard
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.UserManager
 
-/** All user settings. Stored in app-private SharedPreferences, excluded from backups. */
+/**
+ * All user settings, in app-private SharedPreferences excluded from backups.
+ *
+ * Settings live in device-protected storage, so the keyboard works right after a reboot, before
+ * you've unlocked the phone once. Nothing personal goes there: text shortcuts, learned words and
+ * clipboard history stay in the normal encrypted storage, which opens only once you unlock.
+ */
 class Prefs(context: Context) {
-    val sp: SharedPreferences = context.getSharedPreferences(FILE, Context.MODE_PRIVATE)
+    val sp: SharedPreferences = settingsStorage(context).getSharedPreferences(FILE, Context.MODE_PRIVATE)
+    /** Personal data (text shortcuts); null until the phone has been unlocked since it started. */
+    private val personal: SharedPreferences? =
+        if (unlocked(context)) context.getSharedPreferences(PERSONAL_FILE, Context.MODE_PRIVATE) else null
 
     private fun b(key: String, def: Boolean) = sp.getBoolean(key, def)
 
@@ -25,8 +36,10 @@ class Prefs(context: Context) {
     val clipboardHistory get() = b(CLIPBOARD_HISTORY, true)
     val sound get() = b(SOUND, false)
     val dynamicColor get() = b(DYNAMIC_COLOR, true)
-    /** Fun themes: tap bursts and twinkling lights. */
+    /** Fun themes: the scene's motion (snow, petals, bubbles, twinkling lights). */
     val themeEffects get() = b(THEME_EFFECTS, true)
+    /** Fun themes: a little burst from each tapped key. Off unless you turn it on. */
+    val tapSparkles get() = b(TAP_SPARKLES, false)
 
     /** [Feedback.OFF], [Feedback.LIGHT], [Feedback.MEDIUM], [Feedback.STRONG] or [Feedback.SYSTEM] */
     val vibration get() = sp.getInt(VIBRATION, 1)
@@ -37,11 +50,12 @@ class Prefs(context: Context) {
     /** 0 off, -1 left hand, 1 right hand */
     val oneHanded get() = sp.getInt(ONE_HANDED, 0)
 
-    /** Text shortcuts (personal dictionary): shortcut (lowercase) -> expansion. */
+    /** Text shortcuts (personal dictionary): shortcut (lowercase) -> expansion. None before the first unlock. */
     fun shortcuts(): Map<String, String> {
         val out = LinkedHashMap<String, String>()
+        val store = personal ?: return out
         runCatching {
-            val arr = org.json.JSONArray(sp.getString(SHORTCUTS, "[]"))
+            val arr = org.json.JSONArray(store.getString(SHORTCUTS, "[]"))
             for (i in 0 until arr.length()) {
                 val o = arr.getJSONObject(i)
                 val k = o.getString("k").trim().lowercase(java.util.Locale.US)
@@ -55,7 +69,17 @@ class Prefs(context: Context) {
     fun saveShortcuts(map: Map<String, String>) {
         val arr = org.json.JSONArray()
         for ((k, v) in map) arr.put(org.json.JSONObject().put("k", k).put("v", v))
-        sp.edit().putString(SHORTCUTS, arr.toString()).apply()
+        personal?.edit()?.putString(SHORTCUTS, arr.toString())?.apply()
+    }
+
+    /** Call when text shortcuts change elsewhere (the settings screen edits them). */
+    fun onShortcutsChanged(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        personal?.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun stopListening(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sp.unregisterOnSharedPreferenceChangeListener(listener)
+        personal?.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
     /** "google" (bundled Google Sans) or "system" */
@@ -65,6 +89,35 @@ class Prefs(context: Context) {
 
     companion object {
         const val FILE = "settings"
+        const val PERSONAL_FILE = "personal"
+        private const val STATE_FILE = "storage_state"
+
+        /** Whether the phone has been unlocked since it started (encrypted storage is open). */
+        fun unlocked(context: Context): Boolean = context.getSystemService(UserManager::class.java)?.isUserUnlocked != false
+
+        /**
+         * Where settings live. Once, after updating from a version that kept them in encrypted
+         * storage, moves them over (text shortcuts go to their own encrypted file). Needs an
+         * unlocked phone; until then the keyboard runs on defaults. Writes synchronously on purpose:
+         * the move must be finished before anything reads the settings.
+         */
+        @SuppressLint("ApplySharedPref")
+        @Synchronized
+        fun settingsStorage(context: Context): Context {
+            val de = context.createDeviceProtectedStorageContext()
+            if (!unlocked(context)) return de
+            val state = de.getSharedPreferences(STATE_FILE, Context.MODE_PRIVATE)
+            if (!state.getBoolean("moved", false)) {
+                de.moveSharedPreferencesFrom(context, FILE)
+                val settings = de.getSharedPreferences(FILE, Context.MODE_PRIVATE)
+                settings.getString(SHORTCUTS, null)?.let { s ->
+                    context.getSharedPreferences(PERSONAL_FILE, Context.MODE_PRIVATE).edit().putString(SHORTCUTS, s).commit()
+                    settings.edit().remove(SHORTCUTS).commit()
+                }
+                state.edit().putBoolean("moved", true).commit()
+            }
+            return de
+        }
         const val NUMBER_ROW = "number_row"
         const val LONG_PRESS_SYMBOLS = "long_press_symbols"
         const val KEY_PREVIEW = "key_preview"
@@ -82,6 +135,7 @@ class Prefs(context: Context) {
         const val SOUND = "sound"
         const val DYNAMIC_COLOR = "dynamic_color"
         const val THEME_EFFECTS = "theme_effects"
+        const val TAP_SPARKLES = "tap_sparkles"
         const val VIBRATION = "vibration"
         const val THEME = "theme"
         const val HEIGHT = "height"

@@ -10,7 +10,8 @@ its private storage on your phone.
   undoes a correction. Measured: 93.5% of common-word typos fixed (`DictionaryBenchmark`)
 - A built-in phrase model (which words follow the one or two before, counted from ~940 million words
   of film and TV dialogue) drives next-word predictions, completions, autocorrect and glide typing,
-  blended with your own habits. On everyday sentences it never saw, the next word is in the strip
+  blended with your own habits, including three-word phrases you repeat ("ok sounds" -> your word,
+  not the usual one). On everyday sentences it never saw, the next word is in the strip
   before you type a letter 29.5% of the time (12.4% in 1.8.1), 59.8% of letters never need typing
   (44.8%), and typos are fixed 96.2% of the time with 3.6% wrong fixes (92.9% / 6.8%;
   `PredictionBenchmark`)
@@ -26,8 +27,12 @@ its private storage on your phone.
 - Light, dark, black (OLED) and Material You themes, plus ten fun ones: Halloween, Christmas, Neon,
   Sakura, Ocean, Retro terminal, Galaxy, Autumn, Valentine and New Year. Each is a whole scene behind
   glass keys, with gentle motion while you type (snow, petals, bubbles, fireworks; it pauses when you
-  stop, and Theme effects turns it off), its own swipe trail and tap sparkles. Seasonal follows the
+  stop, and Scene motion turns it off), its own swipe trail, and tap sparkles if you turn them on. Seasonal follows the
   calendar: New Year, Valentine's, spring, summer, Halloween, autumn and Christmas. TalkBack support
+- Logins from your password manager (Proton Pass, Bitwarden, 1Password...) in the suggestion strip on
+  Android 11+. The system draws them and fills the fields; the keyboard never sees them
+- Works right after a reboot, before the first unlock (Direct Boot): only settings live in the storage
+  that's readable then; learned words, shortcuts and clipboard history open once you unlock
 - Never learns (words or emoji) from password or incognito fields; clipboard history skips clips marked
   sensitive, images, and copies made while a password/incognito field is active (best effort)
 

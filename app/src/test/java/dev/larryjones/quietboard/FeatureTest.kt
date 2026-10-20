@@ -12,6 +12,7 @@ import android.view.View
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,6 +27,37 @@ import java.time.Duration
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w384dp-h832dp-450dpi")
 class FeatureTest {
+
+    @Test fun threeWordPhrasesAreSavedAndCleared() {
+        val dir = java.nio.file.Files.createTempDirectory("qb").toFile()
+        fun waitUntil(cond: () -> Boolean) {
+            repeat(300) {
+                shadowOf(Looper.getMainLooper()).idle()
+                if (cond()) return
+                Thread.sleep(10)
+            }
+        }
+        val loadedField = UserHistory::class.java.getDeclaredField("loaded").apply { isAccessible = true }
+        fun loaded(): UserHistory {
+            val h = UserHistory(dir)
+            h.loadAsync(android.os.Handler(Looper.getMainLooper()))
+            waitUntil { loadedField.getBoolean(h) }
+            return h
+        }
+        val h = loaded()
+        repeat(3) { h.learn("sounds", "chill", "ok") }
+        h.saveAsync()
+        val f = java.io.File(dir, "user_triples.tsv")
+        waitUntil { f.exists() && f.readText().isNotEmpty() }
+        assertTrue("saved", f.readText().contains("ok\tsounds\tchill\t3"))
+        h.close()
+        val again = loaded()
+        assertEquals("reloaded", 3, again.tripleCount("ok", "sounds", "chill"))
+        again.clear()
+        assertEquals(0, again.tripleCount("ok", "sounds", "chill"))
+        waitUntil { !f.exists() }
+        assertFalse("deleted with the rest of your history", f.exists())
+    }
 
     @Test fun pinnedClipsNeverExpireOrClear() {
         val ctx = RuntimeEnvironment.getApplication()

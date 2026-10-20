@@ -230,6 +230,34 @@ class EngineTest {
         assertTrue("Zorbix" in words("thank"))
     }
 
+    @Test fun threeWordHabitsWin() {
+        val h = UserHistory(Files.createTempDirectory("qb").toFile())
+        val s = Suggest(dict, h)
+        s.phrases = File("src/main/assets/phrases_en.bin").inputStream().use { PhraseModel.fromStream(it, dict) }
+        fun mid(ctx: TextContext, learned: Boolean = true) = s.predict(null, false, learned, before = ctx).getOrNull(1)?.word
+        val okSounds = TextContext("ok", "sounds")
+        val thatSounds = TextContext("that", "sounds")
+        // "sounds good" is your usual habit, but after "ok" you always say "chill".
+        repeat(6) { h.learn("sounds", "good", "that") }
+        repeat(3) { h.learn("sounds", "chill", "ok") }
+        assertEquals("good", mid(thatSounds))
+        assertEquals("the three-word habit beats the stronger two-word one", "chill", mid(okSounds))
+        assertTrue("not where learning is off", mid(okSounds, learned = false) != "chill")
+        assertTrue("completions too", "chill" in s.suggest("ch", "sounds", true, emptySet(), before = okSounds).strip.mapNotNull { it?.word })
+        assertTrue("and swipes", (s.contextFor(null, false, before = okSounds).learned["chill"] ?: 0f) >= 0.9f)
+        // Undoing a correction takes the phrase back too.
+        h.unlearn("sounds", "chill", "ok")
+        assertEquals(2, h.tripleCount("ok", "sounds", "chill"))
+        assertTrue(h.forget("chill"))
+        assertEquals(0, h.tripleCount("ok", "sounds", "chill"))
+        assertTrue(mid(okSounds) != "chill")
+        // A sentence start or comma counts as the word two back; other markers don't.
+        assertEquals("<s> thank", UserHistory.tripleKey(TextContext.START, "thank"))
+        assertEquals(", thanks", UserHistory.tripleKey(TextContext.COMMA, "thanks"))
+        assertNull(UserHistory.tripleKey(TextContext.NUMBER, "years"))
+        assertNull(UserHistory.tripleKey(null, "years"))
+    }
+
     @Test fun textContextReadsTheWordsBeforeTheCursor() {
         assertEquals(TextContext("i'm", "going"), TextContext.of("Well I'm going "))
         assertEquals(TextContext(null, TextContext.START), TextContext.of(""))

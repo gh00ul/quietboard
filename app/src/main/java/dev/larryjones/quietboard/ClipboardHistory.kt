@@ -31,6 +31,8 @@ class ClipboardHistory(private val ctx: Context, private val prefs: Prefs) {
     private val items = ArrayList<Item>()
     private var chipDismissedAt = 0L
     private var stopped = false
+    /** Loaded from disk: until then (before the first unlock) nothing may be written over the saved clips. */
+    private var started = false
     var onChange: (() -> Unit)? = null
     /** When true, a copy is not recorded (e.g. it happened while an incognito field was active). */
     var skipCapture: () -> Boolean = { false }
@@ -45,6 +47,7 @@ class ClipboardHistory(private val ctx: Context, private val prefs: Prefs) {
     }
 
     fun start() {
+        started = true
         load()
         // History was switched off while the keyboard wasn't running: don't keep what's left.
         if (!prefs.clipboardHistory) clear()
@@ -162,7 +165,7 @@ class ClipboardHistory(private val ctx: Context, private val prefs: Prefs) {
 
     private fun save() {
         scheduleTimers()
-        if (stopped || io.isShutdown) return
+        if (!started || stopped || io.isShutdown) return
         // Never write back a clip that has already expired (one still in memory after a long sleep).
         val cutoff = System.currentTimeMillis() - RETENTION_MS
         val snapshot = items.filter { it.pinned || it.time >= cutoff }.map { Item(it.text, it.time, it.pinned) }

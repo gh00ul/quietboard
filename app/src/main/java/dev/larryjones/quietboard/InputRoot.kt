@@ -2,8 +2,11 @@ package dev.larryjones.quietboard
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 
 /** The whole keyboard window: suggestion strip + keys/panels, with the popup overlay on top. */
@@ -15,9 +18,26 @@ class InputRoot(context: Context) : FrameLayout(context) {
     val content: FrameLayout = KeysFrame(context)
     private val column = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
 
+    /** Password-manager logins (Android 11+): views the system draws, placed over the strip. */
+    private val autofillRow = LinearLayout(context).apply {
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
+    }
+    private val autofill = HorizontalScrollView(context).apply {
+        isHorizontalScrollBarEnabled = false
+        visibility = GONE
+        addView(autofillRow, LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+    }
+
     init {
         content.addView(keyboard, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        column.addView(topBar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight))
+        val bar = FrameLayout(context)
+        bar.addView(topBar, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight))
+        bar.addView(autofill, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight).apply {
+            marginStart = topBar.leadWidth
+        })
+        topBar.onModeChange = { autofill.visibility = if (topBar.showingAutofill) VISIBLE else GONE }
+        column.addView(bar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight))
         column.addView(content, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         addView(column, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         addView(overlay, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -44,6 +64,20 @@ class InputRoot(context: Context) : FrameLayout(context) {
             }
             setMeasuredDimension(w, h)
         }
+    }
+
+    /** Shows these login chips over the strip (none: back to suggestions). */
+    fun setAutofill(views: List<View>) {
+        autofillRow.removeAllViews()
+        val gap = (4 * resources.displayMetrics.density).toInt()
+        for (v in views) {
+            autofillRow.addView(v, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                marginEnd = gap
+            })
+        }
+        autofill.scrollTo(0, 0)
+        topBar.autofillCount = views.size
+        autofill.visibility = if (topBar.showingAutofill) VISIBLE else GONE
     }
 
     /** Adds a panel (emoji, clipboard) that sits over the keys. */

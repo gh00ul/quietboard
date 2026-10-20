@@ -129,7 +129,8 @@ class SettingsActivity : Activity() {
         // --- Look
         val look = section("Appearance")
         themeRow(look)
-        switchRow(look, "Theme effects", "In the fun themes: falling snow, petals, bubbles and other motion while you type, and a little burst from each key", Prefs.THEME_EFFECTS, true)
+        switchRow(look, "Scene motion", "Fun themes: snow, petals, bubbles and other motion while you type", Prefs.THEME_EFFECTS, true)
+        switchRow(look, "Tap sparkles", "Fun themes: a little burst from each key you tap", Prefs.TAP_SPARKLES, false)
         choiceRowString(look, "Font", listOf("Google Sans (Gboard)", "System font"), listOf("google", "system"), Prefs.FONT, "google")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             switchRow(look, "Material You colors", "Match your wallpaper colors (Light, Dark, Black and Follow system)", Prefs.DYNAMIC_COLOR, true)

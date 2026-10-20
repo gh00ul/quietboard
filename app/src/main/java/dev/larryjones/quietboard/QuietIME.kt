@@ -1,8 +1,11 @@
 package dev.larryjones.quietboard
 
+import android.annotation.TargetApi
 import android.app.KeyguardManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.media.AudioDeviceInfo
@@ -10,10 +13,12 @@ import android.media.AudioManager
 import android.icu.text.BreakIterator
 import android.inputmethodservice.InputMethodService
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.text.InputType
+import android.util.Size
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.View
@@ -21,6 +26,8 @@ import android.view.ViewGroup
 import android.view.WindowInsetsController
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.ExtractedTextRequest
+import android.view.inputmethod.InlineSuggestionsRequest
+import android.view.inputmethod.InlineSuggestionsResponse
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
@@ -38,7 +45,9 @@ class QuietIME : InputMethodService(),
 
     private enum class Panel { KEYS, EMOJI, CLIPBOARD, EDIT }
 
-    private class Correction(val original: String, val corrected: String, val separator: String, val prev: String?)
+    private class Correction(
+        val original: String, val corrected: String, val separator: String, val prev: String?, val prev2: String? = null,
+    )
 
     private lateinit var prefs: Prefs
     private lateinit var history: UserHistory
@@ -204,25 +213,24 @@ class QuietIME : InputMethodService(),
     }
     private var configDirty = true
     private var effectsOn: Boolean? = null
+    private var sparklesOn: Boolean? = null
 
     // ------------------------------------------------------------------ lifecycle
 
+    /** Right after a reboot, before the first unlock: your words, clipboard and shortcuts open later. */
+    private var unlockReceiver: BroadcastReceiver? = null
+
     override fun onCreate() {
         super.onCreate()
-        prefs = Prefs(this)
-        prefs.sp.registerOnSharedPreferenceChangeListener(prefListener)
         history = UserHistory(filesDir)
-        history.loadAsync(main)
-        feedback = Feedback(this, prefs)
-        clipboard = ClipboardHistory(this, prefs)
-        clipboard.onChange = { main.post { refreshTopBar() } }
-        // Best effort: skip copies made while a password or incognito field is the active editor.
-        clipboard.skipCapture = {
-            getSystemService(KeyguardManager::class.java)?.isKeyguardLocked == true ||
-                activeEditor?.let { isPrivateEditor(it) } ?: false
+        openSettings()
+        if (Prefs.unlocked(this)) {
+            openPersonal()
+        } else {
+            unlockReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) = onUnlocked()
+            }.also { registerReceiver(it, IntentFilter(Intent.ACTION_USER_UNLOCKED)) }
         }
-        clipboard.start()
-        prefs.sp.getString(KEY_RECENTS, null)?.split(SEP)?.filter { it.isNotEmpty() }?.let { emojiRecents.addAll(it) }
         Thread({
             val d = runCatching { EngineCache.dictionary(this) }.getOrNull()
             val phrases = d?.let { EngineCache.phrases(this, it) }
@@ -243,12 +251,51 @@ class QuietIME : InputMethodService(),
         }, "quietboard-dict").start()
     }
 
+    /** Settings (and what depends on them), from storage that's readable even before the first unlock. */
+    private fun openSettings() {
+        if (::prefs.isInitialized) prefs.stopListening(prefListener)
+        prefs = Prefs(this)
+        prefs.sp.registerOnSharedPreferenceChangeListener(prefListener)
+        prefs.onShortcutsChanged(prefListener)
+        feedback = Feedback(this, prefs)
+        if (::clipboard.isInitialized) clipboard.stop()
+        // Not started until [openPersonal]: before that it neither reads nor writes anything.
+        clipboard = ClipboardHistory(this, prefs)
+        clipboard.onChange = { main.post { refreshTopBar() } }
+        // Best effort: skip copies made while a password or incognito field is the active editor.
+        clipboard.skipCapture = {
+            getSystemService(KeyguardManager::class.java)?.isKeyguardLocked == true ||
+                activeEditor?.let { isPrivateEditor(it) } ?: false
+        }
+        emojiRecents.clear()
+        prefs.sp.getString(KEY_RECENTS, null)?.split(SEP)?.filter { it.isNotEmpty() }?.let { emojiRecents.addAll(it) }
+    }
+
+    /** Learned words and clipboard history: encrypted storage, open once the phone has been unlocked. */
+    private fun openPersonal() {
+        history.loadAsync(main)
+        clipboard.start()
+    }
+
+    private fun onUnlocked() {
+        unlockReceiver?.let { runCatching { unregisterReceiver(it) } }
+        unlockReceiver = null
+        if (destroyed) return
+        // Settings may only now have moved over from an older version: read them again.
+        openSettings()
+        openPersonal()
+        suggest?.let { configureSuggest() }
+        configDirty = true
+        if (isInputViewShown) reapplyConfig()
+    }
+
     override fun onDestroy() {
         destroyed = true
+        unlockReceiver?.let { runCatching { unregisterReceiver(it) } }
         dropGesture()
         gestureExec.shutdownNow()
         clipboard.stop()
-        prefs.sp.unregisterOnSharedPreferenceChangeListener(prefListener)
+        prefs.stopListening(prefListener)
         history.saveAsync()
         history.close()
         super.onDestroy()
@@ -342,21 +389,70 @@ class QuietIME : InputMethodService(),
         composing.setLength(0)
         composingSuspect = false
         rejected.clear()
+        clearAutofill()
         super.onFinishInput()
+    }
+
+    // ------------------------------------------------------------------ password managers (Android 11+)
+
+    /** Bumped for each new set of logins, so chips still being drawn for an older set are dropped. */
+    private var autofillGen = 0
+
+    private fun clearAutofill() {
+        autofillGen++
+        root?.setAutofill(emptyList())
+    }
+
+    /** Asks the autofill service (Proton Pass, Bitwarden...) for logins to show in the strip. */
+    @TargetApi(Build.VERSION_CODES.R)
+    override fun onCreateInlineSuggestionsRequest(uiExtras: Bundle): InlineSuggestionsRequest? {
+        // Called before onStartInputView, so check the lock screen here: nothing personal shows there.
+        if (getSystemService(KeyguardManager::class.java)?.isKeyguardLocked == true) return null
+        val t = theme ?: KbTheme.resolve(this, prefs)
+        val bar = topBar?.barHeight ?: (46 * resources.displayMetrics.density).toInt()
+        return InlineAutofill.request(this, t, bar, uiExtras)
+    }
+
+    /** The logins: the system draws each chip; we only place them. None means the login form is gone. */
+    @TargetApi(Build.VERSION_CODES.R)
+    override fun onInlineSuggestionsResponse(response: InlineSuggestionsResponse): Boolean {
+        val list = response.inlineSuggestions
+        val gen = ++autofillGen
+        if (list.isEmpty()) {
+            root?.setAutofill(emptyList())
+            return true
+        }
+        val views = arrayOfNulls<View>(list.size)
+        var left = list.size
+        val size = Size(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        list.forEachIndexed { i, suggestion ->
+            suggestion.inflate(this, size, mainExecutor) { v ->
+                views[i] = v
+                if (--left == 0 && gen == autofillGen) {
+                    // The manager's own pinned icon goes last, as in Gboard.
+                    val order = list.indices.sortedBy { if (list[it].info.isPinned) 1 else 0 }
+                    root?.setAutofill(order.mapNotNull { views[it] })
+                }
+            }
+        }
+        return true
     }
 
     private fun applyConfig() {
         val t = KbTheme.resolve(this, prefs)
-        // Fun themes' tap bursts and twinkling lights; also off when the phone turns animations off.
-        val effects = prefs.themeEffects && android.animation.ValueAnimator.areAnimatorsEnabled()
-        if (t != theme || configDirty || effects != effectsOn) {
+        // Fun themes' scene motion and tap bursts; both off when the phone turns animations off.
+        val animate = android.animation.ValueAnimator.areAnimatorsEnabled()
+        val effects = prefs.themeEffects && animate
+        val sparkles = prefs.tapSparkles && animate
+        if (t != theme || configDirty || effects != effectsOn || sparkles != sparklesOn) {
             theme = t
             effectsOn = effects
+            sparklesOn = sparkles
             topBar?.theme = t
             keyboard?.theme = t
-            keyboard?.effects = effects
+            keyboard?.effects = sparkles
             overlay?.theme = t
-            overlay?.effects = effects
+            overlay?.effects = sparkles
             root?.background = ThemeBackdrop(t, (topBar?.barHeight ?: 0).toFloat(), resources.displayMetrics.density, effects)
             emojiPanel?.applyTheme(t)
             clipPanel?.applyTheme(t)
@@ -781,7 +877,7 @@ class QuietIME : InputMethodService(),
                 ic.commitText(ac, 1)
                 learn(composingPrev, ac)
                 // Backspace-undo only right after a space: after punctuation it would eat the punctuation.
-                lastCorrection = if (isSpace) Correction(typed, ac, sep, composingPrev) else null
+                lastCorrection = if (isSpace) Correction(typed, ac, sep, composingPrev, prev2For(composingPrev, composingBefore)) else null
                 resumedWord = null
                 revertedWord = null
             } else {
@@ -878,7 +974,7 @@ class QuietIME : InputMethodService(),
                 // Undo autocorrect: put back exactly what was typed and don't "fix" it again this session.
                 // It's only trusted for good once committed unchanged; the correction is un-learned.
                 rejected += lc.original.lowercase(Locale.US).replace('\u2019', '\'')
-                if (!noLearning) history.unlearn(lc.prev, lc.corrected)
+                if (!noLearning) history.unlearn(lc.prev, lc.corrected, lc.prev2)
                 revertedWord = lc.original
                 resumedWord = null
                 composingGlued = false
@@ -951,7 +1047,7 @@ class QuietIME : InputMethodService(),
             if (autocorrectOn && !composingFromGesture && ac != null && ac != typed && typed != resumedWord) {
                 ic.commitText(ac, 1)
                 learn(composingPrev, ac)
-                corrected = Correction(typed, ac, "\n", composingPrev)
+                corrected = Correction(typed, ac, "\n", composingPrev, prev2For(composingPrev, composingBefore))
                 resumedWord = null
                 revertedWord = null
             } else {
@@ -1431,11 +1527,19 @@ class QuietIME : InputMethodService(),
         return text.subSequence(start, end).toString()
     }
 
-    private fun learn(prev: String?, word: String) {
+    private fun learn(prev: String?, word: String, before: TextContext = composingBefore) {
         if (noLearning) return
         // "i’m" is "i'm": one spelling of the apostrophe in what's learned.
-        history.learn(prev?.replace('\u2019', '\''), word.replace('\u2019', '\''))
+        val p = prev?.replace('\u2019', '\'')
+        history.learn(p, word.replace('\u2019', '\''), prev2For(p, before))
     }
+
+    /**
+     * The word (or sentence start, or comma) before [prev], for three-word habits, when [before] is
+     * the context [prev] was read from.
+     */
+    private fun prev2For(prev: String?, before: TextContext): String? =
+        before.prev2?.takeIf { prev != null && before.prev1 == prev.lowercase(Locale.US).replace('\u2019', '\'') }
 
     // ------------------------------------------------------------------ top bar
 
@@ -1485,9 +1589,10 @@ class QuietIME : InputMethodService(),
         } else {
             val before = ic.getTextBeforeCursor(1, 0)
             if (autoSpaces && !before.isNullOrEmpty() && !before[0].isWhitespace()) ic.commitText(" ", 1)
-            val prev = lastWord(ic.getTextBeforeCursor(64, 0))
+            val text = ic.getTextBeforeCursor(64, 0)
+            val prev = lastWord(text)
             ic.commitText(item.word, 1)
-            learn(prev, item.word)
+            learn(prev, item.word, TextContext.of(text))
         }
         if (addSpace) ic.commitText(" ", 1)
         ic.endBatchEdit()
