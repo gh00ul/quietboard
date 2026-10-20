@@ -310,6 +310,7 @@ class QuietIME : InputMethodService(),
             if (keepLock) shift = ShiftState.LOCKED
             if (keepPhantom) { phantomSpace = true; anchorPending = true }
         } else {
+            topBar?.toolsOpen = false
             showPanel(Panel.KEYS)
             setLayout(baseLayout)
         }
@@ -1296,6 +1297,9 @@ class QuietIME : InputMethodService(),
         shiftManual = false
         tapUnshiftedAuto = false
         if (!shiftHeld && shift == ShiftState.ON) shift = ShiftState.OFF
+        // Typing means you're done with the toolbar and with the clip you copied: suggestions return.
+        topBar?.toolsOpen = false
+        if (clipboard.freshClip() != null) clipboard.dismissChip()
         updateShift()
     }
 
@@ -1343,9 +1347,14 @@ class QuietIME : InputMethodService(),
             }
         } else {
             pendingAutocorrect = null
-            val preds = if (prefs.nextWord) {
-                val before = conn?.getTextBeforeCursor(64, 0)
-                // Only at a real sentence start (empty field, after . ! ? or a new line), not after a comma.
+            val before = conn?.getTextBeforeCursor(64, 0)
+            // The toolbar instead of predictions on an empty field (that's when you paste or pick an
+            // emoji) and while a clip you just copied waits to be pasted. The tools button reaches it
+            // the rest of the time.
+            val toolbarFirst = before.isNullOrEmpty() ||
+                (panel == Panel.KEYS && !isPassword && !onLockScreen && clipboard.freshClip() != null)
+            val preds = if (prefs.nextWord && !toolbarFirst) {
+                // Only at a real sentence start (after . ! ? or a new line), not after a comma.
                 val trimmed = before?.trimEnd()
                 val sentenceStart = trimmed.isNullOrEmpty() || trimmed.last() in ".!?\n"
                 // Your own habits stay out of incognito fields and the lock screen; built-in ones don't.
@@ -1513,6 +1522,7 @@ class QuietIME : InputMethodService(),
                 clipboard.dismissChip()
                 refreshTopBar()
             }
+            TopBar.Tool.MORE, TopBar.Tool.BACK -> Unit // the strip switches modes itself
         }
     }
 

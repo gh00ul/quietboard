@@ -10,7 +10,7 @@ import kotlin.math.sin
 enum class Icon {
     SHIFT, SHIFT_ON, SHIFT_LOCKED, BACKSPACE, ENTER, SEARCH, SEND, GO, DONE, PREVIOUS,
     EMOJI, CLIPBOARD, SETTINGS, CHEVRON_DOWN, CLOSE, PASTE,
-    EDIT, ONE_HAND, PIN, PIN_ON, SWAP, EXPAND, UP, DOWN, LEFT, RIGHT
+    EDIT, ONE_HAND, PIN, PIN_ON, SWAP, EXPAND, UP, DOWN, LEFT, RIGHT, APPS, CHEVRON_LEFT
 }
 
 /** Icons drawn on a 24x24 grid (Material-style strokes) so no image assets are needed. */
@@ -122,6 +122,18 @@ object Icons {
             Icon.CHEVRON_DOWN -> {
                 path.moveTo(6f, 9.5f); path.lineTo(12f, 15.5f); path.lineTo(18f, 9.5f)
                 canvas.drawPath(path, paint)
+            }
+            Icon.CHEVRON_LEFT -> {
+                path.moveTo(14.5f, 6f); path.lineTo(8.5f, 12f); path.lineTo(14.5f, 18f)
+                canvas.drawPath(path, paint)
+            }
+            Icon.APPS -> {
+                // The toolbar: four tiles.
+                paint.strokeWidth = 1.8f
+                for ((x, y) in listOf(4f to 4f, 13.5f to 4f, 4f to 13.5f, 13.5f to 13.5f)) {
+                    rect.set(x, y, x + 6.5f, y + 6.5f)
+                    canvas.drawRoundRect(rect, 1.8f, 1.8f, paint)
+                }
             }
             Icon.EDIT -> {
                 // I-beam cursor between selection handles

@@ -13,10 +13,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.accessibility.AccessibilityNodeProvider
 
-/** Gboard-style strip: three suggestions while typing, otherwise a toolbar. */
+/**
+ * Gboard-style strip: three suggestions, or the toolbar (emoji, clipboard, editing, one-handed,
+ * settings, hide). While suggestions show, a tools button at the left opens the toolbar, and the
+ * toolbar's back arrow returns to them; the keyboard closes the toolbar again when you type.
+ */
 class TopBar(context: Context) : View(context) {
 
-    enum class Tool { EMOJI, CLIPBOARD, EDIT, ONE_HAND, SETTINGS, HIDE, PASTE }
+    /** [MORE] and [BACK] switch between suggestions and the toolbar; the strip handles them itself. */
+    enum class Tool { EMOJI, CLIPBOARD, EDIT, ONE_HAND, SETTINGS, HIDE, PASTE, MORE, BACK }
 
     interface Listener {
         fun onSuggestionPicked(item: SuggestionItem)
@@ -48,6 +53,19 @@ class TopBar(context: Context) : View(context) {
         set(v) { if (field != v) { field = v; layoutTools(); invalidate(); a11y.invalidateAll() } }
     var activeTool: Tool? = null
         set(v) { if (field != v) { field = v; invalidate() } }
+
+    /** The toolbar is open over suggestions (the tools button). Typing closes it. */
+    var toolsOpen = false
+        set(v) {
+            if (field == v) return
+            field = v
+            pressedSlot = -1
+            pressedTool = null
+            handler.removeCallbacks(longPress)
+            layoutTools()
+            invalidate()
+            a11y.invalidateAll()
+        }
 
     private val dp = resources.displayMetrics.density
     val barHeight = (46 * dp).toInt()
@@ -86,7 +104,13 @@ class TopBar(context: Context) : View(context) {
         }
     }
 
-    val showingSuggestions get() = items.any { it != null }
+    private val hasSuggestions get() = items.any { it != null }
+    val showingSuggestions get() = hasSuggestions && !toolsOpen
+
+    /** Width of the tools button left of the suggestions. */
+    private val lead get() = LEAD_DP * dp
+    private val slotWidth get() = (width - lead) / 3f
+    private fun slotAt(x: Float) = ((x - lead) / slotWidth).toInt().coerceIn(0, 2)
 
     /** What the strip shows now (tests). */
     internal fun itemsForTest(): List<SuggestionItem?> = items
@@ -94,9 +118,11 @@ class TopBar(context: Context) : View(context) {
     fun setSuggestions(list: List<SuggestionItem?>?) {
         val new = list ?: emptyList()
         if (new == items) return // called on every keystroke: skip redraws and accessibility events
+        val had = hasSuggestions
         items = new
         pressedSlot = -1
         handler.removeCallbacks(longPress)
+        if (had != hasSuggestions) layoutTools()
         invalidate()
         a11y.invalidateAll()
     }
@@ -106,51 +132,74 @@ class TopBar(context: Context) : View(context) {
     }
 
     /**
-     * Places the toolbar items (left tools, paste chip, hide) in on-screen order. Done when the size,
-     * chip or lock state changes, not while drawing, so touches and TalkBack always see what's shown.
+     * Places what can be tapped (the tools button; or back, the tools, paste chip and hide) in
+     * on-screen order. Done when the size, mode, chip or lock state changes, not while drawing, so
+     * touches and TalkBack always see what's shown.
      */
     private fun layoutTools() {
         toolRects.clear()
         if (width == 0) return
-        val slot = 50 * dp
+        if (showingSuggestions) {
+            place(Tool.MORE, 0f, 0f, lead, height.toFloat())
+            return
+        }
         var x = 4 * dp
+        if (hasSuggestions) {
+            place(Tool.BACK, 0f, 0f, lead, height.toFloat())
+            x = lead
+        }
         // With a fresh clip to paste, the chip takes the space of the less-used tools.
         val tools = when {
             locked -> LOCKED_TOOLS
             pasteChip != null -> CHIP_TOOLS
             else -> ALL_TOOLS
         }
+        val hideSlot = 50 * dp
+        val hideLeft = width - hideSlot - 4 * dp
+        // Narrow screens: tools share what's left rather than running under the hide button.
+        val slot = minOf(50 * dp, (hideLeft - x) / tools.size)
         for (tool in tools) {
             place(tool, x, 0f, x + slot, height.toFloat())
             x += slot
         }
-        val hideLeft = width - slot - 4 * dp
         if (pasteChip != null && !locked && hideLeft - 6 * dp - (x + 6 * dp) > 60 * dp) {
             place(Tool.PASTE, x + 6 * dp, 7 * dp, hideLeft - 6 * dp, height - 7 * dp)
         }
         place(Tool.HIDE, hideLeft, 0f, width - 4 * dp, height.toFloat())
     }
 
+    private fun toolAt(x: Float, y: Float) = toolRects.entries.firstOrNull { it.value.contains(x, y) }?.key
+
+    /** The strip's own buttons switch modes; everything else goes to the keyboard. */
+    private fun useTool(tool: Tool) {
+        when (tool) {
+            Tool.MORE -> toolsOpen = true
+            Tool.BACK -> toolsOpen = false
+            else -> listener?.onTool(tool)
+        }
+    }
+
     // ---- accessibility (TalkBack): suggestion slots 0..2, tools as TOOL_ID + ordinal
     private val a11y = object : VirtualViews(this@TopBar) {
-        override fun ids(): IntArray =
-            if (showingSuggestions) (0 until 3).filter { items.getOrNull(it) != null }.toIntArray()
-            else toolRects.keys.map { TOOL_ID + it.ordinal }.toIntArray()
+        override fun ids(): IntArray {
+            val tools = toolRects.keys.map { TOOL_ID + it.ordinal }
+            return if (showingSuggestions) (tools + (0 until 3).filter { items.getOrNull(it) != null }).toIntArray()
+            else tools.toIntArray()
+        }
 
         override fun idAt(x: Float, y: Float): Int {
+            toolAt(x, y)?.let { return TOOL_ID + it.ordinal }
             if (showingSuggestions) {
-                val slot = (x / (width / 3f)).toInt().coerceIn(0, 2)
+                val slot = slotAt(x)
                 return if (items.getOrNull(slot) != null) slot else INVALID
             }
-            val tool = toolRects.entries.firstOrNull { it.value.contains(x, y) }?.key ?: return INVALID
-            return TOOL_ID + tool.ordinal
+            return INVALID
         }
 
         override fun bounds(id: Int, out: Rect): Boolean {
             if (id < TOOL_ID) {
                 if (!showingSuggestions || items.getOrNull(id) == null) return false
-                val cw = width / 3f
-                out.set((id * cw).toInt(), 0, ((id + 1) * cw).toInt(), height)
+                out.set((lead + id * slotWidth).toInt(), 0, (lead + (id + 1) * slotWidth).toInt(), height)
                 return true
             }
             val r = toolRects[toolOf(id) ?: return false] ?: return false
@@ -176,6 +225,8 @@ class TopBar(context: Context) : View(context) {
                 Tool.SETTINGS -> "Settings"
                 Tool.HIDE -> "Hide keyboard"
                 Tool.PASTE -> "Paste: " + (chipLabel ?: "").take(100)
+                Tool.MORE -> "Tools: emoji, clipboard, settings"
+                Tool.BACK -> "Back to suggestions"
                 null -> null
             }
         }
@@ -189,7 +240,7 @@ class TopBar(context: Context) : View(context) {
                 listener?.onSuggestionPicked(item)
                 return true
             }
-            listener?.onTool(toolOf(id) ?: return false)
+            useTool(toolOf(id) ?: return false)
             return true
         }
     }
@@ -221,12 +272,21 @@ class TopBar(context: Context) : View(context) {
         if (showingSuggestions) drawSuggestions(canvas, t) else drawToolbar(canvas, t)
     }
 
+    private val dim get() = theme?.let { KbTheme.blend(it.text, it.background, 0.18f) } ?: 0
+
     private fun drawSuggestions(canvas: Canvas, t: KbTheme) {
-        val cw = width / 3f
         val cy = height / 2f
+        toolRects[Tool.MORE]?.let { r ->
+            if (pressedTool == Tool.MORE) {
+                paint.color = t.keyPressed
+                canvas.drawCircle(r.centerX(), cy, 17 * dp, paint)
+            }
+            Icons.draw(canvas, Icon.APPS, r.centerX(), cy, 19 * dp, dim)
+        }
+        val cw = slotWidth
         for (i in 0 until 3) {
             val item = items.getOrNull(i)
-            val left = i * cw
+            val left = lead + i * cw
             if (i == pressedSlot && item != null) {
                 paint.color = t.keyPressed
                 paint.alpha = 140
@@ -278,7 +338,7 @@ class TopBar(context: Context) : View(context) {
             canvas.drawText(s, r.left + isz + 18 * dp, cy - (chipText.descent() + chipText.ascent()) / 2, chipText)
             canvas.restore()
         }
-        for ((tool, r) in toolRects) {
+        for ((tool, tr) in toolRects) {
             val icon = when (tool) {
                 Tool.EMOJI -> Icon.EMOJI
                 Tool.CLIPBOARD -> Icon.CLIPBOARD
@@ -286,21 +346,24 @@ class TopBar(context: Context) : View(context) {
                 Tool.EDIT -> Icon.EDIT
                 Tool.ONE_HAND -> Icon.ONE_HAND
                 Tool.HIDE -> Icon.CHEVRON_DOWN
+                Tool.BACK -> Icon.CHEVRON_LEFT
+                Tool.MORE -> Icon.APPS
                 Tool.PASTE -> continue
             }
+            val radius = minOf(19 * dp, tr.width() / 2)
             if (tool == pressedTool || tool == activeTool) {
                 paint.color = if (tool == activeTool) t.special else t.keyPressed
-                canvas.drawCircle(r.centerX(), cy, 19 * dp, paint)
+                canvas.drawCircle(tr.centerX(), cy, radius, paint)
                 if (tool == activeTool && t.specialStroke != 0) {
                     // Outline themes (Neon, Retro): the fill alone barely shows on the background.
                     paint.style = Paint.Style.STROKE
                     paint.strokeWidth = 1.2f * dp
                     paint.color = t.specialStroke
-                    canvas.drawCircle(r.centerX(), cy, 19 * dp, paint)
+                    canvas.drawCircle(tr.centerX(), cy, radius, paint)
                     paint.style = Paint.Style.FILL
                 }
             }
-            Icons.draw(canvas, icon, r.centerX(), cy, 22 * dp, if (tool == activeTool) t.text else KbTheme.blend(t.text, t.background, 0.18f))
+            Icons.draw(canvas, icon, tr.centerX(), cy, minOf(22 * dp, tr.width() * 0.5f), if (tool == activeTool) t.text else dim)
         }
     }
 
@@ -308,8 +371,8 @@ class TopBar(context: Context) : View(context) {
     private fun fit(text: String, p: Paint, maxW: Float): String {
         if (maxW <= 0f) return ""
         if (p.measureText(text) <= maxW) return text
-        val n = p.breakText(text, true, maxW - p.measureText("\u2026"), null)
-        return text.substring(0, n.coerceIn(0, text.length)).trimEnd() + "\u2026"
+        val n = p.breakText(text, true, maxW - p.measureText("…"), null)
+        return text.substring(0, n.coerceIn(0, text.length)).trimEnd() + "…"
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -317,22 +380,21 @@ class TopBar(context: Context) : View(context) {
             MotionEvent.ACTION_DOWN -> {
                 longPressed = false
                 downX = ev.x; downY = ev.y
-                if (showingSuggestions) {
-                    pressedSlot = (ev.x / (width / 3f)).toInt().coerceIn(0, 2)
+                pressedSlot = -1
+                pressedTool = toolAt(ev.x, ev.y)
+                if (pressedTool == null && showingSuggestions) {
+                    pressedSlot = slotAt(ev.x)
                     if (items.getOrNull(pressedSlot) == null) pressedSlot = -1
                     else handler.postDelayed(longPress, 500L)
-                } else {
-                    pressedTool = toolRects.entries.firstOrNull { it.value.contains(ev.x, ev.y) }?.key
                 }
                 invalidate()
             }
             MotionEvent.ACTION_MOVE -> {
                 // Sliding away cancels: no long press, no pick, no stuck highlight.
                 val moved = kotlin.math.abs(ev.x - downX) > touchSlop || kotlin.math.abs(ev.y - downY) > touchSlop
-                val outside = if (showingSuggestions) {
-                    pressedSlot >= 0 && (ev.x / (width / 3f)).toInt().coerceIn(0, 2) != pressedSlot
-                } else {
-                    pressedTool?.let { toolRects[it]?.contains(ev.x, ev.y) == false } ?: false
+                val outside = when {
+                    pressedSlot >= 0 -> ev.x < lead || slotAt(ev.x) != pressedSlot
+                    else -> pressedTool?.let { toolRects[it]?.contains(ev.x, ev.y) == false } ?: false
                 }
                 if (moved && (outside || pressedSlot >= 0)) handler.removeCallbacks(longPress)
                 if (outside) {
@@ -342,16 +404,16 @@ class TopBar(context: Context) : View(context) {
             }
             MotionEvent.ACTION_UP -> {
                 handler.removeCallbacks(longPress)
-                if (showingSuggestions) {
-                    val slot = (ev.x / (width / 3f)).toInt().coerceIn(0, 2)
-                    val item = items.getOrNull(slot)
-                    if (!longPressed && slot == pressedSlot && item != null) listener?.onSuggestionPicked(item)
-                } else {
-                    val tool = toolRects.entries.firstOrNull { it.value.contains(ev.x, ev.y) }?.key
-                    if (tool != null && tool == pressedTool) listener?.onTool(tool)
-                }
+                val slot = pressedSlot
+                val tool = pressedTool
                 pressedSlot = -1
                 pressedTool = null
+                if (slot >= 0) {
+                    val item = items.getOrNull(slot)
+                    if (!longPressed && ev.x >= lead && slotAt(ev.x) == slot && item != null) listener?.onSuggestionPicked(item)
+                } else if (tool != null && toolAt(ev.x, ev.y) == tool) {
+                    useTool(tool)
+                }
                 invalidate()
             }
             MotionEvent.ACTION_CANCEL -> {
@@ -365,6 +427,8 @@ class TopBar(context: Context) : View(context) {
 
     private companion object {
         const val TOOL_ID = 100
+        /** dp for the tools button / back arrow at the left. */
+        const val LEAD_DP = 44f
         val LOCKED_TOOLS = listOf(Tool.EMOJI)
         val CHIP_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD)
         val ALL_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD, Tool.EDIT, Tool.ONE_HAND, Tool.SETTINGS)

@@ -32,8 +32,8 @@ android {
         applicationId = "dev.larryjones.quietboard"
         minSdk = 29
         targetSdk = 34
-        versionCode = 12
-        versionName = "1.8.0"
+        versionCode = 13
+        versionName = "1.8.1"
     }
 
     // One shared key so APKs built anywhere (GitHub Actions, your PC) can update each other.

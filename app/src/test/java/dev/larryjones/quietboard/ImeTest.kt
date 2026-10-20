@@ -330,6 +330,47 @@ class ImeTest {
         assertEquals("aoife ", text)
     }
 
+    private fun tapStrip(x: Float) {
+        val tb = root.topBar
+        val t = SystemClock.uptimeMillis()
+        tb.dispatchTouchEvent(MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, x, tb.height / 2f, 0))
+        tb.dispatchTouchEvent(MotionEvent.obtain(t, t + 50, MotionEvent.ACTION_UP, x, tb.height / 2f, 0))
+    }
+
+    @Test fun anEmptyFieldShowsTheToolbar() {
+        waitForEngine()
+        start(fieldId = 50)
+        assertFalse("tools, not sentence starters, when nothing is typed yet", root.topBar.showingSuggestions)
+    }
+
+    @Test fun theToolsButtonReachesTheToolbarOverSuggestions() {
+        waitForEngine()
+        type("thank ")
+        assertTrue("predictions after a word", root.topBar.showingSuggestions)
+        tapStrip(10f * root.resources.displayMetrics.density) // the tools button at the left
+        assertFalse("the toolbar is open", root.topBar.showingSuggestions)
+        assertTrue(root.topBar.toolsOpen)
+        type("y")
+        assertFalse("typing closes it", root.topBar.toolsOpen)
+        assertTrue(root.topBar.showingSuggestions)
+    }
+
+    @Test fun aFreshCopyShowsThePasteChipUntilYouType() {
+        waitForEngine()
+        edit.setText("thank ")
+        edit.setSelection(6)
+        val cm = RuntimeEnvironment.getApplication().getSystemService(android.content.ClipboardManager::class.java)
+        cm.setPrimaryClip(android.content.ClipData.newPlainText("t", "copied text"))
+        shadowOf(Looper.getMainLooper()).idle()
+        start(fieldId = 51)
+        assertFalse("the toolbar, not predictions", root.topBar.showingSuggestions)
+        assertEquals("copied text", root.topBar.pasteChip)
+        type("you")
+        ime.onSpace()
+        assertTrue("typing moves on: predictions are back", root.topBar.showingSuggestions)
+        assertEquals(null, root.topBar.pasteChip)
+    }
+
     @Test fun glideAfterPeriodIsCapitalized() {
         waitForEngine()
         edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES

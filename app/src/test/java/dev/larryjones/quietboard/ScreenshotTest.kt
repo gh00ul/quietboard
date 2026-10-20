@@ -248,6 +248,11 @@ class ScreenshotTest {
         renderRoot("dark", "md_emojipanel.png", dynamic = true, setup = emojiPanel)
         renderRoot("halloween", "fun_emojipanel.png", dynamic = false, setup = emojiPanel)
         render("dark", "dark.png", setup = typing)
+        // The toolbar opened over suggestions with the tools button: a back arrow returns to them.
+        render("dark", "tools_open.png") { tb, _, _, _ ->
+            tb.setSuggestions(listOf(SuggestionItem("you"), SuggestionItem("for", bold = true), SuggestionItem("so")))
+            tb.toolsOpen = true
+        }
         render("dark", "glide.png", setup = glide)
         render("light", "light.png", setup = toolbar)
         render("dark", "md_dark.png", dynamic = true, setup = typing)
