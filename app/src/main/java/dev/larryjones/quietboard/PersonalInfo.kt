@@ -102,5 +102,41 @@ class PersonalInfo(emails: List<String>, addresses: List<String>) {
         fun looksLikeEmail(s: String): Boolean = EMAIL.matches(s)
 
         private val EMAIL = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+
+        /** Learning stops adding to a list once it holds this many (prune it in Settings). */
+        const val MAX_SAVED = 50
+
+        /**
+         * What to remember from a [field] you left with [text] in it, or null if it isn't a whole
+         * one: not "amy@exam" or "amy@example.c", not a city alone. An address needs a number and a
+         * second word ("12 Oak Lane", "Flat 3").
+         */
+        fun learnable(text: String, field: Field): String? {
+            val t = text.trim()
+            return when (field) {
+                Field.EMAIL -> t.takeIf { it.length <= 100 && WHOLE_EMAIL.matches(it) }
+                Field.ADDRESS, Field.STREET -> oneLine(t).takeIf {
+                    it.length in 5..200 && ' ' in it && it.any(Char::isDigit) && it.any(Char::isLetter) && '@' !in it &&
+                        !it.startsWith("http", ignoreCase = true) && !it.startsWith("www.", ignoreCase = true)
+                }
+                Field.OTHER -> null
+            }
+        }
+
+        /**
+         * [saved] with [value] (from [learnable]) added at the end, after the ones you put first; null
+         * if it's there already (any capitals, or as the street line of a saved address) or the list is full.
+         */
+        fun withLearned(saved: List<String>, value: String, field: Field): List<String>? {
+            if (saved.size >= MAX_SAVED) return null
+            val known = saved.any {
+                it.equals(value, ignoreCase = true) ||
+                    (field != Field.EMAIL && it.substringBefore(',').trim().equals(value, ignoreCase = true))
+            }
+            return if (known) null else saved + value
+        }
+
+        /** A whole email: a dot in the domain and at least two letters after the last one. */
+        private val WHOLE_EMAIL = Regex("^[^\\s@]+@[^\\s@.]+(\\.[^\\s@.]+)*\\.\\p{L}{2,}$")
     }
 }

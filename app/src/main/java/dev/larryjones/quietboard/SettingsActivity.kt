@@ -14,6 +14,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -107,6 +108,7 @@ class SettingsActivity : Activity() {
             savedSummaries[kind] = actionRow(typing, kind.title, "") { openSaved(kind) }
             updateSavedSummary(kind)
         }
+        switchRow(typing, "Remember emails & addresses", "Adds the ones you type in email and address fields to the lists above. Long-press one in the suggestion strip to forget it.", Prefs.REMEMBER_INFO, true)
 
         // --- Glide
         val glide = section("Gestures")
@@ -191,6 +193,7 @@ class SettingsActivity : Activity() {
     override fun onResume() {
         super.onResume()
         refreshSetup()
+        SavedKind.entries.forEach(::updateSavedSummary) // the keyboard may have remembered more meanwhile
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -342,6 +345,8 @@ class SettingsActivity : Activity() {
             inputType = kind.inputType
             isSingleLine = true
             setText(existing ?: "")
+            // Saved here only on Save: the keyboard mustn't remember a half-edited or cancelled one.
+            imeOptions = EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
         }
         box.addView(field)
         val b = AlertDialog.Builder(this)

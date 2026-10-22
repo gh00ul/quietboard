@@ -83,4 +83,27 @@ class PersonalInfoTest {
         assertFalse(PersonalInfo.looksLikeEmail("larry @example.com"))
         assertFalse(PersonalInfo.looksLikeEmail("a@b@c.com"))
     }
+
+    @Test fun onlyWholeOnesAreRemembered() {
+        assertEquals("amy@example.com", PersonalInfo.learnable(" amy@example.com ", Field.EMAIL))
+        assertEquals("half-typed", null, PersonalInfo.learnable("amy@exam", Field.EMAIL))
+        assertEquals("still typing the ending", null, PersonalInfo.learnable("amy@example.c", Field.EMAIL))
+        assertEquals("12 Oak Lane, Springfield", PersonalInfo.learnable("12  Oak Lane\nSpringfield", Field.ADDRESS))
+        assertEquals("12 Oak Lane", PersonalInfo.learnable("12 Oak Lane", Field.STREET))
+        assertEquals("a city alone", null, PersonalInfo.learnable("Springfield", Field.ADDRESS))
+        assertEquals("a house number alone", null, PersonalInfo.learnable("12", Field.ADDRESS))
+        assertEquals("a link", null, PersonalInfo.learnable("www.example.com/12 a", Field.ADDRESS))
+        assertEquals("not from other fields", null, PersonalInfo.learnable("amy@example.com", Field.OTHER))
+    }
+
+    @Test fun rememberedOnesGoAfterYours() {
+        val mine = listOf("larry@example.com")
+        assertEquals(listOf("larry@example.com", "amy@example.com"), PersonalInfo.withLearned(mine, "amy@example.com", Field.EMAIL))
+        assertEquals("already saved, any capitals", null, PersonalInfo.withLearned(mine, "Larry@Example.com", Field.EMAIL))
+        val home = listOf("1234 W Main St, Phoenix, AZ 85001")
+        assertEquals("the street line of a saved address", null, PersonalInfo.withLearned(home, "1234 W Main St", Field.STREET))
+        assertEquals(home + "12 Oak Lane", PersonalInfo.withLearned(home, "12 Oak Lane", Field.STREET))
+        val full = (1..PersonalInfo.MAX_SAVED).map { "p$it@example.com" }
+        assertEquals("a full list stays as it is", null, PersonalInfo.withLearned(full, "amy@example.com", Field.EMAIL))
+    }
 }

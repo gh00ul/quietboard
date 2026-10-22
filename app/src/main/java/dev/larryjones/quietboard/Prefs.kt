@@ -45,6 +45,8 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
     val showSuggestions get() = b(SUGGESTIONS, true)
     val learnWords get() = b(LEARN_WORDS, true)
     val nextWord get() = b(NEXT_WORD, true)
+    /** Add the emails and addresses you type in their fields to your saved ones. */
+    val rememberInfo get() = b(REMEMBER_INFO, true)
     val clipboardHistory get() = b(CLIPBOARD_HISTORY, true)
     val sound get() = b(SOUND, false)
     val dynamicColor get() = b(DYNAMIC_COLOR, true)
@@ -189,6 +191,7 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
         const val SHORTCUTS = "shortcuts"
         const val MY_EMAILS = "my_emails"
         const val MY_ADDRESSES = "my_addresses"
+        const val REMEMBER_INFO = "remember_info"
         /** Bumped by the settings screen; the running keyboard reacts by wiping its memory too. */
         const val CLEAR_HISTORY = "clear_history_at"
         const val CLEAR_CLIPBOARD = "clear_clipboard_at"
