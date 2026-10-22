@@ -640,6 +640,103 @@ class ImeTest {
         assertEquals("Hi. Hello ", text)
     }
 
+    // ---------------------------------------------------------------- your saved emails and addresses
+
+    private val myEmail = "larry@example.com"
+    private val myAddress = "1234 W Main St, Phoenix, AZ 85001"
+
+    private fun savePersonal(emails: List<String> = listOf(myEmail), addresses: List<String> = listOf(myAddress)) {
+        Prefs(RuntimeEnvironment.getApplication()).apply {
+            saveEmails(emails)
+            saveAddresses(addresses)
+        }
+        shadowOf(Looper.getMainLooper()).idle() // the keyboard hears of the change
+    }
+
+    private fun strip() = root.topBar.itemsForTest()
+
+    /** Only one thing in the strip: your saved [value], in the middle (drawn across the whole strip). */
+    private fun assertOnlyMine(value: String) {
+        val items = strip()
+        assertEquals(value, items.getOrNull(1)?.word)
+        assertTrue("nothing beside it", items.getOrNull(0) == null && items.getOrNull(2) == null)
+    }
+
+    @Test fun yourEmailShowsInEmailFieldsAndReplacesWhatYouTyped() {
+        waitForEngine()
+        savePersonal()
+        start(fieldId = 60, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+        assertOnlyMine(myEmail)
+        assertEquals("nothing typed yet", "", strip()[1]?.replaces)
+        type("LAR")
+        assertOnlyMine(myEmail)
+        assertEquals("LAR", strip()[1]?.replaces)
+        ime.onSuggestionPicked(strip()[1]!!)
+        assertEquals("no space after it in an email field", myEmail, text)
+        val h = QuietIME::class.java.getDeclaredField("history").apply { isAccessible = true }.get(ime) as UserHistory
+        assertEquals("the half-typed part isn't learned", 0, h.count("lar"))
+        assertTrue("typed in full: not offered again", strip().none { it?.replaces != null })
+    }
+
+    @Test fun yourEmailShowsInPlainTextOnceItsClearlyAnEmail() {
+        waitForEngine()
+        savePersonal()
+        start(fieldId = 61)
+        type("mail lar")
+        assertEquals("offered on the right", myEmail, strip().getOrNull(2)?.word)
+        assertTrue("the word you're typing keeps the middle", strip().getOrNull(1)?.replaces == null)
+        type("ry@ex")
+        assertOnlyMine(myEmail)
+        ime.onSuggestionPicked(strip()[1]!!)
+        assertEquals("mail $myEmail ", text)
+    }
+
+    @Test fun yourAddressShowsInAddressFields() {
+        waitForEngine()
+        savePersonal()
+        start(fieldId = 62, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS)
+        assertOnlyMine(myAddress)
+        type("1234 W")
+        assertOnlyMine(myAddress)
+        assertEquals("1234 W", strip()[1]?.replaces)
+        ime.onSpace()
+        assertEquals("space never corrects your own address", "1234 W ", text)
+        type("m")
+        ime.onSuggestionPicked(strip()[1]!!)
+        assertEquals(myAddress, text)
+    }
+
+    @Test fun streetLineFieldsGetJustTheStreet() {
+        savePersonal()
+        edit.hint = "Address line 1"
+        start(fieldId = 63)
+        assertOnlyMine("1234 W Main St")
+        edit.hint = "Address line 2"
+        start(fieldId = 64)
+        assertTrue("not in the apartment line", strip().none { it?.replaces != null })
+        edit.hint = "Email"
+        start(fieldId = 65)
+        assertOnlyMine(myEmail)
+    }
+
+    @Test fun yourEmailIsNeverShownOnTheLockScreen() {
+        savePersonal()
+        val km = RuntimeEnvironment.getApplication().getSystemService(KeyguardManager::class.java)
+        shadowOf(km).setKeyguardLocked(true)
+        start(fieldId = 66, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+        type("lar")
+        assertTrue(strip().none { it?.replaces != null })
+    }
+
+    @Test fun nothingSavedChangesNothing() {
+        waitForEngine()
+        start(fieldId = 67, type = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+        type("gma")
+        assertTrue(strip().none { it?.replaces != null })
+        ime.onSuggestionPicked(SuggestionItem("gmail"))
+        assertEquals("gmail", text)
+    }
+
     private fun waitUntil(cond: () -> Boolean): Boolean {
         repeat(300) {
             shadowOf(Looper.getMainLooper()).idle()

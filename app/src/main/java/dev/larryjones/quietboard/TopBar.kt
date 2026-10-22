@@ -147,7 +147,11 @@ class TopBar(context: Context) : View(context) {
     /** Width of the tools button left of the suggestions. */
     private val lead get() = LEAD_DP * dp
     private val slotWidth get() = (width - lead) / 3f
-    private fun slotAt(x: Float) = ((x - lead) / slotWidth).toInt().coerceIn(0, 2)
+    /** One of your saved emails or addresses alone in the strip: it gets the whole width, to be read in full. */
+    private val wide get() = items.getOrNull(1)?.replaces != null && items.getOrNull(0) == null && items.getOrNull(2) == null
+    private fun slotAt(x: Float) = if (wide) 1 else ((x - lead) / slotWidth).toInt().coerceIn(0, 2)
+    private fun slotLeft(i: Int) = if (wide) lead else lead + i * slotWidth
+    private fun slotRight(i: Int) = if (wide) width.toFloat() else lead + (i + 1) * slotWidth
 
     /** What the strip shows now (tests). */
     internal fun itemsForTest(): List<SuggestionItem?> = items
@@ -237,7 +241,7 @@ class TopBar(context: Context) : View(context) {
         override fun bounds(id: Int, out: Rect): Boolean {
             if (id < TOOL_ID) {
                 if (!showingSuggestions || items.getOrNull(id) == null) return false
-                out.set((lead + id * slotWidth).toInt(), 0, (lead + (id + 1) * slotWidth).toInt(), height)
+                out.set(slotLeft(id).toInt(), 0, slotRight(id).toInt(), height)
                 return true
             }
             val r = toolRects[toolOf(id) ?: return false] ?: return false
@@ -250,6 +254,7 @@ class TopBar(context: Context) : View(context) {
                 val item = items.getOrNull(id) ?: return null
                 return when {
                     item.emoji -> "Emoji ${item.word}"
+                    item.replaces != null -> "${item.word}, saved"
                     item.literal -> "${item.word}, as typed"
                     item.bold -> "${item.word}, autocorrect"
                     else -> item.word
@@ -330,10 +335,10 @@ class TopBar(context: Context) : View(context) {
     private fun drawSuggestions(canvas: Canvas, t: KbTheme) {
         val cy = height / 2f
         drawMore(canvas, t)
-        val cw = slotWidth
         for (i in 0 until 3) {
             val item = items.getOrNull(i)
-            val left = lead + i * cw
+            val left = slotLeft(i)
+            val cw = slotRight(i) - left
             if (i == pressedSlot && item != null) {
                 paint.color = t.keyPressed
                 paint.alpha = 140
