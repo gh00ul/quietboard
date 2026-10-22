@@ -29,6 +29,10 @@ its private storage on your phone.
   glass keys, with gentle motion while you type (snow, petals, bubbles, fireworks; it pauses when you
   stop, and Scene motion turns it off), its own swipe trail, and tap sparkles if you turn them on. Seasonal follows the
   calendar: New Year, Valentine's, spring, summer, Halloween, autumn and Christmas. TalkBack support
+- Your own email addresses and street addresses (saved in Settings → Typing) in the suggestion strip
+  as you start typing them: right away in email and address fields, and once it's clearly them
+  elsewhere (three letters on the right of the strip, or the whole strip after an "@"). Tap to type
+  the rest. Kept with your text shortcuts on this phone, never learned, never on the lock screen
 - Logins from your password manager (Proton Pass, Bitwarden, 1Password...) in the suggestion strip on
   Android 11+. The system draws them and fills the fields; the keyboard never sees them
 - Works right after a reboot, before the first unlock (Direct Boot): only settings live in the storage

@@ -34,6 +34,7 @@ class SettingsActivity : Activity() {
     private var textSecondary = 0
     private var card = 0
     private var shortcutSummary: TextView? = null
+    private val savedSummaries = HashMap<SavedKind, TextView>()
 
     private fun dp(v: Float) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, resources.displayMetrics)
     private fun dpi(v: Float) = dp(v).toInt()
@@ -102,6 +103,10 @@ class SettingsActivity : Activity() {
         switchRow(typing, "Emoji suggestions", "Offer \uD83C\uDF55 when you type \u201Cpizza\u201D", Prefs.EMOJI_SUGGESTIONS, true)
         shortcutSummary = actionRow(typing, "Text shortcuts", "") { openShortcuts() }
         updateShortcutSummary()
+        for (kind in SavedKind.entries) {
+            savedSummaries[kind] = actionRow(typing, kind.title, "") { openSaved(kind) }
+            updateSavedSummary(kind)
+        }
 
         // --- Glide
         val glide = section("Gestures")
@@ -165,7 +170,8 @@ class SettingsActivity : Activity() {
             text = "• No INTERNET permission — Android blocks all network access for this app.\n" +
                 "• No analytics, crash reporting, or Google libraries.\n" +
                 "• Learned words, clipboard and settings are excluded from cloud backup.\n" +
-                "• Passwords and incognito fields are never learned."
+                "• Passwords and incognito fields are never learned.\n" +
+                "• Your saved emails and addresses stay on this phone and never show on the lock screen."
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
             setTextColor(textSecondary)
             setLineSpacing(dp(3f), 1f)
@@ -276,6 +282,96 @@ class SettingsActivity : Activity() {
                         updateShortcutSummary()
                         dialog.dismiss()
                         openShortcuts()
+                    }
+                }
+            }
+        }
+        dialog.show()
+    }
+
+    // ---------------------------------------------------------------- your emails and addresses
+
+    /** Your own emails and addresses, offered in the suggestion strip as you start typing them ([PersonalInfo]). */
+    private enum class SavedKind(val title: String, val noun: String, val empty: String, val hint: String, val inputType: Int) {
+        EMAIL(
+            "Your email addresses", "email",
+            "Shows your email in the suggestion strip as you start typing it",
+            "you@example.com",
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+        ),
+        ADDRESS(
+            "Your addresses", "address",
+            "Shows your address in the suggestion strip as you start typing it",
+            "123 Main St, Phoenix, AZ 85001",
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS or InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+        ),
+    }
+
+    private fun savedList(kind: SavedKind) = if (kind == SavedKind.EMAIL) prefs.emails() else prefs.addresses()
+
+    private fun saveList(kind: SavedKind, list: List<String>) {
+        if (kind == SavedKind.EMAIL) prefs.saveEmails(list) else prefs.saveAddresses(list)
+        updateSavedSummary(kind)
+    }
+
+    private fun updateSavedSummary(kind: SavedKind) {
+        val n = savedList(kind).size
+        savedSummaries[kind]?.text = if (n == 0) "${kind.empty}. Kept on this phone only."
+        else "$n saved · kept on this phone only"
+    }
+
+    private fun openSaved(kind: SavedKind) {
+        val list = savedList(kind)
+        val items = if (list.isEmpty()) arrayOf("None yet — tap Add") else list.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(kind.title)
+            .setItems(items) { _, which -> editSaved(kind, list.getOrNull(which)) }
+            .setPositiveButton("Add") { _, _ -> editSaved(kind, null) }
+            .setNegativeButton("Close", null)
+            .show()
+    }
+
+    private fun editSaved(kind: SavedKind, existing: String?) {
+        val list = savedList(kind).toMutableList()
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpi(22f), dpi(8f), dpi(22f), 0)
+        }
+        val field = EditText(this).apply {
+            hint = kind.hint
+            inputType = kind.inputType
+            isSingleLine = true
+            setText(existing ?: "")
+        }
+        box.addView(field)
+        val b = AlertDialog.Builder(this)
+            .setTitle(if (existing == null) "New ${kind.noun}" else "Edit ${kind.noun}")
+            .setView(box)
+            .setPositiveButton("Save", null) // validated below, without closing the dialog on errors
+            .setNegativeButton("Cancel") { _, _ -> openSaved(kind) }
+        if (existing != null) {
+            b.setNeutralButton("Delete") { _, _ ->
+                list.remove(existing)
+                saveList(kind, list)
+                openSaved(kind)
+            }
+        }
+        val dialog = b.create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val v = if (kind == SavedKind.EMAIL) field.text.toString().trim() else PersonalInfo.oneLine(field.text.toString())
+                val dup = list.any { it.equals(v, ignoreCase = true) && !it.equals(existing, ignoreCase = true) }
+                when {
+                    v.isEmpty() -> field.error = "Enter your ${kind.noun}"
+                    kind == SavedKind.EMAIL && !PersonalInfo.looksLikeEmail(v) -> field.error = "That doesn't look like an email address"
+                    dup -> field.error = "Already saved"
+                    else -> {
+                        // Edit in place so the list keeps its order (the first one is offered first).
+                        val i = if (existing != null) list.indexOf(existing) else -1
+                        if (i >= 0) list[i] = v else list += v
+                        saveList(kind, list)
+                        dialog.dismiss()
+                        openSaved(kind)
                     }
                 }
             }
