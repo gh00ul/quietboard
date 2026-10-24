@@ -9,12 +9,13 @@ import android.os.UserManager
  * All user settings, in app-private SharedPreferences excluded from backups.
  *
  * Settings live in device-protected storage, so the keyboard works right after a reboot, before
- * you've unlocked the phone once. Nothing personal goes there: text shortcuts, learned words and
- * clipboard history stay in the normal encrypted storage, which opens only once you unlock.
+ * you've unlocked the phone once. Nothing personal goes there: text shortcuts, your saved emails and
+ * addresses, learned words and clipboard history stay in the normal encrypted storage, which opens
+ * only once you unlock.
  */
 class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
     val sp: SharedPreferences = settingsStorage(context, unlocked).getSharedPreferences(FILE, Context.MODE_PRIVATE)
-    /** Personal data (text shortcuts, recent emoji); null until the phone has been unlocked since it started. */
+    /** Personal data (text shortcuts, your emails and addresses, recent emoji); null until the phone has been unlocked since it started. */
     private val personal: SharedPreferences? =
         if (unlocked) context.getSharedPreferences(PERSONAL_FILE, Context.MODE_PRIVATE) else null
 
@@ -44,6 +45,8 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
     val showSuggestions get() = b(SUGGESTIONS, true)
     val learnWords get() = b(LEARN_WORDS, true)
     val nextWord get() = b(NEXT_WORD, true)
+    /** Add the emails and addresses you type in their fields to your saved ones. */
+    val rememberInfo get() = b(REMEMBER_INFO, true)
     val clipboardHistory get() = b(CLIPBOARD_HISTORY, true)
     val sound get() = b(SOUND, false)
     val dynamicColor get() = b(DYNAMIC_COLOR, true)
@@ -83,7 +86,31 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
         personal?.edit()?.putString(SHORTCUTS, arr.toString())?.apply()
     }
 
-    /** Call when text shortcuts change elsewhere (the settings screen edits them). */
+    /** Your email addresses, saved in Settings and offered as you type them. None before the first unlock. */
+    fun emails(): List<String> = stringList(MY_EMAILS)
+
+    fun saveEmails(list: List<String>) = saveStringList(MY_EMAILS, list)
+
+    /** Your street addresses (one line each), offered as you type them. None before the first unlock. */
+    fun addresses(): List<String> = stringList(MY_ADDRESSES)
+
+    fun saveAddresses(list: List<String>) = saveStringList(MY_ADDRESSES, list)
+
+    private fun stringList(key: String): List<String> {
+        val store = personal ?: return emptyList()
+        return runCatching {
+            val arr = org.json.JSONArray(store.getString(key, "[]"))
+            (0 until arr.length()).map { arr.getString(it) }.filter { it.isNotBlank() }
+        }.getOrDefault(emptyList())
+    }
+
+    private fun saveStringList(key: String, list: List<String>) {
+        val arr = org.json.JSONArray()
+        for (v in list) arr.put(v)
+        personal?.edit()?.putString(key, arr.toString())?.apply()
+    }
+
+    /** Call when text shortcuts, emails or addresses change elsewhere (the settings screen edits them). */
     fun onShortcutsChanged(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         personal?.registerOnSharedPreferenceChangeListener(listener)
     }
@@ -162,6 +189,9 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
         const val BLOCK_OFFENSIVE = "block_offensive"
         const val ONE_HANDED = "one_handed"
         const val SHORTCUTS = "shortcuts"
+        const val MY_EMAILS = "my_emails"
+        const val MY_ADDRESSES = "my_addresses"
+        const val REMEMBER_INFO = "remember_info"
         /** Bumped by the settings screen; the running keyboard reacts by wiping its memory too. */
         const val CLEAR_HISTORY = "clear_history_at"
         const val CLEAR_CLIPBOARD = "clear_clipboard_at"

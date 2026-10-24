@@ -11,6 +11,11 @@ data class SuggestionItem(
     val literal: Boolean = false,
     /** An emoji offered for the word being typed; picking it keeps the word and adds the emoji. */
     val emoji: Boolean = false,
+    /**
+     * One of your saved emails or addresses ([PersonalInfo]): the text right before the cursor that
+     * picking it replaces (what you've typed of it so far). Null for everything else.
+     */
+    val replaces: String? = null,
 )
 
 /** Three strip slots (left, center, right) plus the word space will autocorrect to, if any. */

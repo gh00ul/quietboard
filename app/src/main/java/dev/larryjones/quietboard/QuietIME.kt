@@ -119,6 +119,21 @@ class QuietIME : InputMethodService(),
     private var capChars = false
     private var suggestionsOn = false
     private var autocorrectOn = false
+    /** Your saved emails and addresses (Settings), and what this field asks for; offered as you type them. */
+    private var personalInfo = PersonalInfo(emptyList(), emptyList())
+    private var personalField = PersonalInfo.Field.OTHER
+    /** A text field off the lock screen that isn't a password: your saved emails and addresses may show. */
+    private var personalOn = false
+    /** The strip shows only your saved emails or addresses ([personalTyped]: matching something you've typed). */
+    private var personalTyping = false
+    private var personalTyped = false
+    /** The email or address typed in this field is added to your saved ones when you leave it. */
+    private var rememberHere = false
+    /** The field's text as last read after you typed in it, and its kind: remembered when you leave. */
+    private var fieldText: String? = null
+    private var fieldTextKind = PersonalInfo.Field.OTHER
+    private var fieldReadPending = false
+    private val readField = Runnable { readFieldNow() }
     private var autoCapOn = false
 
     // Typing state
@@ -191,6 +206,11 @@ class QuietIME : InputMethodService(),
                 refreshTopBar()
             }
             Prefs.EMOJI_RECENTS, Prefs.ONE_HANDED -> Unit // written by the keyboard itself
+            // Saved in Settings, or remembered by the keyboard as you left a field: nothing else to redo.
+            Prefs.MY_EMAILS, Prefs.MY_ADDRESSES -> {
+                personalInfo = PersonalInfo(prefs.emails(), prefs.addresses())
+                if (viewShown) refreshSuggestions()
+            }
             else -> {
                 configDirty = true
                 // Changed while the keyboard is up (Settings' "Try it here" box): apply right away.
@@ -315,6 +335,7 @@ class QuietIME : InputMethodService(),
         getSystemService(AudioManager::class.java)?.unregisterAudioDeviceCallback(audioDevices)
         dropGesture()
         gestureExec.shutdownNow()
+        rememberField()
         clipboard.stop()
         prefs.stopListening(prefListener)
         history.saveAsync()
@@ -361,6 +382,10 @@ class QuietIME : InputMethodService(),
         // Apps restart input on the same field all the time (reformatting a phone number, toggling a
         // mode, controlled React/Compose fields). Keep the user's layout, panel and caps lock then.
         val sameField = restarting && key == lastEditor
+        // Another field without the last one finishing first: keep what was read there (the
+        // connection is already this field's, so nothing more can be read). Not when the keyboard
+        // just comes back to the same field: you may not be done typing there.
+        if (key != lastEditor) rememberField()
         lastEditor = key
         editorInfo = info
         if (!sameField) dropGesture()
@@ -401,6 +426,8 @@ class QuietIME : InputMethodService(),
 
     override fun onFinishInputView(finishingInput: Boolean) {
         flushGesture()
+        // Still this field's connection: catch the last letters typed (remembered once you leave it).
+        if (fieldReadPending) readFieldNow()
         conn?.finishComposingText()
         composing.setLength(0)
         keyboard?.cancelAll()
@@ -415,6 +442,7 @@ class QuietIME : InputMethodService(),
     }
 
     override fun onFinishInput() {
+        rememberField()
         activeEditor = null
         composing.setLength(0)
         composingSuspect = false
@@ -511,6 +539,8 @@ class QuietIME : InputMethodService(),
                 referenceRows = if (prefs.numberRow) 4.82f else 4f
                 oneHanded = prefs.oneHanded
             }
+            // Empty until the phone has been unlocked once (they live in encrypted storage).
+            personalInfo = PersonalInfo(prefs.emails(), prefs.addresses())
             configureSuggest()
         }
     }
@@ -593,6 +623,9 @@ class QuietIME : InputMethodService(),
             variation != InputType.TYPE_TEXT_VARIATION_FILTER && variation != InputType.TYPE_TEXT_VARIATION_PERSON_NAME
         autoCapOn = prefs.autoCap && cls == InputType.TYPE_CLASS_TEXT && !isPassword
         textField = cls == InputType.TYPE_CLASS_TEXT && !isPassword
+        personalOn = textField && !onLockScreen
+        personalField = personalFieldOf(info)
+        rememberHere = personalOn && personalField != PersonalInfo.Field.OTHER && !noLearning && prefs.rememberInfo
 
         keyboard?.enterIcon = enterIconFor(info)
         keyboard?.enterDescription = enterDescriptionFor(info)
@@ -618,6 +651,34 @@ class QuietIME : InputMethodService(),
                 it.type == AudioDeviceInfo.TYPE_USB_HEADSET || it.type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP ||
                 it.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO ||
                 (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && it.type == AudioDeviceInfo.TYPE_BLE_HEADSET)
+        }
+    }
+
+    /**
+     * What a field wants, for your saved emails and addresses: its input type first, then the words
+     * the app labels it with (a web form's "Email" or "Street address" box is often plain text).
+     */
+    private fun personalFieldOf(info: EditorInfo): PersonalInfo.Field {
+        if (field == FieldKind.EMAIL) return PersonalInfo.Field.EMAIL
+        val cls = info.inputType and InputType.TYPE_MASK_CLASS
+        val variation = info.inputType and InputType.TYPE_MASK_VARIATION
+        if (cls != InputType.TYPE_CLASS_TEXT || field == FieldKind.URL) return PersonalInfo.Field.OTHER
+        // "address_line1", "E-mail", "streetAddress" -> "address line1", "e mail", "street address"
+        val words = listOfNotNull(info.hintText, info.label, info.fieldName).joinToString(" ")
+            .replace(Regex("([a-z])([A-Z])"), "$1 $2").lowercase(Locale.US).replace(Regex("[^a-z0-9]+"), " ")
+        if (variation == InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS) return when {
+            NOT_POSTAL_WORDS.containsMatchIn(words) -> PersonalInfo.Field.OTHER // "Address line 2"
+            STREET_WORDS.containsMatchIn(words) -> PersonalInfo.Field.STREET
+            else -> PersonalInfo.Field.ADDRESS
+        }
+        // A message box that only mentions an email ("Write an email...") is no email field.
+        if ((info.inputType and InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0) return PersonalInfo.Field.OTHER
+        return when {
+            EMAIL_WORDS.containsMatchIn(words) -> PersonalInfo.Field.EMAIL
+            NOT_POSTAL_WORDS.containsMatchIn(words) -> PersonalInfo.Field.OTHER // web, IP, wallet addresses
+            STREET_WORDS.containsMatchIn(words) -> PersonalInfo.Field.STREET
+            ADDRESS_WORDS.containsMatchIn(words) -> PersonalInfo.Field.ADDRESS
+            else -> PersonalInfo.Field.OTHER
         }
     }
 
@@ -1152,6 +1213,8 @@ class QuietIME : InputMethodService(),
         lastCorrection = if (newline) corrected else null
         anchorPending = lastCorrection != null
         anchorSlack = if (lastCorrection != null) 1 else 0
+        // Next/Go may move on to another field before a later read: note the email or address now.
+        if (rememberHere && !newline) readFieldNow()
         sendKeyChar('\n')
         afterInput()
         refreshSuggestions()
@@ -1505,6 +1568,40 @@ class QuietIME : InputMethodService(),
         topBar?.toolsOpen = false
         if (clipboard.freshClip() != null) clipboard.dismissChip()
         updateShift()
+        if (rememberHere) {
+            // Read once typing pauses, not on every key: the app may be slow to answer.
+            fieldReadPending = true
+            main.removeCallbacks(readField)
+            main.postDelayed(readField, 150L)
+        }
+    }
+
+    /** Notes what the email or address field holds now (before and after the cursor). */
+    private fun readFieldNow() {
+        main.removeCallbacks(readField)
+        fieldReadPending = false
+        if (!rememberHere) return
+        val ic = conn ?: return
+        // Null when the app no longer answers (it moved on): keep what was read last.
+        val before = ic.getTextBeforeCursor(MAX_FIELD, 0) ?: return
+        val after = ic.getTextAfterCursor(MAX_FIELD, 0) ?: return
+        fieldText = before.toString() + after
+        fieldTextKind = personalField
+    }
+
+    /**
+     * Leaving a field you typed in: add the email or address it holds (if it's a whole one) to your
+     * saved ones, as last read. (onFinishInputView, which always comes first, did any read still waiting.)
+     */
+    private fun rememberField() {
+        main.removeCallbacks(readField)
+        fieldReadPending = false
+        val text = fieldText ?: return
+        val kind = fieldTextKind
+        fieldText = null
+        val value = PersonalInfo.learnable(text, kind) ?: return
+        if (kind == PersonalInfo.Field.EMAIL) PersonalInfo.withLearned(prefs.emails(), value, kind)?.let { prefs.saveEmails(it) }
+        else PersonalInfo.withLearned(prefs.addresses(), value, kind)?.let { prefs.saveAddresses(it) }
     }
 
     private fun updateShift() {
@@ -1535,6 +1632,18 @@ class QuietIME : InputMethodService(),
     private fun refreshSuggestions() {
         val tb = topBar ?: return
         val s = suggest
+        val mine = if (panel == Panel.KEYS) personalMatches() else emptyList()
+        // Your own email or address, clearly being typed (or its field is empty): it takes the strip,
+        // and space mustn't "correct" it. Also in email fields that ask for no suggestions.
+        val sure = mine.filter { it.strong }
+        personalTyping = sure.isNotEmpty()
+        personalTyped = sure.any { it.typed.isNotEmpty() }
+        if (personalTyping) {
+            pendingAutocorrect = null
+            tb.setSuggestions(personalStrip(sure))
+            refreshTopBar()
+            return
+        }
         if (!suggestionsOn || panel != Panel.KEYS || s == null) {
             pendingAutocorrect = null
             tb.setSuggestions(null)
@@ -1546,18 +1655,18 @@ class QuietIME : InputMethodService(),
                 pendingAutocorrect = null
                 val w = composing.toString()
                 tb.setSuggestions(
-                    listOf(
+                    withMine(listOf(
                         gestureAlternatives.getOrNull(0)?.let { SuggestionItem(it) },
                         SuggestionItem(w, bold = true),
                         s.emojiFor(w)?.let { SuggestionItem(it, emoji = true) }
                             ?: gestureAlternatives.getOrNull(1)?.let { SuggestionItem(it) },
-                    )
+                    ), mine)
                 )
             } else {
                 val r = s.suggest(composing.toString(), composingPrev, autocorrectOn && !composingGlued, rejected, learned = !noLearning,
                     before = composingBefore, personal = !onLockScreen)
                 pendingAutocorrect = r.autoCorrect
-                tb.setSuggestions(r.strip)
+                tb.setSuggestions(withMine(r.strip, mine))
             }
         } else {
             pendingAutocorrect = null
@@ -1573,9 +1682,28 @@ class QuietIME : InputMethodService(),
                 s.predict(lastWord(before), shift != ShiftState.OFF, learned = !noLearning, before = TextContext.of(before),
                     allCaps = shift == ShiftState.LOCKED || capChars)
             } else emptyList()
-            tb.setSuggestions(preds.ifEmpty { null })
+            tb.setSuggestions(preds.ifEmpty { null }?.let { withMine(it, mine) })
         }
         refreshTopBar()
+    }
+
+    /** Your saved emails and addresses that what's before the cursor starts (nothing to look up if none are saved). */
+    private fun personalMatches(): List<PersonalInfo.Match> {
+        if (!personalOn || personalInfo.isEmpty) return emptyList()
+        val before = conn?.getTextBeforeCursor(PERSONAL_LOOKBACK, 0) ?: return emptyList()
+        return personalInfo.matches(before, personalField)
+    }
+
+    private fun personalItem(m: PersonalInfo.Match) = SuggestionItem(m.value, replaces = m.typed)
+
+    /** Only your matches: the best in the middle (alone, it spans the strip so it reads in full). */
+    private fun personalStrip(mine: List<PersonalInfo.Match>): List<SuggestionItem?> =
+        listOf(mine.getOrNull(1)?.let(::personalItem), personalItem(mine[0]), mine.getOrNull(2)?.let(::personalItem))
+
+    /** A possible match in a plain text field: offered on the right, leaving the word and its correction be. */
+    private fun withMine(strip: List<SuggestionItem?>, mine: List<PersonalInfo.Match>): List<SuggestionItem?> {
+        val m = mine.firstOrNull() ?: return strip
+        return listOf(strip.getOrNull(0), strip.getOrNull(1), personalItem(m))
     }
 
     private fun refreshTopBar() {
@@ -1588,7 +1716,8 @@ class QuietIME : InputMethodService(),
         }
         tb.locked = onLockScreen
         // Logins step aside while you type a word (so the autocorrection you'll get shows) or use a panel.
-        tb.autofillPaused = composing.isNotEmpty() || panel != Panel.KEYS
+        // ...and while you type your own email or address (on an empty field the logins come first).
+        tb.autofillPaused = composing.isNotEmpty() || panel != Panel.KEYS || personalTyped
         tb.pasteChip = if (panel == Panel.KEYS && !isPassword && !onLockScreen) clipboard.freshClip()?.text else null
         if (panel == Panel.CLIPBOARD) clipPanel?.setItems(clipboard.list(), prefs.clipboardHistory)
     }
@@ -1658,6 +1787,10 @@ class QuietIME : InputMethodService(),
         if (pendingGesture != null) { flushGesture(); return }
         val ic = conn ?: return
         syncComposing()
+        if (item.replaces != null) {
+            pickPersonal(ic, item, item.replaces)
+            return
+        }
         // A space after the pick at the end of the text or right before another word; before a line
         // break it waits for the next letter; none before a space or punctuation, or in email/URL fields.
         val next = ic.getTextAfterCursor(1, 0)?.firstOrNull()
@@ -1718,9 +1851,67 @@ class QuietIME : InputMethodService(),
         refreshSuggestions()
     }
 
+    /**
+     * Long-press on one of your saved emails or addresses: forget it (for a street line, the address
+     * it came from). Never on the lock screen, where none show.
+     */
+    private fun forgetPersonal(value: String): Boolean {
+        if (!personalOn) return false
+        val emails = prefs.emails()
+        val addresses = prefs.addresses()
+        val e = emails.filterNot { it.equals(value, ignoreCase = true) }
+        val a = addresses.filterNot { it.equals(value, ignoreCase = true) || it.substringBefore(',').trim().equals(value, ignoreCase = true) }
+        if (e.size == emails.size && a.size == addresses.size) return false
+        if (e.size != emails.size) prefs.saveEmails(e)
+        if (a.size != addresses.size) prefs.saveAddresses(a)
+        // ...and not saved again on leaving this field, if that's what it holds.
+        if (fieldText?.let { PersonalInfo.learnable(it, fieldTextKind) }.equals(value, ignoreCase = true)) fieldText = null
+        Toast.makeText(this, "Removed \u201C$value\u201D from your saved emails and addresses", Toast.LENGTH_SHORT).show()
+        refreshSuggestions()
+        return true
+    }
+
+    /**
+     * Types one of your saved emails or addresses in place of the part of it you'd typed ([typed]).
+     * Never learned: it's not a word, and it's yours already.
+     */
+    private fun pickPersonal(ic: InputConnection, item: SuggestionItem, typed: String) {
+        ic.beginBatchEdit()
+        // The half-typed word is part of what's replaced: let go of it without learning it.
+        if (composing.isNotEmpty()) {
+            ic.finishComposingText()
+            composing.setLength(0)
+            composingFromGesture = false
+            gestureAlternatives = emptyList()
+        }
+        val before = ic.getTextBeforeCursor(typed.length, 0)?.toString()
+        if (before == null || !before.equals(typed, ignoreCase = true)) {
+            // The text changed under the strip: show what fits now instead of typing over the wrong thing.
+            ic.endBatchEdit()
+            refreshSuggestions()
+            return
+        }
+        if (typed.isNotEmpty()) ic.deleteSurroundingText(typed.length, 0)
+        // Mid-sentence ("write to me at larry@...") a space follows, like any picked word; never in its own field.
+        val next = ic.getTextAfterCursor(1, 0)?.firstOrNull()
+        val addSpace = autoSpaces && personalField == PersonalInfo.Field.OTHER && (next == null || next.isLetterOrDigit())
+        ic.commitText(if (addSpace) item.word + " " else item.word, 1)
+        ic.endBatchEdit()
+        resumedWord = null
+        revertedWord = null
+        weakSpace = addSpace
+        phantomSpace = false
+        lastCorrection = null
+        lastSpaceTime = 0L
+        anchorPending = true
+        afterInput()
+        refreshSuggestions()
+    }
+
     override fun onSuggestionLongPress(item: SuggestionItem): Boolean {
+        if (item.replaces != null) return forgetPersonal(item.word)
         // Not on the lock screen: a stranger mustn't probe or delete what you've taught it.
-        if (item.emoji || noLearning || !history.forget(item.word)) return false
+        if (item.emoji || item.replaces != null || noLearning || !history.forget(item.word)) return false
         Toast.makeText(this, "Removed \u201C${item.word}\u201D from learned words", Toast.LENGTH_SHORT).show()
         refreshSuggestions()
         return true
@@ -1973,6 +2164,17 @@ class QuietIME : InputMethodService(),
         /** No space before a glided word right after these ("(hello", "well-known", "@name"). */
         private const val NO_SPACE_BEFORE_GLIDE = "([{\"'/@#\u201C\u2018-\u2013\u2014_"
         private val SWAP_PUNCT = setOf(".", ",", "?", "!", ":", ";")
+        /** Characters before the cursor read to match your saved emails and addresses. */
+        private const val PERSONAL_LOOKBACK = 160
+        /** Characters read from an email or address field, each side of the cursor, to remember it. */
+        private const val MAX_FIELD = 200
+        // Words in a field's hint, label or name (lowercase, punctuation as spaces) saying what it wants.
+        private val EMAIL_WORDS = Regex("\\be ?mail\\b")
+        private val STREET_WORDS = Regex("\\bstreet\\b|\\baddress ?line ?1\\b|\\baddr(ess)? ?1\\b")
+        private val ADDRESS_WORDS = Regex("\\baddress\\b|\\baddr\\b")
+        /** Web, IP and wallet addresses, and the second address line (apartment, suite). */
+        private val NOT_POSTAL_WORDS =
+            Regex("\\b(web|ip|mac|url|wallet|server|bitcoin|btc|eth|crypto|ipv4|ipv6)\\b|\\baddr(ess)? ?(line ?)?[2-9]\\b")
         private val BACKWARD = setOf(EditPanel.Action.LEFT, EditPanel.Action.UP, EditPanel.Action.HOME)
         private val FORWARD = setOf(EditPanel.Action.RIGHT, EditPanel.Action.DOWN, EditPanel.Action.END)
         private val PASSWORD_VARIATIONS = setOf(
