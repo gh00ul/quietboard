@@ -32,7 +32,8 @@ class Key(
 
 class Row(val keys: List<Key>, val height: Float = 1f)
 
-class KeyboardLayout(val id: LayoutId, val rows: List<Row>)
+/** [split]: drawn as two halves with a gap between (see [Layouts.splitRows]). */
+class KeyboardLayout(val id: LayoutId, val rows: List<Row>, val split: Boolean = false)
 
 data class LayoutOptions(
     val numberRow: Boolean,
@@ -40,6 +41,8 @@ data class LayoutOptions(
     val field: FieldKind,
     /** The field's own layout is a number/date/phone pad: the symbols pages lead back to it ("123"). */
     val numericBase: Boolean = false,
+    /** Big screens (an unfolded Fold, tablets): letters and symbols in two halves, one for each thumb. */
+    val split: Boolean = false,
 )
 
 object Layouts {
@@ -108,11 +111,35 @@ object Layouts {
         )
     }
 
-    fun build(id: LayoutId, opts: LayoutOptions): KeyboardLayout = when (id) {
-        LayoutId.ALPHA -> alpha(opts)
-        LayoutId.SYMBOLS -> symbols(opts)
-        LayoutId.SYMBOLS2 -> symbols2(opts)
-        LayoutId.NUMBER, LayoutId.DATETIME, LayoutId.PHONE -> numberPad(id)
+    fun build(id: LayoutId, opts: LayoutOptions): KeyboardLayout {
+        val l = when (id) {
+            LayoutId.ALPHA -> alpha(opts)
+            LayoutId.SYMBOLS -> symbols(opts)
+            LayoutId.SYMBOLS2 -> symbols2(opts)
+            LayoutId.NUMBER, LayoutId.DATETIME, LayoutId.PHONE -> numberPad(id)
+        }
+        // Number, phone and date pads stay whole: a few big keys, not a thumb stretch.
+        return if (opts.split && l.id in SPLITTABLE) KeyboardLayout(l.id, splitRows(l.rows), split = true) else l
+    }
+
+    private val SPLITTABLE = setOf(LayoutId.ALPHA, LayoutId.SYMBOLS, LayoutId.SYMBOLS2)
+
+    /**
+     * For a split keyboard: a space bar across the middle of its row becomes one space bar in each
+     * half. Other keys go to the half their middle is in ("g" left, "h" right); see KeyboardView.
+     */
+    internal fun splitRows(rows: List<Row>): List<Row> = rows.map { row ->
+        val half = row.keys.sumOf { (it.weight + it.padLeft + it.padRight).toDouble() }.toFloat() / 2
+        var at = 0f
+        val keys = row.keys.flatMap { k ->
+            val start = at + k.padLeft
+            val end = start + k.weight
+            at = end + k.padRight
+            if (k.type == KeyType.SPACE && start < half && end > half) {
+                listOf(Key(KeyType.SPACE, " ", label = "", weight = half - start), Key(KeyType.SPACE, " ", label = "", weight = end - half))
+            } else listOf(k)
+        }
+        Row(keys, row.height)
     }
 
     private fun backKey(opts: LayoutOptions) = Key(KeyType.TO_ALPHA, label = if (opts.numericBase) "123" else "ABC", weight = 1.5f)
