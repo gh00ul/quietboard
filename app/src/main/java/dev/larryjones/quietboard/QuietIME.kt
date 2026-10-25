@@ -745,7 +745,22 @@ class QuietIME : InputMethodService(),
     }
 
     private fun layoutOptions() =
-        LayoutOptions(prefs.numberRow, prefs.longPressSymbols, field, numericBase = baseLayout != LayoutId.ALPHA)
+        LayoutOptions(prefs.numberRow, prefs.longPressSymbols, field, numericBase = baseLayout != LayoutId.ALPHA, split = splitKeys())
+
+    /**
+     * Two halves, one for each thumb: on big screens (an unfolded Fold, a tablet: 600 dp both ways),
+     * or whenever the screen is that wide if you chose so. Never one-handed. Folding or turning the
+     * phone restarts the keyboard, so this is asked again then.
+     */
+    private fun splitKeys(): Boolean {
+        if (prefs.oneHanded != 0) return false
+        val c = resources.configuration
+        return when (prefs.splitKeyboard) {
+            "off" -> false
+            "wide" -> c.screenWidthDp >= SPLIT_MIN_DP
+            else -> c.screenWidthDp >= SPLIT_MIN_DP && c.smallestScreenWidthDp >= SPLIT_MIN_DP
+        }
+    }
 
     private fun setLayout(id: LayoutId) {
         layoutId = id
@@ -1406,7 +1421,8 @@ class QuietIME : InputMethodService(),
         if (previewBusy || !glidePreviewing || !suggestionsOn) return
         val dec = decoder ?: return
         val kv = keyboard ?: return
-        val (cx, cy) = kv.letterCenters()
+        val (cx, cy) = kv.glideCenters()
+        val gx = kv.unsplitXs(xs, ys, count)
         val kw = kv.keyWidthPx()
         val kh = kv.rowHeightPx()
         val id = glideId
@@ -1415,7 +1431,7 @@ class QuietIME : InputMethodService(),
         previewBusy = true
         try {
             gestureExec.execute {
-                val best = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 1, ctx, learned) }.getOrDefault(emptyList()).firstOrNull()
+                val best = runCatching { dec.decode(gx, ys, count, cx, cy, kw, kh, 1, ctx, learned) }.getOrDefault(emptyList()).firstOrNull()
                 main.post {
                     previewBusy = false
                     if (id == glideId && glidePreviewing && best != null) {
@@ -1456,7 +1472,9 @@ class QuietIME : InputMethodService(),
             return
         }
         val kv = keyboard ?: return
-        val (cx, cy) = kv.letterCenters()
+        // A split keyboard's gap taken out: the decoder sees one block of keys.
+        val (cx, cy) = kv.glideCenters()
+        val gx = kv.unsplitXs(xs, ys, count)
         val kw = kv.keyWidthPx()
         val kh = kv.rowHeightPx()
         val ctx = glideContext
@@ -1464,7 +1482,7 @@ class QuietIME : InputMethodService(),
         val id = ++pendingGestureId
         pendingGesture = try {
             gestureExec.submit(Callable {
-                val results = runCatching { dec.decode(xs, ys, count, cx, cy, kw, kh, 4, ctx, learned) }.getOrDefault(emptyList())
+                val results = runCatching { dec.decode(gx, ys, count, cx, cy, kw, kh, 4, ctx, learned) }.getOrDefault(emptyList())
                 main.post { if (pendingGestureId == id && pendingGesture != null) flushGesture() }
                 results
             })
@@ -2045,6 +2063,8 @@ class QuietIME : InputMethodService(),
     private fun setOneHanded(side: Int) {
         prefs.sp.edit().putInt(Prefs.ONE_HANDED, side).apply()
         keyboard?.oneHanded = side
+        // One-handed and split don't mix: the halves join (or part again) with it.
+        if (layoutOptions() != builtOptions) setLayout(layoutId)
         refreshTopBar()
     }
 
@@ -2166,6 +2186,8 @@ class QuietIME : InputMethodService(),
         private val SWAP_PUNCT = setOf(".", ",", "?", "!", ":", ";")
         /** Characters before the cursor read to match your saved emails and addresses. */
         private const val PERSONAL_LOOKBACK = 160
+        /** Screen width (dp) from which the keyboard splits: an unfolded Fold or a tablet, not a phone. */
+        private const val SPLIT_MIN_DP = 600
         /** Characters read from an email or address field, each side of the cursor, to remember it. */
         private const val MAX_FIELD = 200
         // Words in a field's hint, label or name (lowercase, punctuation as spaces) saying what it wants.

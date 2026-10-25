@@ -227,6 +227,54 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
     fun keyWidthPx() = keyWidth
     fun rowHeightPx() = rowHeight
 
+    // Split keyboard: per row, where the gap between the halves starts and how wide it is (0: none).
+    private var splitGapStart = FloatArray(0)
+    private var splitGapWidth = FloatArray(0)
+    private var rowBottom = FloatArray(0)
+
+    /**
+     * Where [x] would be without the split's gap (the keyboard as one block): glides are decoded
+     * there, so a swipe from "t" across the gap to "y" is one key's hop, as the decoder was tuned for.
+     * Points in the gap sit on its edge.
+     */
+    fun unsplitX(x: Float, y: Float): Float {
+        val r = rowAt(y)
+        val gap = splitGapWidth.getOrElse(r) { 0f }
+        if (gap == 0f) return x
+        val start = splitGapStart[r]
+        return when {
+            x <= start -> x
+            x >= start + gap -> x - gap
+            else -> start
+        }
+    }
+
+    private fun rowAt(y: Float): Int {
+        var r = 0
+        while (r < rowBottom.size - 1 && y >= rowBottom[r]) r++
+        return r
+    }
+
+    /** Inside the gap between a split keyboard's halves (past the keys' reach into it, once their touch areas missed). */
+    private fun inSplitGap(x: Float, y: Float): Boolean {
+        val r = rowAt(y)
+        val gap = splitGapWidth.getOrElse(r) { 0f }
+        return gap > 0f && x > splitGapStart[r] && x < splitGapStart[r] + gap
+    }
+
+    /** A glide's points as [unsplitX] sees them (the same array when nothing is split). */
+    fun unsplitXs(xs: FloatArray, ys: FloatArray, count: Int): FloatArray {
+        if (splitGapWidth.all { it == 0f }) return xs
+        return FloatArray(count) { unsplitX(xs[it], ys[it]) }
+    }
+
+    /** [letterCenters] as the glide decoder sees them: without the split's gap. */
+    fun glideCenters(): Pair<FloatArray, FloatArray> {
+        val (xs, ys) = letterCenters()
+        for (i in xs.indices) if (!xs[i].isNaN()) xs[i] = unsplitX(xs[i], ys[i])
+        return xs to ys
+    }
+
     private fun baseRowHeight() = 54f * dp * heightScale
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -249,8 +297,9 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         val totalRows = l.rows.sumOf { it.height.toDouble() }.toFloat()
         val rowUnit = (height - topPad - bottomPad) / totalRows
         var y = topPad
-        // One-handed: keys take 80% of the width on one side, the rest holds swap/expand buttons.
-        val keysW = if (oneHanded != 0) width * 0.8f else width.toFloat()
+        // One-handed: keys take 80% of the width on one side (no wider than a phone's keyboard, on an
+        // unfolded Fold or a tablet), the rest holds swap/expand buttons.
+        val keysW = if (oneHanded != 0) minOf(width * 0.8f, ONE_HAND_MAX * dp) else width.toFloat()
         val keysLeft = if (oneHanded == 1) width - keysW else 0f
         val usable = keysW - 2 * sidePad
         if (oneHanded != 0) {
@@ -265,22 +314,48 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             sideArea.setEmpty(); swapBtn.setEmpty(); expandBtn.setEmpty()
         }
         keyWidth = 0f
+        val split = l.split && oneHanded == 0
+        if (splitGapStart.size != l.rows.size) {
+            splitGapStart = FloatArray(l.rows.size)
+            splitGapWidth = FloatArray(l.rows.size)
+            rowBottom = FloatArray(l.rows.size)
+        }
         for ((ri, row) in l.rows.withIndex()) {
             val rh = row.height * rowUnit
             val totalW = row.keys.sumOf { (it.weight + it.padLeft + it.padRight).toDouble() }.toFloat()
-            val unit = usable / totalW
+            // Split: phone-sized keys in two halves at the edges, within thumb reach; the gap takes the rest.
+            val unit = if (split) minOf(usable * SPLIT_KEYS_SHARE / totalW, SPLIT_KEY_MAX * dp) else usable / totalW
+            val gap = if (split) usable - unit * totalW else 0f
+            // The first key of the right half: the first whose middle is past the row's middle ("h", not "g").
+            var gapAt = -1
+            if (split) {
+                var at = 0f
+                for ((ki, k) in row.keys.withIndex()) {
+                    val w = k.weight + k.padLeft + k.padRight
+                    if (at + w / 2 > totalW / 2 + 0.01f) { gapAt = ki; break }
+                    at += w
+                }
+            }
             if (row.height == 1f && keyWidth == 0f) keyWidth = unit
             var x = keysLeft + sidePad
             for ((ki, k) in row.keys.withIndex()) {
+                if (ki == gapAt) {
+                    splitGapStart[ri] = x
+                    x += gap
+                }
                 val kw = (k.weight + k.padLeft + k.padRight) * unit
                 val top = if (ri == 0) 0f else y
                 val bottom = if (ri == l.rows.lastIndex) height.toFloat() else y + rh
-                val left = if (ki == 0) keysLeft else x
-                val right = if (ki == row.keys.lastIndex) keysLeft + keysW else x + kw
+                // A thumb that lands just inside the gap still gets its key (deeper in is no key: see keyAt).
+                val reach = minOf(gap / 2, unit * GAP_REACH)
+                val left = when (ki) { 0 -> keysLeft; gapAt -> x - reach; else -> x }
+                val right = when (ki) { row.keys.lastIndex -> keysLeft + keysW; gapAt - 1 -> x + kw + reach; else -> x + kw }
                 k.touch.set(left, top, right, bottom)
                 k.visual.set(x + k.padLeft * unit + gapH, y + gapV, x + kw - k.padRight * unit - gapH, y + rh - gapV)
                 x += kw
             }
+            splitGapWidth[ri] = if (gapAt >= 0) gap else 0f
+            rowBottom[ri] = y + rh
             y += rh
         }
         rowHeight = rowUnit
@@ -311,6 +386,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         funcPaint.textSize = rowHeight * 0.26f
         hintPaint.textSize = rowHeight * 0.17f
         val iconSize = rowHeight * 0.42f
+        // A split keyboard has a space bar in each half: the language name goes on the left one only.
+        var spaceLabelled = false
 
         if (oneHanded != 0) {
             for (i in 0..1) {
@@ -386,7 +463,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
                 KeyType.DELETE -> Icons.draw(canvas, Icon.BACKSPACE, cx, cy, iconSize, t.text)
                 KeyType.ENTER -> Icons.draw(canvas, enterIcon, cx, cy, iconSize, t.onAccent)
                 KeyType.EMOJI -> Icons.draw(canvas, Icon.EMOJI, cx, cy, iconSize, t.text)
-                KeyType.SPACE -> if (l.id == LayoutId.ALPHA && spaceLabel.isNotEmpty() && k.visual.width() > 0f) {
+                KeyType.SPACE -> if (l.id == LayoutId.ALPHA && spaceLabel.isNotEmpty() && k.visual.width() > 0f && !spaceLabelled) {
+                    spaceLabelled = true
                     hintPaint.color = t.hint
                     hintPaint.textAlign = Paint.Align.CENTER
                     val size = hintPaint.textSize
@@ -484,6 +562,8 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         val l = layout ?: return null
         if (sideArea.contains(x, y)) return null
         for (row in l.rows) for (k in row.keys) if (k.touch.contains(x, y)) return k
+        // Deep in a split keyboard's gap (a palm, the other hand's grip): no key at all.
+        if (inSplitGap(x, y)) return null
         var best: Key? = null
         var bestD = Float.MAX_VALUE
         for (row in l.rows) for (k in row.keys) {
@@ -951,6 +1031,14 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
     }
 
     private companion object {
+        /** Split keyboard: the keys take at most this share of the width (the gap the rest)... */
+        const val SPLIT_KEYS_SHARE = 0.7f
+        /** ...and are at most this wide (dp; a phone's are ~40): each half stays a thumb's reach (~40 mm). */
+        const val SPLIT_KEY_MAX = 50f
+        /** How far (in key widths) a split keyboard's edge keys reach into the gap for a slightly-off thumb. */
+        const val GAP_REACH = 0.5f
+        /** One-handed keys at most this wide (dp), about a phone keyboard. */
+        const val ONE_HAND_MAX = 400f
         const val RELEASE_FADE_MS = 160f
         const val PROGRESS_MS = 90L
         /** Points kept for a lone finger before it becomes a glide (it's a tap or a slide until then). */

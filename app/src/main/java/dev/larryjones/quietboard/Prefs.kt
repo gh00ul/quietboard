@@ -63,6 +63,8 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
     val blockOffensive get() = b(BLOCK_OFFENSIVE, false)
     /** 0 off, -1 left hand, 1 right hand */
     val oneHanded get() = sp.getInt(ONE_HANDED, 0)
+    /** Split keyboard: "auto" (big screens: an unfolded Fold, tablets), "wide" (also phones in landscape) or "off". */
+    val splitKeyboard: String get() = sp.getString(SPLIT_KEYBOARD, "auto") ?: "auto"
 
     /** Text shortcuts (personal dictionary): shortcut (lowercase) -> expansion. None before the first unlock. */
     fun shortcuts(): Map<String, String> {
@@ -188,6 +190,7 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
         const val EMOJI_SUGGESTIONS = "emoji_suggestions"
         const val BLOCK_OFFENSIVE = "block_offensive"
         const val ONE_HANDED = "one_handed"
+        const val SPLIT_KEYBOARD = "split_keyboard"
         const val SHORTCUTS = "shortcuts"
         const val MY_EMAILS = "my_emails"
         const val MY_ADDRESSES = "my_addresses"

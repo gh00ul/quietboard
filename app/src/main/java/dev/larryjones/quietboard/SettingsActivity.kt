@@ -120,6 +120,10 @@ class SettingsActivity : Activity() {
         // --- Keys
         val keys = section("Keys")
         switchRow(keys, "Number row", null, Prefs.NUMBER_ROW, false)
+        choiceRowString(
+            keys, "Split keyboard", listOf("On big screens (unfolded Fold, tablets)", "Also on phones in landscape", "Off"),
+            listOf("auto", "wide", "off"), Prefs.SPLIT_KEYBOARD, "auto",
+        )
         switchRow(keys, "Long press for symbols", "Show symbol hints on letter keys", Prefs.LONG_PRESS_SYMBOLS, false)
         switchRow(keys, "Popup on keypress", null, Prefs.KEY_PREVIEW, true)
         choiceRow(
