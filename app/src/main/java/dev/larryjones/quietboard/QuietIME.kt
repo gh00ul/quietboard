@@ -896,7 +896,9 @@ class QuietIME : InputMethodService(),
     private fun resumeWord(word: String, glided: Boolean, alternatives: List<String>, prev: String?, before: TextContext) {
         val ic = conn ?: return
         val text = ic.getTextBeforeCursor(word.length, 0)?.toString() ?: return
-        if (text != word || !ic.getTextAfterCursor(1, 0).isNullOrEmpty() && isWordCharAt(ic.getTextAfterCursor(1, 0)!![0])) return
+        // Asked once: a second round trip can come back null or empty (the app busy or the connection gone).
+        val after = ic.getTextAfterCursor(1, 0)
+        if (text != word || !after.isNullOrEmpty() && isWordCharAt(after[0])) return
         ic.beginBatchEdit()
         ic.deleteSurroundingText(word.length, 0)
         ic.setComposingText(word, 1)
