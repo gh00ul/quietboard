@@ -41,9 +41,11 @@ import java.util.concurrent.Future
 import kotlin.math.abs
 
 class QuietIME : InputMethodService(),
-    KeyboardView.Listener, TopBar.Listener, EmojiPanel.Listener, ClipboardPanel.Listener, EditPanel.Listener {
+    KeyboardView.Listener, TopBar.Listener, EmojiPanel.Listener, ClipboardPanel.Listener, EditPanel.Listener,
+    ResizePanel.Listener {
 
-    private enum class Panel { KEYS, EMOJI, CLIPBOARD, EDIT }
+    /** RESIZE sits over the keys, which stay in view. */
+    private enum class Panel { KEYS, EMOJI, CLIPBOARD, EDIT, RESIZE }
 
     private class Correction(
         val original: String, val corrected: String, val separator: String, val prev: String?, val prev2: String? = null,
@@ -85,6 +87,7 @@ class QuietIME : InputMethodService(),
     private var emojiPanel: EmojiPanel? = null
     private var clipPanel: ClipboardPanel? = null
     private var editPanel: EditPanel? = null
+    private var resizePanel: ResizePanel? = null
     private var swallowBackUp = false
     private var emojiKeywords: Map<String, String> = emptyMap()
     private var theme: KbTheme? = null
@@ -335,6 +338,7 @@ class QuietIME : InputMethodService(),
         getSystemService(AudioManager::class.java)?.unregisterAudioDeviceCallback(audioDevices)
         dropGesture()
         gestureExec.shutdownNow()
+        posture.stop()
         rememberField()
         clipboard.stop()
         prefs.stopListening(prefListener)
@@ -365,7 +369,7 @@ class QuietIME : InputMethodService(),
         this.root = root
         topBar = root.topBar; keyboard = root.keyboard; overlay = root.overlay; content = root.content
         feedback.attach(root.keyboard) // "Phone default" haptics go through the keyboard view
-        emojiPanel = null; clipPanel = null; editPanel = null
+        emojiPanel = null; clipPanel = null; editPanel = null; resizePanel = null
         panel = Panel.KEYS
         configDirty = true
         theme = null
@@ -422,9 +426,11 @@ class QuietIME : InputMethodService(),
         updateShift()
         refreshSuggestions()
         wakeScene()
+        watchPosture()
     }
 
     override fun onFinishInputView(finishingInput: Boolean) {
+        posture.stop()
         flushGesture()
         // Still this field's connection: catch the last letters typed (remembered once you leave it).
         if (fieldReadPending) readFieldNow()
@@ -525,6 +531,7 @@ class QuietIME : InputMethodService(),
             emojiPanel?.applyTheme(t)
             clipPanel?.applyTheme(t)
             editPanel?.applyTheme(t)
+            resizePanel?.applyTheme(t)
             colorNavBar(t)
         }
         if (configDirty) {
@@ -755,11 +762,24 @@ class QuietIME : InputMethodService(),
     private fun splitKeys(): Boolean {
         if (prefs.oneHanded != 0) return false
         val c = resources.configuration
+        // Half open with the hinge across (a book-style Fold turned landscape): it stands on a table
+        // like a laptop and you type with your fingers on the flat half, so the keys stay whole.
+        if (posture.halfOpen && c.orientation == Configuration.ORIENTATION_LANDSCAPE) return false
         return when (prefs.splitKeyboard) {
             "off" -> false
             "wide" -> c.screenWidthDp >= SPLIT_MIN_DP
             else -> c.screenWidthDp >= SPLIT_MIN_DP && c.smallestScreenWidthDp >= SPLIT_MIN_DP
         }
+    }
+
+    /** Half open or flat (see [splitKeys]); listened to only while the keyboard is up on a big screen. */
+    private val posture = FoldPosture(this) {
+        if (viewShown && keyboard?.layout != null && layoutOptions() != builtOptions) setLayout(layoutId)
+    }
+
+    private fun watchPosture() {
+        val bigScreen = resources.configuration.screenWidthDp >= SPLIT_MIN_DP
+        if (bigScreen && prefs.splitKeyboard != "off") posture.start() else posture.stop()
     }
 
     private fun setLayout(id: LayoutId) {
@@ -1730,6 +1750,7 @@ class QuietIME : InputMethodService(),
             Panel.EMOJI -> TopBar.Tool.EMOJI
             Panel.CLIPBOARD -> TopBar.Tool.CLIPBOARD
             Panel.EDIT -> TopBar.Tool.EDIT
+            Panel.RESIZE -> TopBar.Tool.RESIZE
             Panel.KEYS -> if (prefs.oneHanded != 0) TopBar.Tool.ONE_HAND else null
         }
         tb.locked = onLockScreen
@@ -1946,6 +1967,8 @@ class QuietIME : InputMethodService(),
             }
             TopBar.Tool.HIDE -> requestHideSelf(0)
             TopBar.Tool.EDIT -> showPanel(if (panel == Panel.EDIT) Panel.KEYS else Panel.EDIT)
+            // A setting: not for whoever holds the locked phone.
+            TopBar.Tool.RESIZE -> if (!onLockScreen) showPanel(if (panel == Panel.RESIZE) Panel.KEYS else Panel.RESIZE)
             TopBar.Tool.ONE_HAND -> {
                 setOneHanded(if (prefs.oneHanded == 0) 1 else 0)
                 if (panel != Panel.KEYS) showPanel(Panel.KEYS)
@@ -1992,6 +2015,7 @@ class QuietIME : InputMethodService(),
                 emojiPanel?.visibility = View.GONE
                 clipPanel?.visibility = View.GONE
                 editPanel?.visibility = View.GONE
+                resizePanel?.visibility = View.GONE
                 editPanel?.setSelecting(false)
                 kv.visibility = View.VISIBLE
             }
@@ -2004,6 +2028,7 @@ class QuietIME : InputMethodService(),
                 ed.setSelecting(false)
                 emojiPanel?.visibility = View.GONE
                 clipPanel?.visibility = View.GONE
+                resizePanel?.visibility = View.GONE
                 ed.visibility = View.VISIBLE
                 kv.visibility = View.INVISIBLE
             }
@@ -2017,6 +2042,7 @@ class QuietIME : InputMethodService(),
                 ep.open()
                 clipPanel?.visibility = View.GONE
                 editPanel?.visibility = View.GONE
+                resizePanel?.visibility = View.GONE
                 ep.visibility = View.VISIBLE
                 kv.visibility = View.INVISIBLE
             }
@@ -2028,8 +2054,22 @@ class QuietIME : InputMethodService(),
                 if (t != null) cp.applyTheme(t)
                 emojiPanel?.visibility = View.GONE
                 editPanel?.visibility = View.GONE
+                resizePanel?.visibility = View.GONE
                 cp.visibility = View.VISIBLE
                 kv.visibility = View.INVISIBLE
+            }
+            Panel.RESIZE -> {
+                val rp = resizePanel ?: ResizePanel(this, this).also {
+                    resizePanel = it
+                    root?.addPanel(it)
+                }
+                if (t != null) rp.applyTheme(t)
+                rp.percent = prefs.heightPercent
+                emojiPanel?.visibility = View.GONE
+                clipPanel?.visibility = View.GONE
+                editPanel?.visibility = View.GONE
+                rp.visibility = View.VISIBLE
+                kv.visibility = View.VISIBLE // the keys show through: you see the height you get
             }
         }
         refreshSuggestions()
@@ -2075,6 +2115,18 @@ class QuietIME : InputMethodService(),
     // ------------------------------------------------------------------ editing panel
 
     override fun onKeyFeedbackPanel() = feedback.key(KeyType.CHAR)
+
+    // ------------------------------------------------------------------ resizing on the keyboard
+
+    override fun onResize(percent: Int, done: Boolean) {
+        val p = percent.coerceIn(Prefs.MIN_HEIGHT, Prefs.MAX_HEIGHT)
+        // Live as you drag; saved (so it lasts, and Settings shows it) once you let go.
+        keyboard?.heightScale = p / 100f
+        resizePanel?.percent = p
+        if (done && p != prefs.heightPercent) prefs.sp.edit().putInt(Prefs.HEIGHT, p).apply()
+    }
+
+    override fun onResizeDone() = showPanel(Panel.KEYS)
 
     override fun onEditAction(action: EditPanel.Action, extend: Boolean) {
         flushGesture()

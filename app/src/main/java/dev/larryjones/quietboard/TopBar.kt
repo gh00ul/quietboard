@@ -21,7 +21,7 @@ import android.view.accessibility.AccessibilityNodeProvider
 class TopBar(context: Context) : View(context) {
 
     /** [MORE] and [BACK] switch between suggestions and the toolbar; the strip handles them itself. */
-    enum class Tool { EMOJI, CLIPBOARD, EDIT, ONE_HAND, SETTINGS, HIDE, PASTE, MORE, BACK }
+    enum class Tool { EMOJI, CLIPBOARD, EDIT, ONE_HAND, SETTINGS, HIDE, PASTE, MORE, BACK, RESIZE }
 
     interface Listener {
         fun onSuggestionPicked(item: SuggestionItem)
@@ -149,9 +149,43 @@ class TopBar(context: Context) : View(context) {
     private val slotWidth get() = (width - lead) / 3f
     /** One of your saved emails or addresses alone in the strip: it gets the whole width, to be read in full. */
     private val wide get() = items.getOrNull(1)?.replaces != null && items.getOrNull(0) == null && items.getOrNull(2) == null
-    private fun slotAt(x: Float) = if (wide) 1 else ((x - lead) / slotWidth).toInt().coerceIn(0, 2)
-    private fun slotLeft(i: Int) = if (wide) lead else lead + i * slotWidth
-    private fun slotRight(i: Int) = if (wide) width.toFloat() else lead + (i + 1) * slotWidth
+
+    /**
+     * A split keyboard's gap (left and right x, as the keys below have it): the first suggestion goes
+     * over the left half, the middle one and the last over the right half, none in the gap, where
+     * neither thumb reaches. Null: the usual three across.
+     */
+    var split: Pair<Float, Float>? = null
+        set(v) {
+            if (field == v) return
+            field = v
+            pressedSlot = -1
+            invalidate()
+            a11y.invalidateAll()
+        }
+    private val splitHere get() = split?.takeIf { !wide && it.second > lead && it.second < width }
+
+    /** The slot at [x], or -1 in a split keyboard's gap. */
+    private fun slotAt(x: Float): Int {
+        if (wide) return 1
+        val s = splitHere ?: return ((x - lead) / slotWidth).toInt().coerceIn(0, 2)
+        return when {
+            x < s.first -> 0
+            x < s.second -> -1
+            x < slotRight(1) -> 1
+            else -> 2
+        }
+    }
+    private fun slotLeft(i: Int): Float {
+        if (wide) return lead
+        val s = splitHere ?: return lead + i * slotWidth
+        return when (i) { 0 -> lead; 1 -> s.second; else -> (s.second + width) / 2 }
+    }
+    private fun slotRight(i: Int): Float {
+        if (wide) return width.toFloat()
+        val s = splitHere ?: return lead + (i + 1) * slotWidth
+        return when (i) { 0 -> s.first; 1 -> (s.second + width) / 2; else -> width.toFloat() }
+    }
 
     /** What the strip shows now (tests). */
     internal fun itemsForTest(): List<SuggestionItem?> = items
@@ -265,10 +299,11 @@ class TopBar(context: Context) : View(context) {
                 Tool.CLIPBOARD -> "Clipboard"
                 Tool.EDIT -> "Text editing"
                 Tool.ONE_HAND -> "One-handed mode"
+                Tool.RESIZE -> "Resize keyboard"
                 Tool.SETTINGS -> "Settings"
                 Tool.HIDE -> "Hide keyboard"
                 Tool.PASTE -> "Paste: " + (chipLabel ?: "").take(100)
-                Tool.MORE -> "Tools: emoji, clipboard, settings"
+                Tool.MORE -> "Tools: emoji, clipboard, resize, settings"
                 Tool.BACK -> if (autofillCount > 0) "Back to saved logins" else "Back to suggestions"
                 null -> null
             }
@@ -360,7 +395,8 @@ class TopBar(context: Context) : View(context) {
                 canvas.drawText(s, left + cw / 2, cy - (p.descent() + p.ascent()) / 2, p)
                 p.textSize = normalSize
             }
-            if (i < 2 && item != null && items.getOrNull(i + 1) != null) {
+            // A divider between neighbours (not across a split keyboard's gap).
+            if (i < 2 && item != null && items.getOrNull(i + 1) != null && kotlin.math.abs(slotLeft(i + 1) - (left + cw)) < 1f) {
                 paint.color = t.divider
                 canvas.drawRoundRect(left + cw - 0.5f * dp, cy - 8 * dp, left + cw + 0.5f * dp, cy + 8 * dp, 0.5f * dp, 0.5f * dp, paint)
             }
@@ -397,6 +433,7 @@ class TopBar(context: Context) : View(context) {
                 Tool.SETTINGS -> Icon.SETTINGS
                 Tool.EDIT -> Icon.EDIT
                 Tool.ONE_HAND -> Icon.ONE_HAND
+                Tool.RESIZE -> Icon.RESIZE
                 Tool.HIDE -> Icon.CHEVRON_DOWN
                 Tool.BACK -> Icon.CHEVRON_LEFT
                 Tool.MORE -> Icon.APPS
@@ -483,6 +520,6 @@ class TopBar(context: Context) : View(context) {
         const val LEAD_DP = 44f
         val LOCKED_TOOLS = listOf(Tool.EMOJI)
         val CHIP_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD)
-        val ALL_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD, Tool.EDIT, Tool.ONE_HAND, Tool.SETTINGS)
+        val ALL_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD, Tool.EDIT, Tool.ONE_HAND, Tool.RESIZE, Tool.SETTINGS)
     }
 }

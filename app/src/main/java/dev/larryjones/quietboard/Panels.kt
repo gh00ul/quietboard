@@ -479,7 +479,8 @@ class PanelKey(context: Context, val label: String?, val icon: Icon?, private va
         } else if (label != null) {
             text.color = fg
             text.typeface = t.fonts.medium
-            text.textSize = 15 * dp
+            // A lone sign ("−", "+") would look lost at word size.
+            text.textSize = if (label.length == 1) 22 * dp else 15 * dp
             canvas.drawText(label, width / 2f, height / 2f - (text.descent() + text.ascent()) / 2, text)
         }
     }
@@ -520,6 +521,27 @@ class EditPanel(context: Context, private val listener: Listener) : LinearLayout
     private lateinit var select: PanelKey
     var selecting = false
         private set
+    /** Each row's gap (shown for a split keyboard) and its right-hand key (Select all, Copy, Paste, Delete). */
+    private val gaps = ArrayList<View>()
+    private val rightColumn = ArrayList<PanelKey>()
+
+    /**
+     * A split keyboard's gap (its left and right x), or null: the arrows, Select, Undo and Redo go
+     * under the left thumb; Select all, Copy, Paste and Delete under the right, with the gap between.
+     */
+    var split: Pair<Float, Float>? = null
+        set(v) {
+            if (field == v) return
+            field = v
+            val gapWidth = v?.let { (it.second - it.first).toInt() } ?: 0
+            for (g in gaps) {
+                g.visibility = if (v == null) GONE else VISIBLE
+                g.layoutParams = (g.layoutParams as LayoutParams).apply { width = gapWidth }
+            }
+            // Halves as wide as each other, like the keys': the right column weighs as much as the three on the left.
+            for (k in rightColumn) k.layoutParams = (k.layoutParams as LayoutParams).apply { weight = if (v == null) RIGHT_WEIGHT else 3f }
+            requestLayout()
+        }
 
     init {
         orientation = VERTICAL
@@ -536,34 +558,38 @@ class EditPanel(context: Context, private val listener: Listener) : LinearLayout
                 keys += it
             }
         fun act(a: Action) = { listener.onEditAction(a, selecting) }
-        fun row(vararg items: Pair<PanelKey, Float>) = LinearLayout(context).apply {
+        // Keys weighing 3 in all on the left, then a gap (only for a split keyboard), then one key on the right.
+        fun row(right: PanelKey, vararg left: Pair<PanelKey, Float>) = LinearLayout(context).apply {
             orientation = HORIZONTAL
-            for ((k, w) in items) addView(k, LayoutParams(0, LayoutParams.MATCH_PARENT, w))
+            for ((k, w) in left) addView(k, LayoutParams(0, LayoutParams.MATCH_PARENT, w))
+            addView(View(context).apply { visibility = GONE }.also { gaps += it }, LayoutParams(0, LayoutParams.MATCH_PARENT))
+            addView(right, LayoutParams(0, LayoutParams.MATCH_PARENT, RIGHT_WEIGHT))
+            rightColumn += right
             this@EditPanel.addView(this, LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f))
         }
         select = key("Select", null) { setSelecting(!selecting) }
         row(
+            key("Select all", null) { listener.onEditAction(Action.SELECT_ALL, false) },
             key("Home", null, onClick = act(Action.HOME)) to 1f,
             key(null, Icon.UP, repeat = true, functional = false, onClick = act(Action.UP)) to 1f,
             key("End", null, onClick = act(Action.END)) to 1f,
-            key("Select all", null) { listener.onEditAction(Action.SELECT_ALL, false) } to 1.15f,
         )
         row(
+            key("Copy", null) { listener.onEditAction(Action.COPY, false); setSelecting(false) },
             key(null, Icon.LEFT, repeat = true, functional = false, onClick = act(Action.LEFT)) to 1f,
             select to 1f,
             key(null, Icon.RIGHT, repeat = true, functional = false, onClick = act(Action.RIGHT)) to 1f,
-            key("Copy", null) { listener.onEditAction(Action.COPY, false); setSelecting(false) } to 1.15f,
         )
         row(
+            key("Paste", null) { listener.onEditAction(Action.PASTE, false); setSelecting(false) },
             key("Undo", null) { listener.onEditAction(Action.UNDO, false) } to 1f,
             key(null, Icon.DOWN, repeat = true, functional = false, onClick = act(Action.DOWN)) to 1f,
             key("Redo", null) { listener.onEditAction(Action.REDO, false) } to 1f,
-            key("Paste", null) { listener.onEditAction(Action.PASTE, false); setSelecting(false) } to 1.15f,
         )
         row(
+            key(null, Icon.BACKSPACE, repeat = true, press = false) { listener.onPanelDelete() }, // gives its own feedback
             key("ABC", null) { setSelecting(false); listener.onPanelBack() } to 2f,
             key("Cut", null) { listener.onEditAction(Action.CUT, false); setSelecting(false) } to 1f,
-            key(null, Icon.BACKSPACE, repeat = true, press = false) { listener.onPanelDelete() } to 1.15f, // gives its own feedback
         )
     }
 
@@ -575,5 +601,128 @@ class EditPanel(context: Context, private val listener: Listener) : LinearLayout
     fun applyTheme(t: KbTheme) {
         setBackgroundColor(if (t.hasBackdrop) 0 else t.background) // fun themes: the scene shows through
         for (k in keys) k.theme = t
+    }
+
+    private companion object {
+        /** The right-hand column's weight beside the three on the left, when the keys are whole. */
+        const val RIGHT_WEIGHT = 1.15f
+    }
+}
+
+/**
+ * Resizing the keyboard on the keyboard itself (toolbar → Resize): drag up or down anywhere over the
+ * keys, or tap − and + (hold to repeat). The keys show through at the new height as it changes;
+ * Reset goes back to Normal, Done (or Back) closes it. Nothing is typed meanwhile.
+ */
+@SuppressLint("ViewConstructor")
+class ResizePanel(context: Context, private val listener: Listener) : FrameLayout(context) {
+    interface Listener {
+        /** The height to show now, in percent of Normal; [done]: the finger lifted or a button was tapped, so keep it. */
+        fun onResize(percent: Int, done: Boolean)
+        fun onResizeDone()
+        fun onKeyFeedbackPanel()
+    }
+
+    /** The height shown, in percent of Normal. */
+    var percent = 100
+        set(v) {
+            if (field == v) return
+            field = v
+            contentDescription = "Keyboard height $v%. Drag up or down to resize."
+            invalidate()
+        }
+
+    private val dp = resources.displayMetrics.density
+    private var theme: KbTheme? = null
+    private val keys = ArrayList<PanelKey>()
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
+    /** Between the two pairs of buttons: nothing on a phone, the middle of a wide screen (out of thumb reach). */
+    private val middle = View(context)
+    private var startY = 0f
+    private var startPercent = 100
+    private var pxPerPercent = 1f
+    private var dragging = false
+
+    init {
+        setWillNotDraw(false)
+        contentDescription = "Keyboard height $percent%. Drag up or down to resize."
+        val row = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL }
+        fun key(label: String, said: String, repeat: Boolean = false, onClick: () -> Unit) {
+            val k = PanelKey(context, label, null, repeat)
+            k.contentDescription = said
+            k.onPress = { listener.onKeyFeedbackPanel() }
+            k.onClick = onClick
+            keys += k
+            row.addView(k, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f))
+        }
+        key("−", "Shorter", repeat = true) { listener.onResize(percent - STEP, true) }
+        key("Reset", "Reset to normal height") { listener.onResize(100, true) }
+        row.addView(middle, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0f))
+        key("Done", "Done resizing") { listener.onResizeDone() }
+        key("+", "Taller", repeat = true) { listener.onResize(percent + STEP, true) }
+        val side = (8 * dp).toInt()
+        addView(row, LayoutParams(LayoutParams.MATCH_PARENT, (48 * dp).toInt(), Gravity.CENTER_VERTICAL).apply {
+            leftMargin = side; rightMargin = side
+        })
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        // A wide screen (an unfolded Fold): the buttons go to the edges, two under each thumb. Set
+        // before the buttons are measured, so the first layout already has it.
+        (middle.layoutParams as LinearLayout.LayoutParams).weight = if (MeasureSpec.getSize(widthMeasureSpec) > 600 * dp) 4f else 0f
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
+    fun applyTheme(t: KbTheme) {
+        theme = t
+        text.typeface = t.fonts.medium
+        for (k in keys) k.theme = t
+        invalidate()
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        val t = theme ?: return
+        // The keys show through, dimmed: the height you see is the height you get.
+        paint.color = t.background
+        paint.alpha = 205
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.alpha = 255
+        // A handle on the top edge, which is what moves.
+        paint.color = t.accent
+        val hw = 28 * dp
+        canvas.drawRoundRect(width / 2f - hw, 5 * dp, width / 2f + hw, 9 * dp, 2 * dp, 2 * dp, paint)
+        text.color = t.text
+        text.textSize = 14 * dp
+        canvas.drawText("Drag up or down to resize · $percent%", width / 2f, height / 2f - 36 * dp, text)
+    }
+
+    // A drag surface, not a click: TalkBack users get the same through the Shorter/Taller buttons.
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        when (ev.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                startY = ev.rawY
+                startPercent = percent
+                // Measured on the screen, not in this view: the view itself moves as the keyboard grows.
+                pxPerPercent = (height.toFloat() / percent).coerceAtLeast(0.5f)
+                dragging = true
+            }
+            MotionEvent.ACTION_MOVE -> if (dragging) {
+                // Up is taller. The keyboard keeps it within its limits (and shows the result in [percent]).
+                val p = startPercent + ((startY - ev.rawY) / pxPerPercent).toInt()
+                if (p != percent) listener.onResize(p, false)
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> if (dragging) {
+                dragging = false
+                listener.onResize(percent, true)
+            }
+        }
+        return true // every touch over the keys is the resize's: nothing gets typed
+    }
+
+    private companion object {
+        /** Percent per tap of − or +. */
+        const val STEP = 2
     }
 }

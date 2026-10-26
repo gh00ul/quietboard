@@ -45,6 +45,11 @@ class InputRoot(context: Context) : FrameLayout(context) {
             leftMargin = topBar.leadWidth
         })
         autofillRow.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> clipChips() }
+        // A split keyboard's halves: the suggestions and the editing panel line up with them.
+        keyboard.onSplitChanged = { span ->
+            topBar.split = span
+            for (i in 0 until content.childCount) (content.getChildAt(i) as? EditPanel)?.split = span
+        }
         topBar.onModeChange = { autofill.visibility = if (topBar.showingAutofill) VISIBLE else GONE }
         column.addView(bar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, topBar.barHeight))
         column.addView(content, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -108,6 +113,7 @@ class InputRoot(context: Context) : FrameLayout(context) {
 
     /** Adds a panel (emoji, clipboard) that sits over the keys. */
     fun addPanel(panel: android.view.View) {
+        (panel as? EditPanel)?.split = keyboard.splitSpan
         content.addView(panel, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
     }
 }

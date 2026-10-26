@@ -36,6 +36,8 @@ class SettingsActivity : Activity() {
     private var card = 0
     private var shortcutSummary: TextView? = null
     private val savedSummaries = HashMap<SavedKind, TextView>()
+    /** Re-reads each choice row's value (the keyboard may have changed one, like its height). */
+    private val summaryUpdates = ArrayList<() -> Unit>()
 
     private fun dp(v: Float) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, resources.displayMetrics)
     private fun dpi(v: Float) = dp(v).toInt()
@@ -146,7 +148,11 @@ class SettingsActivity : Activity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             switchRow(look, "Material You colors", "Match your wallpaper colors (Light, Dark, Black and Follow system)", Prefs.DYNAMIC_COLOR, true)
         }
-        choiceRow(look, "Keyboard height", listOf("Short", "Normal", "Tall", "Extra tall"), listOf(88, 100, 112, 124), Prefs.HEIGHT, 100)
+        // Also set by dragging on the keyboard itself (toolbar → Resize), to any height in between.
+        choiceRow(
+            look, "Keyboard height", listOf("Short", "Normal", "Tall", "Extra tall"), listOf(88, 100, 112, 124), Prefs.HEIGHT, 100,
+            other = { "Custom ($it%) · set on the keyboard" },
+        )
 
         // --- Clipboard & privacy
         val privacy = section("Clipboard & privacy")
@@ -198,6 +204,7 @@ class SettingsActivity : Activity() {
         super.onResume()
         refreshSetup()
         SavedKind.entries.forEach(::updateSavedSummary) // the keyboard may have remembered more meanwhile
+        summaryUpdates.forEach { it() } // ...or been resized
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -502,14 +509,22 @@ class SettingsActivity : Activity() {
         row.setOnClickListener { sw.toggle() }
     }
 
+    /**
+     * A setting picked from [labels]. [other] names a value that isn't one of [values] (set elsewhere,
+     * like a height dragged on the keyboard); the summary catches up when you come back to Settings.
+     */
     private fun choiceRow(
         parent: LinearLayout, title: String, labels: List<String>, values: List<Int>, key: String, def: Int,
+        other: ((Int) -> String)? = null,
         onPicked: (() -> Unit)? = null,
     ) {
-        val (row, _, summary) = rowBase(parent, title, labels[values.indexOf(prefs.sp.getInt(key, def)).coerceAtLeast(0)])
+        fun label(v: Int) = values.indexOf(v).let { if (it >= 0) labels[it] else other?.invoke(v) ?: labels[0] }
+        val (row, _, summary) = rowBase(parent, title, label(prefs.sp.getInt(key, def)))
         summary.visibility = View.VISIBLE
+        summaryUpdates += { summary.text = label(prefs.sp.getInt(key, def)) }
         row.setOnClickListener {
-            val cur = values.indexOf(prefs.sp.getInt(key, def)).coerceAtLeast(0)
+            // A value set elsewhere ticks none of the choices.
+            val cur = values.indexOf(prefs.sp.getInt(key, def))
             AlertDialog.Builder(this)
                 .setTitle(title)
                 .setSingleChoiceItems(labels.toTypedArray(), cur) { d, which ->

@@ -32,7 +32,10 @@ class Key(
 
 class Row(val keys: List<Key>, val height: Float = 1f)
 
-/** [split]: drawn as two halves with a gap between (see [Layouts.splitRows]). */
+/**
+ * [split]: for a big screen. Letters and symbols are drawn as two halves with a gap between (see
+ * [Layouts.splitRows]); number, phone and date pads are docked at the right edge.
+ */
 class KeyboardLayout(val id: LayoutId, val rows: List<Row>, val split: Boolean = false)
 
 data class LayoutOptions(
@@ -118,8 +121,9 @@ object Layouts {
             LayoutId.SYMBOLS2 -> symbols2(opts)
             LayoutId.NUMBER, LayoutId.DATETIME, LayoutId.PHONE -> numberPad(id)
         }
-        // Number, phone and date pads stay whole: a few big keys, not a thumb stretch.
-        return if (opts.split && l.id in SPLITTABLE) KeyboardLayout(l.id, splitRows(l.rows), split = true) else l
+        // Number, phone and date pads aren't cut in two: KeyboardView docks them at the edge instead.
+        if (!opts.split) return l
+        return KeyboardLayout(l.id, if (l.id in SPLITTABLE) splitRows(l.rows) else l.rows, split = true)
     }
 
     private val SPLITTABLE = setOf(LayoutId.ALPHA, LayoutId.SYMBOLS, LayoutId.SYMBOLS2)
