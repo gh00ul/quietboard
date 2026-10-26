@@ -10,7 +10,7 @@ import kotlin.math.sin
 enum class Icon {
     SHIFT, SHIFT_ON, SHIFT_LOCKED, BACKSPACE, ENTER, SEARCH, SEND, GO, DONE, PREVIOUS,
     EMOJI, CLIPBOARD, SETTINGS, CHEVRON_DOWN, CLOSE, PASTE,
-    EDIT, ONE_HAND, PIN, PIN_ON, SWAP, EXPAND, UP, DOWN, LEFT, RIGHT, APPS, CHEVRON_LEFT
+    EDIT, ONE_HAND, PIN, PIN_ON, SWAP, EXPAND, UP, DOWN, LEFT, RIGHT, APPS, CHEVRON_LEFT, RESIZE
 }
 
 /** Icons drawn on a 24x24 grid (Material-style strokes) so no image assets are needed. */
@@ -187,6 +187,15 @@ object Icons {
             Icon.CLOSE -> {
                 canvas.drawLine(6.5f, 6.5f, 17.5f, 17.5f, paint)
                 canvas.drawLine(17.5f, 6.5f, 6.5f, 17.5f, paint)
+            }
+            Icon.RESIZE -> {
+                // An up-and-down arrow between two bars: the keyboard's height.
+                canvas.drawLine(4f, 3.5f, 20f, 3.5f, paint)
+                canvas.drawLine(4f, 20.5f, 20f, 20.5f, paint)
+                canvas.drawLine(12f, 7.5f, 12f, 16.5f, paint)
+                path.moveTo(8.5f, 10.5f); path.lineTo(12f, 7f); path.lineTo(15.5f, 10.5f)
+                path.moveTo(8.5f, 13.5f); path.lineTo(12f, 17f); path.lineTo(15.5f, 13.5f)
+                canvas.drawPath(path, paint)
             }
         }
         canvas.restore()

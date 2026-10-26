@@ -125,7 +125,7 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
     /** "google" (bundled Google Sans) or "system" */
     val font: String get() = sp.getString(FONT, "google") ?: "google"
     /** Keyboard height in percent. */
-    val heightPercent get() = sp.getInt(HEIGHT, 100)
+    val heightPercent get() = sp.getInt(HEIGHT, 100).coerceIn(MIN_HEIGHT, MAX_HEIGHT)
 
     companion object {
         const val FILE = "settings"
@@ -186,6 +186,9 @@ class Prefs(context: Context, unlocked: Boolean = unlocked(context)) {
         const val VIBRATION = "vibration"
         const val THEME = "theme"
         const val HEIGHT = "height"
+        /** Keyboard height limits, in percent of Normal (Settings' choices, or any step between by resizing on the keyboard). */
+        const val MIN_HEIGHT = 70
+        const val MAX_HEIGHT = 140
         const val FONT = "font"
         const val EMOJI_SUGGESTIONS = "emoji_suggestions"
         const val BLOCK_OFFENSIVE = "block_offensive"

@@ -858,6 +858,106 @@ class ImeTest {
         }
     }
 
+    // ---------------------------------------------------------------- resizing on the keyboard
+
+    private fun measureRoot(): Int {
+        root.measure(
+            View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(2340, View.MeasureSpec.AT_MOST),
+        )
+        root.layout(0, 0, 1080, root.measuredHeight)
+        return root.keyboard.measuredHeight
+    }
+
+    private fun resizePanel() = (0 until root.content.childCount).map { root.content.getChildAt(it) }
+        .filterIsInstance<ResizePanel>().singleOrNull()
+
+    private fun drag(v: View, fromY: Float, toY: Float) {
+        val t = SystemClock.uptimeMillis()
+        val x = v.width / 2f
+        v.dispatchTouchEvent(MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, x, fromY, 0))
+        for (i in 1..5) {
+            v.dispatchTouchEvent(MotionEvent.obtain(t, t + 20L * i, MotionEvent.ACTION_MOVE, x, fromY + (toY - fromY) * i / 5, 0))
+        }
+        v.dispatchTouchEvent(MotionEvent.obtain(t, t + 120, MotionEvent.ACTION_UP, x, toY, 0))
+    }
+
+    @Test fun draggingOnTheKeyboardMakesItShorter() {
+        val normal = measureRoot()
+        ime.onTool(TopBar.Tool.RESIZE)
+        measureRoot()
+        val panel = resizePanel()!!
+        assertEquals(View.VISIBLE, panel.visibility)
+        assertEquals("the keys stay in view, to see the height", View.VISIBLE, root.keyboard.visibility)
+        // Down a fifth of the keyboard's height (from near the handle, above the buttons): about 20% shorter.
+        drag(panel, panel.height * 0.15f, panel.height * 0.15f + normal / 5f)
+        val shorter = Prefs(RuntimeEnvironment.getApplication()).heightPercent
+        assertTrue("saved shorter: $shorter%", shorter in 75..85)
+        assertTrue("and it is: ${measureRoot()} < $normal", measureRoot() < normal * 0.9f)
+        ime.onTool(TopBar.Tool.RESIZE)
+        assertEquals("the toolbar button closes it again", View.GONE, panel.visibility)
+        assertEquals("still shorter after", shorter, Prefs(RuntimeEnvironment.getApplication()).heightPercent)
+    }
+
+    @Test fun resizeButtonsStepAndStayWithinLimits() {
+        ime.onTool(TopBar.Tool.RESIZE)
+        measureRoot()
+        val panel = resizePanel()!!
+        fun button(said: String) {
+            fun find(v: View): PanelKey? = when (v) {
+                is PanelKey -> v.takeIf { it.contentDescription == said }
+                is android.view.ViewGroup -> (0 until v.childCount).firstNotNullOfOrNull { find(v.getChildAt(it)) }
+                else -> null
+            }
+            find(panel)!!.performClick()
+        }
+        val prefs = Prefs(RuntimeEnvironment.getApplication())
+        button("Shorter")
+        assertEquals(98, prefs.heightPercent)
+        button("Taller"); button("Taller")
+        assertEquals(102, prefs.heightPercent)
+        drag(panel, panel.height * 0.15f, panel.height * 0.15f + 5000f)
+        assertEquals("never shorter than the limit (as stored)", Prefs.MIN_HEIGHT, prefs.sp.getInt(Prefs.HEIGHT, 100))
+        assertEquals("and the keys stop there too", Prefs.MIN_HEIGHT / 100f, root.keyboard.heightScale, 0.001f)
+        button("Reset to normal height")
+        assertEquals(100, prefs.heightPercent)
+        button("Done resizing")
+        assertEquals(View.GONE, panel.visibility)
+    }
+
+    @Test fun nothingIsTypedWhileResizing() {
+        ime.onTool(TopBar.Tool.RESIZE)
+        measureRoot()
+        val k = root.keyboard.layout!!.rows[0].keys[0] // "q", under the resize layer (above its buttons)
+        val y = root.topBar.measuredHeight + k.visual.centerY()
+        drag(root, y, y) // a tap where "q" is
+        assertEquals("", text)
+    }
+
+    @Test fun noResizingOnTheLockScreen() {
+        val km = RuntimeEnvironment.getApplication().getSystemService(KeyguardManager::class.java)
+        shadowOf(km).setKeyguardLocked(true)
+        try {
+            start(fieldId = 40)
+            ime.onTool(TopBar.Tool.RESIZE)
+            assertTrue(resizePanel()?.visibility != View.VISIBLE)
+        } finally {
+            shadowOf(km).setKeyguardLocked(false)
+        }
+    }
+
+    @Test fun settingsShowsAHeightSetOnTheKeyboard() {
+        Prefs(RuntimeEnvironment.getApplication()).sp.edit().putInt(Prefs.HEIGHT, 92).commit()
+        val activity = Robolectric.buildActivity(SettingsActivity::class.java).setup().get()
+        fun texts(v: View): List<String> = when (v) {
+            is android.widget.TextView -> listOf(v.text.toString())
+            is android.view.ViewGroup -> (0 until v.childCount).flatMap { texts(v.getChildAt(it)) }
+            else -> emptyList()
+        }
+        val all = texts(activity.window.decorView)
+        assertTrue("not \"Short\": $all", all.any { it.startsWith("Custom (92%)") })
+    }
+
     private fun waitUntil(cond: () -> Boolean): Boolean {
         repeat(300) {
             shadowOf(Looper.getMainLooper()).idle()

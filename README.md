@@ -28,6 +28,9 @@ its private storage on your phone.
   up again for typing with your fingers. One-handed mode stays phone-sized there. Folding or
   unfolding switches on its own; Settings → Keys → Split keyboard turns it off, or on for phones in
   landscape too
+- Resize the keyboard on the keyboard: toolbar → Resize, then drag up or down anywhere over the keys
+  (or tap − / +), 70% to 140% of normal, watching the keys change as you go. Reset and Done sit
+  under your thumbs; Settings shows the height you picked
 - Space-bar cursor control, swipe-left-on-backspace to delete words
 - Long-press accents/digits/symbols, emoji panel with recents, 1-hour local clipboard history
 - Crisp per-key haptics (lighter for repeats and cursor steps, firmer for space/enter), or the phone's

@@ -263,15 +263,23 @@ class FoldTest {
     }
 
     /** QB_SCREENSHOTS=1: the unfolded keyboard as drawn, for a look (build/screens/fold_*.png). */
+    private fun shot(name: String, prefix: String = "fold") {
+        layoutRoot()
+        val bmp = Bitmap.createBitmap(root.measuredWidth, root.measuredHeight, Bitmap.Config.ARGB_8888)
+        root.draw(Canvas(bmp))
+        File("build/screens").mkdirs()
+        File("build/screens/${prefix}_$name.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
+
+    /** QB_SCREENSHOTS=1: resizing on the cover screen (phone-sized). */
+    @Test @Config(qualifiers = "w384dp-h832dp-450dpi") fun coverScreenResizeScreenshot() {
+        assumeTrue(System.getenv("QB_SCREENSHOTS") == "1")
+        ime.onTool(TopBar.Tool.RESIZE)
+        shot("resize", prefix = "cover")
+    }
+
     @Test fun screenshots() {
         assumeTrue(System.getenv("QB_SCREENSHOTS") == "1")
-        fun shot(name: String) {
-            layoutRoot()
-            val bmp = Bitmap.createBitmap(root.measuredWidth, root.measuredHeight, Bitmap.Config.ARGB_8888)
-            root.draw(Canvas(bmp))
-            File("build/screens").mkdirs()
-            File("build/screens/fold_$name.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
-        }
         waitForEngine()
         type("th")
         shot("letters")
@@ -281,6 +289,9 @@ class FoldTest {
         ime.onTool(TopBar.Tool.EDIT)
         shot("editing")
         ime.onTool(TopBar.Tool.EDIT)
+        ime.onTool(TopBar.Tool.RESIZE)
+        shot("resize")
+        ime.onTool(TopBar.Tool.RESIZE)
         edit.setText("")
         edit.inputType = InputType.TYPE_CLASS_PHONE
         start(9)

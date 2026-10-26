@@ -21,7 +21,7 @@ import android.view.accessibility.AccessibilityNodeProvider
 class TopBar(context: Context) : View(context) {
 
     /** [MORE] and [BACK] switch between suggestions and the toolbar; the strip handles them itself. */
-    enum class Tool { EMOJI, CLIPBOARD, EDIT, ONE_HAND, SETTINGS, HIDE, PASTE, MORE, BACK }
+    enum class Tool { EMOJI, CLIPBOARD, EDIT, ONE_HAND, SETTINGS, HIDE, PASTE, MORE, BACK, RESIZE }
 
     interface Listener {
         fun onSuggestionPicked(item: SuggestionItem)
@@ -299,10 +299,11 @@ class TopBar(context: Context) : View(context) {
                 Tool.CLIPBOARD -> "Clipboard"
                 Tool.EDIT -> "Text editing"
                 Tool.ONE_HAND -> "One-handed mode"
+                Tool.RESIZE -> "Resize keyboard"
                 Tool.SETTINGS -> "Settings"
                 Tool.HIDE -> "Hide keyboard"
                 Tool.PASTE -> "Paste: " + (chipLabel ?: "").take(100)
-                Tool.MORE -> "Tools: emoji, clipboard, settings"
+                Tool.MORE -> "Tools: emoji, clipboard, resize, settings"
                 Tool.BACK -> if (autofillCount > 0) "Back to saved logins" else "Back to suggestions"
                 null -> null
             }
@@ -432,6 +433,7 @@ class TopBar(context: Context) : View(context) {
                 Tool.SETTINGS -> Icon.SETTINGS
                 Tool.EDIT -> Icon.EDIT
                 Tool.ONE_HAND -> Icon.ONE_HAND
+                Tool.RESIZE -> Icon.RESIZE
                 Tool.HIDE -> Icon.CHEVRON_DOWN
                 Tool.BACK -> Icon.CHEVRON_LEFT
                 Tool.MORE -> Icon.APPS
@@ -518,6 +520,6 @@ class TopBar(context: Context) : View(context) {
         const val LEAD_DP = 44f
         val LOCKED_TOOLS = listOf(Tool.EMOJI)
         val CHIP_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD)
-        val ALL_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD, Tool.EDIT, Tool.ONE_HAND, Tool.SETTINGS)
+        val ALL_TOOLS = listOf(Tool.EMOJI, Tool.CLIPBOARD, Tool.EDIT, Tool.ONE_HAND, Tool.RESIZE, Tool.SETTINGS)
     }
 }
