@@ -297,10 +297,18 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         val totalRows = l.rows.sumOf { it.height.toDouble() }.toFloat()
         val rowUnit = (height - topPad - bottomPad) / totalRows
         var y = topPad
+        // Big screens: a number, phone or date pad is docked at the right edge, as wide as the split
+        // letters' right half, so every digit is in the right thumb's reach. The rest is no key.
+        val pad = l.id == LayoutId.NUMBER || l.id == LayoutId.DATETIME || l.id == LayoutId.PHONE
+        val docked = l.split && oneHanded == 0 && pad
         // One-handed: keys take 80% of the width on one side (no wider than a phone's keyboard, on an
         // unfolded Fold or a tablet), the rest holds swap/expand buttons.
-        val keysW = if (oneHanded != 0) minOf(width * 0.8f, ONE_HAND_MAX * dp) else width.toFloat()
-        val keysLeft = if (oneHanded == 1) width - keysW else 0f
+        val keysW = when {
+            oneHanded != 0 -> minOf(width * 0.8f, ONE_HAND_MAX * dp)
+            docked -> minOf(width.toFloat(), 5 * splitUnit(width - 2 * sidePad, 10f) + 2 * sidePad)
+            else -> width.toFloat()
+        }
+        val keysLeft = if (oneHanded == 1 || docked) width - keysW else 0f
         val usable = keysW - 2 * sidePad
         if (oneHanded != 0) {
             if (oneHanded == 1) sideArea.set(0f, 0f, keysLeft, height.toFloat())
@@ -311,10 +319,11 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             swapBtn.set(cx - bs / 2, cy - bs - 6 * dp, cx + bs / 2, cy - 6 * dp)
             expandBtn.set(cx - bs / 2, cy + 6 * dp, cx + bs / 2, cy + bs + 6 * dp)
         } else {
-            sideArea.setEmpty(); swapBtn.setEmpty(); expandBtn.setEmpty()
+            if (docked) sideArea.set(0f, 0f, keysLeft, height.toFloat()) else sideArea.setEmpty()
+            swapBtn.setEmpty(); expandBtn.setEmpty()
         }
         keyWidth = 0f
-        val split = l.split && oneHanded == 0
+        val split = l.split && oneHanded == 0 && !pad
         if (splitGapStart.size != l.rows.size) {
             splitGapStart = FloatArray(l.rows.size)
             splitGapWidth = FloatArray(l.rows.size)
@@ -324,7 +333,7 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
             val rh = row.height * rowUnit
             val totalW = row.keys.sumOf { (it.weight + it.padLeft + it.padRight).toDouble() }.toFloat()
             // Split: phone-sized keys in two halves at the edges, within thumb reach; the gap takes the rest.
-            val unit = if (split) minOf(usable * SPLIT_KEYS_SHARE / totalW, SPLIT_KEY_MAX * dp) else usable / totalW
+            val unit = if (split) splitUnit(usable, totalW) else usable / totalW
             val gap = if (split) usable - unit * totalW else 0f
             // The first key of the right half: the first whose middle is past the row's middle ("h", not "g").
             var gapAt = -1
@@ -360,7 +369,23 @@ class KeyboardView(context: Context, private val overlay: PopupOverlay) : View(c
         }
         rowHeight = rowUnit
         if (keyWidth == 0f) keyWidth = usable / 10f
+        // Where the halves part (the top row's gap), for the strip and the editing panel to match.
+        val r = splitGapWidth.indexOfFirst { it > 0f }
+        val span = if (r >= 0) splitGapStart[r] to splitGapStart[r] + splitGapWidth[r] else null
+        if (span != splitSpan) {
+            splitSpan = span
+            onSplitChanged?.invoke(span)
+        }
     }
+
+    /** A split keyboard's key width: [SPLIT_KEYS_SHARE] of [usable] across a row of [weights] keys, at most [SPLIT_KEY_MAX]. */
+    private fun splitUnit(usable: Float, weights: Float) = minOf(usable * SPLIT_KEYS_SHARE / weights, SPLIT_KEY_MAX * dp)
+
+    /** Where a split keyboard's gap is (its left and right x), or null when the keys are whole. */
+    var splitSpan: Pair<Float, Float>? = null
+        private set
+    /** Told when [splitSpan] changes (InputRoot lines the strip and the editing panel up with it). */
+    var onSplitChanged: ((Pair<Float, Float>?) -> Unit)? = null
 
     // ---------------------------------------------------------------- drawing
 

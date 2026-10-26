@@ -21,9 +21,13 @@ its private storage on your phone.
   sentences, 82.3% in 1.8.1) and gliding words you've taught it
 - Foldables and tablets: on a big screen (an unfolded Galaxy Z Fold, 600 dp both ways) letters and
   symbols split into two phone-sized halves at the edges, one for each thumb, with a space bar in each.
-  Glides across the gap decode as on one keyboard; a palm resting in the gap types nothing. One-handed
-  mode stays phone-sized there. Folding or unfolding switches on its own; Settings → Keys → Split
-  keyboard turns it off, or on for phones in landscape too
+  Glides across the gap decode as on one keyboard; a palm resting in the gap types nothing. The
+  suggestions sit over the halves (the main one under the right thumb), the cursor/copy-paste panel
+  splits the same way, and number, phone and date pads dock phone-sized at the right edge. Half
+  folded on a table like a laptop (hinge across, read from Android's hinge sensor), the keys join
+  up again for typing with your fingers. One-handed mode stays phone-sized there. Folding or
+  unfolding switches on its own; Settings → Keys → Split keyboard turns it off, or on for phones in
+  landscape too
 - Space-bar cursor control, swipe-left-on-backspace to delete words
 - Long-press accents/digits/symbols, emoji panel with recents, 1-hour local clipboard history
 - Crisp per-key haptics (lighter for repeats and cursor steps, firmer for space/enter), or the phone's

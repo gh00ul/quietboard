@@ -335,6 +335,7 @@ class QuietIME : InputMethodService(),
         getSystemService(AudioManager::class.java)?.unregisterAudioDeviceCallback(audioDevices)
         dropGesture()
         gestureExec.shutdownNow()
+        posture.stop()
         rememberField()
         clipboard.stop()
         prefs.stopListening(prefListener)
@@ -422,9 +423,11 @@ class QuietIME : InputMethodService(),
         updateShift()
         refreshSuggestions()
         wakeScene()
+        watchPosture()
     }
 
     override fun onFinishInputView(finishingInput: Boolean) {
+        posture.stop()
         flushGesture()
         // Still this field's connection: catch the last letters typed (remembered once you leave it).
         if (fieldReadPending) readFieldNow()
@@ -755,11 +758,24 @@ class QuietIME : InputMethodService(),
     private fun splitKeys(): Boolean {
         if (prefs.oneHanded != 0) return false
         val c = resources.configuration
+        // Half open with the hinge across (a book-style Fold turned landscape): it stands on a table
+        // like a laptop and you type with your fingers on the flat half, so the keys stay whole.
+        if (posture.halfOpen && c.orientation == Configuration.ORIENTATION_LANDSCAPE) return false
         return when (prefs.splitKeyboard) {
             "off" -> false
             "wide" -> c.screenWidthDp >= SPLIT_MIN_DP
             else -> c.screenWidthDp >= SPLIT_MIN_DP && c.smallestScreenWidthDp >= SPLIT_MIN_DP
         }
+    }
+
+    /** Half open or flat (see [splitKeys]); listened to only while the keyboard is up on a big screen. */
+    private val posture = FoldPosture(this) {
+        if (viewShown && keyboard?.layout != null && layoutOptions() != builtOptions) setLayout(layoutId)
+    }
+
+    private fun watchPosture() {
+        val bigScreen = resources.configuration.screenWidthDp >= SPLIT_MIN_DP
+        if (bigScreen && prefs.splitKeyboard != "off") posture.start() else posture.stop()
     }
 
     private fun setLayout(id: LayoutId) {

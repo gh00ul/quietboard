@@ -520,6 +520,27 @@ class EditPanel(context: Context, private val listener: Listener) : LinearLayout
     private lateinit var select: PanelKey
     var selecting = false
         private set
+    /** Each row's gap (shown for a split keyboard) and its right-hand key (Select all, Copy, Paste, Delete). */
+    private val gaps = ArrayList<View>()
+    private val rightColumn = ArrayList<PanelKey>()
+
+    /**
+     * A split keyboard's gap (its left and right x), or null: the arrows, Select, Undo and Redo go
+     * under the left thumb; Select all, Copy, Paste and Delete under the right, with the gap between.
+     */
+    var split: Pair<Float, Float>? = null
+        set(v) {
+            if (field == v) return
+            field = v
+            val gapWidth = v?.let { (it.second - it.first).toInt() } ?: 0
+            for (g in gaps) {
+                g.visibility = if (v == null) GONE else VISIBLE
+                g.layoutParams = (g.layoutParams as LayoutParams).apply { width = gapWidth }
+            }
+            // Halves as wide as each other, like the keys': the right column weighs as much as the three on the left.
+            for (k in rightColumn) k.layoutParams = (k.layoutParams as LayoutParams).apply { weight = if (v == null) RIGHT_WEIGHT else 3f }
+            requestLayout()
+        }
 
     init {
         orientation = VERTICAL
@@ -536,34 +557,38 @@ class EditPanel(context: Context, private val listener: Listener) : LinearLayout
                 keys += it
             }
         fun act(a: Action) = { listener.onEditAction(a, selecting) }
-        fun row(vararg items: Pair<PanelKey, Float>) = LinearLayout(context).apply {
+        // Keys weighing 3 in all on the left, then a gap (only for a split keyboard), then one key on the right.
+        fun row(right: PanelKey, vararg left: Pair<PanelKey, Float>) = LinearLayout(context).apply {
             orientation = HORIZONTAL
-            for ((k, w) in items) addView(k, LayoutParams(0, LayoutParams.MATCH_PARENT, w))
+            for ((k, w) in left) addView(k, LayoutParams(0, LayoutParams.MATCH_PARENT, w))
+            addView(View(context).apply { visibility = GONE }.also { gaps += it }, LayoutParams(0, LayoutParams.MATCH_PARENT))
+            addView(right, LayoutParams(0, LayoutParams.MATCH_PARENT, RIGHT_WEIGHT))
+            rightColumn += right
             this@EditPanel.addView(this, LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f))
         }
         select = key("Select", null) { setSelecting(!selecting) }
         row(
+            key("Select all", null) { listener.onEditAction(Action.SELECT_ALL, false) },
             key("Home", null, onClick = act(Action.HOME)) to 1f,
             key(null, Icon.UP, repeat = true, functional = false, onClick = act(Action.UP)) to 1f,
             key("End", null, onClick = act(Action.END)) to 1f,
-            key("Select all", null) { listener.onEditAction(Action.SELECT_ALL, false) } to 1.15f,
         )
         row(
+            key("Copy", null) { listener.onEditAction(Action.COPY, false); setSelecting(false) },
             key(null, Icon.LEFT, repeat = true, functional = false, onClick = act(Action.LEFT)) to 1f,
             select to 1f,
             key(null, Icon.RIGHT, repeat = true, functional = false, onClick = act(Action.RIGHT)) to 1f,
-            key("Copy", null) { listener.onEditAction(Action.COPY, false); setSelecting(false) } to 1.15f,
         )
         row(
+            key("Paste", null) { listener.onEditAction(Action.PASTE, false); setSelecting(false) },
             key("Undo", null) { listener.onEditAction(Action.UNDO, false) } to 1f,
             key(null, Icon.DOWN, repeat = true, functional = false, onClick = act(Action.DOWN)) to 1f,
             key("Redo", null) { listener.onEditAction(Action.REDO, false) } to 1f,
-            key("Paste", null) { listener.onEditAction(Action.PASTE, false); setSelecting(false) } to 1.15f,
         )
         row(
+            key(null, Icon.BACKSPACE, repeat = true, press = false) { listener.onPanelDelete() }, // gives its own feedback
             key("ABC", null) { setSelecting(false); listener.onPanelBack() } to 2f,
             key("Cut", null) { listener.onEditAction(Action.CUT, false); setSelecting(false) } to 1f,
-            key(null, Icon.BACKSPACE, repeat = true, press = false) { listener.onPanelDelete() } to 1.15f, // gives its own feedback
         )
     }
 
@@ -575,5 +600,10 @@ class EditPanel(context: Context, private val listener: Listener) : LinearLayout
     fun applyTheme(t: KbTheme) {
         setBackgroundColor(if (t.hasBackdrop) 0 else t.background) // fun themes: the scene shows through
         for (k in keys) k.theme = t
+    }
+
+    private companion object {
+        /** The right-hand column's weight beside the three on the left, when the keys are whole. */
+        const val RIGHT_WEIGHT = 1.15f
     }
 }
